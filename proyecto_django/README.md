@@ -12,4 +12,4 @@ IMPORTANTE: Cada vez que se agreguen modelos nuevos, o se cambien los existentes
 
 A este punto, la app deberia estar corriendo en `localhost:8000`, y se puede ver desde el navegador.
 
-ADICIONALMENTE, el comando `docker exec -ti django_DSSD manage.py collectstatic` debe ser usado para generar los estaticos de la interfaz admin de django, si se quiere usar.
+ADICIONALMENTE, el comando `docker exec -ti django_DSSD manage.py collectstatic` debe ser usado para generar los estaticos de la interfaz admin de django, si se quiere usar. Para usar la interfaz de admin, debe crearse un superusuario con `docker exec -ti django_DSSD python manage.py createsuperuser`, y luego, entrar a `localhost:8000/admin` con el usuario y contraseña
