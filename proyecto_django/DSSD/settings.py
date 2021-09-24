@@ -12,6 +12,31 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+import dj_database_url
+import django_heroku
+
+# Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+DATABASES={}
+
+
+if os.environ.get('DJANGO_PRODUCTION'):
+    django_heroku.settings(locals())
+else:
+    DATABASES['default']={
+      'ENGINE':'django.db.backends.postgresql',
+      'NAME':'djangodb',
+      'USER':'postgres',
+      'PASSWORD':'postgres',
+      'HOST':'db',
+      'PORT':5432,
+   }
+
+# # el objeto env se usa para traer las variables de entorno
+# env = environ.Env()
+# environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +51,7 @@ SECRET_KEY = 'django-insecure-ylotrf+1a=dplkyvm!9jjs%%-&#o(o0gjp9%p7#h)#ickwnss4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://dssd-app.herokuapp.com/', '0.0.0.0', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -69,21 +94,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DSSD.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES={
-   'default':{
-      'ENGINE':'django.db.backends.postgresql',
-      'NAME':'djangodb',
-      'USER':'postgres',
-      'PASSWORD':'postgres',
-      'HOST':'db',
-      'PORT':5432,
-   }
-}
 
 
 # Password validation
