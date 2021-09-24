@@ -16,30 +16,17 @@ import environ
 import dj_database_url
 import django_heroku
 
+# # el objeto env se usa para traer las variables de entorno
+env = environ.Env()
+environ.Env.read_env()
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES={}
 
-
-if os.environ.get('DJANGO_PRODUCTION'):
-    django_heroku.settings(locals())
-else:
-    DATABASES['default']={
-      'ENGINE':'django.db.backends.postgresql',
-      'NAME':'djangodb',
-      'USER':'postgres',
-      'PASSWORD':'postgres',
-      'HOST':'db',
-      'PORT':5432,
-   }
-
-# # el objeto env se usa para traer las variables de entorno
-# env = environ.Env()
-# environ.Env.read_env()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -132,6 +119,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -139,3 +127,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if env('DJANGO_DEVELOPMENT') == 'True':
+    DATABASES['default']={
+      'ENGINE':'django.db.backends.postgresql',
+      'NAME':'djangodb',
+      'USER':'postgres',
+      'PASSWORD':'postgres',
+      'HOST':'db',
+      'PORT':5432,
+   }
+else:
+    django_heroku.settings(locals())
