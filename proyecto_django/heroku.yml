@@ -1,0 +1,5 @@
+build:
+  docker:
+    web: ./proyecto_django/Dockerfile
+run:
+  web: python manage.py runserver 0.0.0.0:8000
