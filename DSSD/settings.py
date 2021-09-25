@@ -20,6 +20,7 @@ import django_heroku
 env = environ.Env()
 environ.Env.read_env()
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -67,7 +68,7 @@ ROOT_URLCONF = 'DSSD.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,7 +120,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
