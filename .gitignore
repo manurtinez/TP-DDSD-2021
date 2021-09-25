@@ -6,4 +6,3 @@ static_shared
 target
 db.sqlite3
 .vscode
-.env
