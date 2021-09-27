@@ -1,0 +1,67 @@
+@import url("https://assets.loupbrun.ca/fonts/booster/stylesheet.css");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+/* FONTS */
+.roboto{
+	font-family: 'Roboto', sans-serif;
+}
+html,
+body {
+	height: 100%;
+	width: 100%;
+	padding: 0%;
+	margin: 0%;
+	font-family: "Booster Next FY" !important;
+}
+
+body {
+	display: table
+}
+
+body>main {
+	display: table-cell;
+	text-align: center;
+	/* horizontal */
+	vertical-align: middle;
+	/* vertical */
+}
+
+a {
+	color: #1266f1;
+	text-decoration: none;
+}
+
+.bgc-primary {
+	background-color: #F1F8E9;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Booster Next FY";
+  margin: 0.3em 0 0.1em;
+  font-weight: 100;
+  font-size: inherit;
+  line-height: 1.42;
+
+}
+
+h1 {
+  font-size: 4em;
+}
+
+h2 {
+  font-size: 3em;
+}
+
+h3 {
+  font-size: 2.2em;
+}
+
+h4 {
+  font-size: 1.8em;
+}
+
+h5 {
+  font-size: 1.3em;
+}
+
+h6 {
+  font-size: 1em;
+}
