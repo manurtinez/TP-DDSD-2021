@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -5,12 +6,17 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="images/logo.ico">
+
+  <!--<link rel="icon" href="images/logo.ico">-->
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
+  <script type="text/javascript" src="{% static 'js/validaciones.js' %}"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+
+
+
 
   <title>Alta de sociedad anónima</title>
 </head>
@@ -74,13 +80,7 @@
             <div class="col-auto">
               <div class="input-group mb-2">
                 <span class="input-group-text border-0">Porcentaje de aportes:</span>
-                <div class="input-group-text"><i class="fas fa-globe-americas"></i></div>
-                <select class="form-select" aria-label="Default select example">
-                  <option selected value="Representante">25 %</option>
-                  <option value="Representante">50 %</option>
-                  <option value="Representante">75 %</option>
-                  <option value="Representante">100 %</option>
-                </select>
+                <input type="text" class="form-control" id="porcentajeAportes" name="porcentajeAportes" placeholder="Por ej. 50"> <div class="input-group-text"><i class="fas fa-percent"></i></div>
               </div>
             </div>
             <div class="col-auto">
