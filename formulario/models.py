@@ -24,10 +24,19 @@ class SociedadAnonima(models.Model):
     legal_representative = models.ForeignKey(
         'Socio', on_delete=models.SET_NULL, null=True)
 
+    class Meta:
+        ordering = ['-name']
+
+    def __str__(self):
+        return self.name
+
 
 class Socio(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     percentage = models.FloatField(max_length=30)
-    # Este es el email del apoderado
+    # Este es el email del apoderado (no todos los socios parecieran tenerlo)
     representative_email = models.CharField(max_length=30, null=True)
+
+    def __str__(self):
+        return self.first_name
