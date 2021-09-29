@@ -64,9 +64,9 @@
           <div class="row g-3 col mt-3 ">
 
             <div class="input-group mb-2">
-              <span class="input-group-text border-0"> Nombre: </span>
+              <span class="input-group-text border-0"> Nombre de la sociedad: </span>
               <div class="input-group-text"><i class="fas fa-child"></i></div>
-              <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Por ej. Juan Rodriguez">
+              <input type="text" class="form-control" id="nombreSociedad" name="nombreSociedad" placeholder="Por ej. Juan Rodriguez & Roberto Fernandez Sociedad de Hecho">
             </div>
 
             <div class="input-group mb-2">
@@ -77,9 +77,18 @@
 
             <div class="col-auto">
               <div class="input-group mb-2">
-                <span class="input-group-text border-0">Socio:</span>
+                <span class="input-group-text border-0">Apellido del socio:</span>
                 <div class="input-group-text"><i class="fas fa-users"></i></div>
-                <input type="text" class="form-control" id="socio" name="socio" placeholder="Por ej. Juan Rodriguez">
+                <input type="text" class="form-control" id="apellidoSocio" name="apellidoSocio" placeholder="Por ej. Juan Rodriguez">
+              </div>
+            </div>
+
+            
+            <div class="col-auto">
+              <div class="input-group mb-2">
+                <span class="input-group-text border-0">Nombre del socio:</span>
+                <div class="input-group-text"><i class="fas fa-users"></i></div>
+                <input type="text" class="form-control" id="nombreSocio" name="nombreSocio" placeholder="Por ej. Juan Rodriguez">
               </div>
             </div>
             
@@ -127,7 +136,7 @@
               <div class="d-flex flex-row">
                 <div class="p-2 text-start fst-italic"><i class="fas fa-info-circle fa-lg"></i> Representante sugerido:
                 </div>
-                <div class="p-2 fw-bold">Roberto Perez</div>
+                <div class="p-2 fw-bold">Roberto Perez - 50% de aportes</div>
               </div>
             </div>
 
@@ -145,7 +154,7 @@
 
             <div class="col-auto">
               <div class="input-group mb-2">
-                <span class="input-group-text border-0">País</span>
+                <span class="input-group-text border-0">País:</span>
                 <div class="input-group-text"><i class="fas fa-globe-americas"></i></div>
                 <select class="form-select" id="paisDeExportacion" name="paisDeExportacion" aria-label="Default select example">
                   <option selected value="0">Seleccioná un pais...</option>
