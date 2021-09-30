@@ -11,15 +11,14 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet">
-  <script type="text/javascript" src="{% static 'js/validaciones.js' %}"></script>
+	<link href="{% static 'form.css' %}" rel="stylesheet" type="text/css"/>
+  <link rel="stylesheet" href="../static/form.css">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <title>Alta de sociedad anónima</title>
 </head>
 
-<body class="bg-light">
+<body class="bg-light" onload="refrescarTabla()">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'altaDeFormulario' %}">Sistema de Sociedades</a>
@@ -54,7 +53,7 @@
     <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Alta de sociedad</h3>
     <div class="card-body container mb-3 ">
       <div class=" container mt-4">
-        <form action="alta" method="POST" enctype="multipart/form-data" action=""  class="text-left p-3" id="formContacto" name="formularioSociedad" onsubmit="return validarFormulario();">
+        <form action="alta" method="POST" enctype="multipart/form-data" action="" class="text-left p-3" id="formContacto" name="formularioSociedad" onsubmit="return validarFormulario();">
           {% csrf_token %}
 
           <h4><span class="badge rounded-pill bg-info">Sociedad</span></h4>
@@ -70,7 +69,7 @@
               <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
               <input type="date" class="form-control" id="fechaCreacion" name="fechaCreacion" max="dateToday()">
             </div>
-            
+
             <div class="input-group mb-3">
               <span class="input-group-text border-0">Estatuto de conformación: </span>
               <div class="input-group-text"><i class="fas fa-paperclip"></i></div>
@@ -98,42 +97,59 @@
                 placeholder="Por ej. sancheznicolas@gmail.com">
             </div>
 
-            <div class="input-group mb-3">
-              <span class="input-group-text border-0">¿Exporta a otros países?</span>
-              <input class="form-check-input mt-2" type="checkbox" value="" id="flexCheckDefault" />
+            <div class="input-group mb-2">
+              <label for="checkExporta" class="input-group-text border-0">¿Exporta a otros países?</label>
+              <input checked autocomplete="off" class="form-check-input mt-2" type="checkbox" value="" id="checkExporta"
+                onclick="if (checkExporta.checked){containerExporta.hidden=false}else{containerExporta.hidden=true}" />
             </div>
 
-            <div class="col-auto">
-              <div class="input-group mb-3">
-                <span class="input-group-text border-0">País:</span>
-                <div class="input-group-text"><i class="fas fa-globe-americas"></i></div>
-                <select class="form-select" id="paisDeExportacion" name="paisDeExportacion" aria-label="Default select example">
-                  <option selected value="0">Seleccioná un pais...</option>
-                  <option value="País 1">País 1</option>
-                  <option value="País 2">País 2</option>
-                  <option value="País 3">País 3</option>
-                  <option value="País 4">País 4</option>
-                  <option value="País 5">País 5</option>
+            <div class="row mb-3" id="containerExporta">
+
+              <div class="col-auto">
+                <div class="input-group">
+                  <span class="input-group-text border-0">País:</span>
+                  <div class="input-group-text"><i class="fas fa-globe-americas"></i></div>
+                  <button class="btn btn-primary w-auto" type="button"
+                    onclick="if (paisesDeExportacion.hidden==true){paisesDeExportacion.hidden=false}else{paisesDeExportacion.hidden=true} ">Seleccioná
+                    los Paises... <i class="fas fa-angle-down"></i>
+                  </button>
+                </div>
+                <select autocomplete="off" id="paisesDeExportacion" name="paisesDeExportacion"
+                  class="form-select select-checkbox w-100" hidden multiple size="auto"
+                  onmousedown="customSelect(event,this);">
+                  <option value="">Mexico</option>
+                  <option value="">España</option>
+                  <option value="">Suiza</option>
+                  <option value="">Francia</option>
+                  <option value="">Colombia</option>
+                  <option value="">Chile</option>
+                  <option value="">Peru</option>
+                  <option value="">Australia</option>
                 </select>
               </div>
-            </div>
-            
-            <div class="col-auto">
-              <div class="input-group mb-3">
-                <span class="input-group-text border-0">Estado:</span>
+
+              <div class="col-auto">
+                <div class="input-group">
+                  <span class="input-group-text border-0">Estado:</span>
                   <div class="input-group-text"><i class="fas fa-flag-usa"></i></div>
-                  <select class="form-select" id="estadoDeExportacion" name="estadoDeExportacion" aria-label="Default select example">
-                    <option selected value="0">Seleccioná un estado...</option>
-                    <option value="Estado 1">Estado 1</option>
-                    <option value="Estado 2">Estado 2</option>
-                    <option value="Estado 3">Estado 3</option>
-                    <option value="Estado 4">Estado 4</option>
-                    <option value="Estado 5">Estado 5</option>
-                  </select>
+                  <button class="btn btn-primary w-auto" type="button"
+                    onclick="if (estadosDeExportacion.hidden==true){estadosDeExportacion.hidden=false}else{estadosDeExportacion.hidden=true}">Selecciona
+                    los Estados... <i class="fas fa-angle-down"></i></button>
+                </div>
+                <select autocomplete="off" id="estadosDeExportacion" name="estadosDeExportacion"
+                  class="form-select select-checkbox w-100" hidden multiple size="auto"
+                  onmousedown="customSelect(event,this);">
+                  <option value="">Mexico</option>
+                  <option value="">España</option>
+                  <option value="">Suiza</option>
+                  <option value="">Francia</option>
+                  <option value="">Colombia</option>
+                  <option value="">Chile</option>
+                  <option value="">Peru</option>
+                  <option value="">Australia</option>
+                </select>
+
               </div>
-            </div>
-            <div class="col-auto">
-              <button type="submit" id="agregarSocio" class="btn btn-primary pl-5">+</button>
             </div>
 
             <h4><span class="badge rounded-pill bg-info">Socios</span></h4>
@@ -144,7 +160,7 @@
                 <input type="text" class="form-control" id="apellidoSocio" name="apellidoSocio" placeholder="Por ej. Juan Rodriguez">
               </div>
             </div>
-            
+
             <div class="col-auto">
               <div class="input-group mb-3">
                 <span class="input-group-text border-0">Nombre:</span>
@@ -152,17 +168,32 @@
                 <input type="text" class="form-control" id="nombreSocio" name="nombreSocio" placeholder="Por ej. Juan Rodriguez">
               </div>
             </div>
-            
+
             <div class="col-auto">
               <div class="input-group mb-3">
                 <span class="input-group-text border-0">Porcentaje de aportes:</span>
-                <input type="text" class="form-control" id="porcentajeAportes" name="porcentajeAportes" placeholder="Por ej. 50"> <div class="input-group-text"><i class="fas fa-percent"></i></div>
+                <input type="number" class="form-control" id="porcentajeAportes" name="porcentajeAportes" placeholder="Por ej. 50">
+                <div class="input-group-text"><i class="fas fa-percent"></i></div>
               </div>
             </div>
             <div class="col-auto">
-              <button type="submit" id="agregarSocio" class="btn btn-primary pl-5">+</button>
+              <button type="button" onclick="validarTotalSocios(parseInt(porcentajeAportes.value))" id="agregarSocio" class="btn btn-primary pl-5">+</button>
             </div>
-
+            <table id="tablaSocios" class="table table-primary table-hover w-50 mx-auto text-center">
+              <caption>Socios Agregados</caption>
+            
+              <thead class="table-dark ">
+                <tr class="px-5">
+                  <th scope="col" style="width: 5%;">#</th>
+                  <th scope="col" style="width: 70%;">Socio</th>
+                  <th scope="col" class="px-0" style="width: 20%;">% Porcentaje</th>
+                  <th scope="col" style="width: 5%;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+            
+              </tbody>
+            </table>
             <div class="input-group mb-3">
               <span class="input-group-text border-0">Representante legal/apoderado: </span>
               <div class="input-group-text"><i class="fas fa-suitcase"></i></div>
@@ -175,14 +206,13 @@
                 <option value="Representante 5">Representante 5</option>
               </select>
               <div class="d-flex flex-row">
-                <div class="p-2 text-start fst-italic"><i class="fas fa-info-circle fa-lg"></i> Representante sugerido:
-                </div>
+                <div class="p-2 text-start fst-italic"><i class="fas fa-info-circle fa-lg"></i> Representante sugerido:</div>
                 <div class="p-2 fw-bold">Roberto Perez - 50% de aportes</div>
               </div>
             </div>
-            
+
             <div class="text-center mt-4">
-              <button type="submit" id="submit" class="btn btn-primary mb-4 mt-3" > <i class="fas fa-save"></i> Guardar</button>            
+              <button type="submit" id="submit" class="btn btn-primary mb-4 mt-3"> <i class="fas fa-save"></i>Guardar</button>
             </div>
           </div>
 

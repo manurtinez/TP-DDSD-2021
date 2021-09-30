@@ -1,3 +1,7 @@
+let totalPorcentajeSocios = 0;
+const columnaNombre = 1;
+const columnaPorcentaje = 2;
+var opcionesSeleccionadas = new Set();
 
 function validarFormulario() {
 
@@ -246,4 +250,65 @@ function mostrarModalMensaje(mensaje) {
         }
     })
 
+}
+
+function customSelect(event,multiSelect) {
+	optionIndex = event.target.index;
+	if(opcionesSeleccionadas.has(optionIndex)){
+		opcionesSeleccionadas.delete(optionIndex);
+		multiSelect.options[optionIndex].selected = false;
+
+	}else if(event.target.index != undefined){
+		opcionesSeleccionadas.add(optionIndex);
+		multiSelect.options[optionIndex].selected = true;
+	}
+    // Para prevenir la ejecucion del codigo nativo
+	event.preventDefault();
+}
+
+function validarTotalSocios(porcentajeASumar) {
+	if (totalPorcentajeSocios + porcentajeASumar <= 100) {
+		totalPorcentajeSocios += porcentajeASumar;
+		// alert("Total porcentaje socios = " + totalPorcentajeSocios);
+		let newRow = tablaSocios.tBodies[0].insertRow(-1);
+		let newCell = newRow.insertCell(-1);
+		let newText = document.createTextNode(tablaSocios.tBodies[0].rows.length);
+		newCell.appendChild(newText);
+		newCell = newRow.insertCell(-1);
+		newText = document.createTextNode(nombreSocio.value+' '+apellidoSocio.value);
+		newCell.appendChild(newText);
+		newCell = newRow.insertCell(-1);
+		newText = document.createTextNode(porcentajeAportes.value);
+		newCell.appendChild(newText);
+		newCell = newRow.insertCell(-1);
+        let iconEditar = document.createElement('i');
+        iconEditar.title = "Modificar";
+        iconEditar.classList.add("far","fa-edit");
+        newCell.appendChild(iconEditar);
+        let iconEliminar = document.createElement('i');
+        iconEliminar.title = "Eliminar";
+        iconEliminar.classList.add("far","fa-trash-alt");
+        newCell.appendChild(iconEliminar);
+	} else {
+		Swal.fire({
+			icon: 'warning',
+			title: 'Atención!',
+			text: 'Por favor ingrese un porcentaje menor o igual a ' + (100 - totalPorcentajeSocios)
+		})
+	}
+	refrescarTabla();
+    apellidoSocio.value = nombreSocio.value = "";
+	porcentajeAportes.value = "";
+	apellidoSocio.focus();
+}
+
+function refrescarTabla() {
+	if (tablaSocios.tBodies[0].rows.length > 0) {
+		tablaSocios.hidden = false;
+	} else {
+		tablaSocios.hidden = true;
+		if (totalPorcentajeSocios == 100) {
+            agregarSocio.disabled = true;
+		}
+	}
 }
