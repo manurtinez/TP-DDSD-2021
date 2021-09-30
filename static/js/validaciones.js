@@ -48,14 +48,6 @@ function validarFormulario() {
         return false; 
     }
 
-    // REPRESENTANTE LEGAL/APODERADO - VACIO
-    if (document.formularioSociedad.representanteLegal.value == 0 || document.formularioSociedad.representanteLegal.value== "") {
-        let $mensaje = 'Por favor, seleccioná un representante legal/apoderado.';
-        document.formularioSociedad.representanteLegal.focus();
-        mostrarModalMensaje($mensaje)
-        return false;
-    }
-
     // ESTATUTO DE CONFORMACION - VACIO
     if (document.formularioSociedad.estatuto.value.length == 0)  {      
         let $mensaje = 'Por favor, ingresá el estatuto de conformación.';
@@ -226,6 +218,14 @@ function validarFormulario() {
 
     // PORCENTAJE DE APORTES - SOLO NUMEROS ¿ADMITE DECIMALES? (DEFINIR)
     // HACER
+
+    // REPRESENTANTE LEGAL/APODERADO - VACIO
+    if (document.formularioSociedad.representanteLegal.value == 0 || document.formularioSociedad.representanteLegal.value== "") {
+        let $mensaje = 'Por favor, seleccioná un representante legal/apoderado.';
+        document.formularioSociedad.representanteLegal.focus();
+        mostrarModalMensaje($mensaje)
+        return false;
+    }
 
 	return true;
 }
