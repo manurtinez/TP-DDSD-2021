@@ -18,7 +18,7 @@
   <title>Alta de sociedad anónima</title>
 </head>
 
-<body class="bg-light" onload="refrescarTabla()">
+<body class="bg-light" onload="">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'altaDeFormulario' %}">Sistema de Sociedades</a>
@@ -168,7 +168,7 @@
                 <input type="text" class="form-control" id="nombreSocio" name="nombreSocio" placeholder="Por ej. Juan Rodriguez">
               </div>
             </div>
-
+          <div class="row">
             <div class="col-auto">
               <div class="input-group mb-3">
                 <span class="input-group-text border-0">Porcentaje de aportes:</span>
@@ -179,6 +179,7 @@
             <div class="col-auto">
               <button type="button" onclick="validarTotalSocios(parseInt(porcentajeAportes.value))" id="agregarSocio" class="btn btn-primary pl-5">+</button>
             </div>
+          </div>
             <table id="tablaSocios" class="table table-primary table-hover w-50 mx-auto text-center">
               <caption>Socios Agregados</caption>
             
