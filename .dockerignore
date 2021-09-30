@@ -3,6 +3,4 @@ myvenv
 .vscode
 *.pyc
 db.sqlite3
-static
-static_shared
 target
