@@ -6,4 +6,5 @@ db.sqlite3
 .vscode
 uploads
 .idea
-staticfiles
+staticfiles/*
+!staticfiles/hola.txt
