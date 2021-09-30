@@ -59,26 +59,25 @@
     <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Alta de sociedad</h3>
     <div class="card-body container mb-3 ">
       <div class=" container mt-4">
-        <form action="alta" method="POST" action=""  class="text-left p-3" id="formContacto" name="formularioSociedad" onsubmit="return validarFormulario();">
+        <form action="alta" method="POST" enctype="multipart/form-data" action=""  class="text-left p-3" id="formContacto" name="formularioSociedad" onsubmit="return validarFormulario();">
           {% csrf_token %}
           <div class="row g-3 col mt-3 ">
-
             <div class="input-group mb-2">
               <span class="input-group-text border-0"> Nombre de la sociedad: </span>
-              <div class="input-group-text"><i class="fas fa-child"></i></div>
+              <div class="input-group-text"><i class="fas fa-users"></i></div>
               <input type="text" class="form-control" id="nombreSociedad" name="nombreSociedad" placeholder="Por ej. Juan Rodriguez & Roberto Fernandez Sociedad de Hecho">
             </div>
 
             <div class="input-group mb-2">
               <span class="input-group-text border-0">Fecha de creación: </span>
               <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-              <input type="date" class="form-control" id="fechaCreacion" name="fechaCreacion">
+              <input type="date" class="form-control" id="fechaCreacion" name="fechaCreacion" max="dateToday()">
             </div>
 
             <div class="col-auto">
               <div class="input-group mb-2">
                 <span class="input-group-text border-0">Apellido del socio:</span>
-                <div class="input-group-text"><i class="fas fa-users"></i></div>
+                <div class="input-group-text"><i class="fas fa-user-circle"></i></div>
                 <input type="text" class="form-control" id="apellidoSocio" name="apellidoSocio" placeholder="Por ej. Juan Rodriguez">
               </div>
             </div>
@@ -87,7 +86,7 @@
             <div class="col-auto">
               <div class="input-group mb-2">
                 <span class="input-group-text border-0">Nombre del socio:</span>
-                <div class="input-group-text"><i class="fas fa-users"></i></div>
+                <div class="input-group-text"><i class="fas fa-user-alt"></i></div>
                 <input type="text" class="form-control" id="nombreSocio" name="nombreSocio" placeholder="Por ej. Juan Rodriguez">
               </div>
             </div>
