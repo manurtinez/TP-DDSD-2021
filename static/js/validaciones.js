@@ -137,8 +137,10 @@ function validarFormulario() {
     }
 
     // LOS PAISES Y ESTADOS SOLO SE DEBEN VALIDAR SI SE TILDÓ "EXPORTA A OTROS PAISES" - HACER
+    // DESCOMENTAR LO DE ABAJO LUEGO - EXPLOTA POR EL MULTISELECT
 
     // PAISES DE EXPORTACION - VACIO
+    /*
     if (document.formularioSociedad.paisDeExportacion.value == 0 || document.formularioSociedad.paisDeExportacion.value== "") {
         let $mensaje = 'Por favor, seleccioná un país.';
         document.formularioSociedad.paisDeExportacion.focus();
@@ -153,75 +155,15 @@ function validarFormulario() {
         mostrarModalMensaje($mensaje)
         return false;
     }
+    */
 
-    // APELLIDO DEL SOCIO
-    if (document.formularioSociedad.apellidoSocio.value.length==0 ) {    
-        let mensaje = "Por favor, ingresa el apellido del socio."
-        document.formularioSociedad.apellidoSocio.focus();    
-        mostrarModalMensaje(mensaje)
-        return false; 
-    } 
-    
-    // APELLIDO DEL SOCIO - ENTRE 3 Y 50 CARACTERES
-    if (document.formularioSociedad.apellidoSocio.value.length > 50 ||
-        document.formularioSociedad.apellidoSocio.value.length <= 2) {
-        let mensaje = 'Por favor, el apellido del socio debe tener entre 3 y 50 caracteres.';
+    // VALIDAR QUE EL PORCENTAJE  DE APORTES HAYA LLLEGADO AL 100%
+    if (totalPorcentajeSocios < 100) {
+        let $mensaje = 'Por favor, los socios ingresados no logran completar el 100% de acciones.';
         document.formularioSociedad.apellidoSocio.focus();
-        mostrarModalMensaje(mensaje);
+        mostrarModalMensaje($mensaje)
         return false;
     }
-
-    // APELLIDO DEL SOCIO - SOLO LETRAS
-    if (/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(document.formularioSociedad.apellidoSocio.value)) {
-        let mensaje = 'Por favor, el apellido del socio debe contener sólo letras.';
-        document.formularioSociedad.apellidoSocio.focus();
-        mostrarModalMensaje(mensaje);
-        return false;
-    }
-
-    // NOMBRE DEL SOCIO - VACIO 
-    if (document.formularioSociedad.nombreSocio.value.length==0 ) {    
-        let mensaje = "Por favor, ingresa el nombre del socio."
-        document.formularioSociedad.nombreSocio.focus();    
-        mostrarModalMensaje(mensaje)
-        return false; 
-    } 
-    
-    // NOMBRE DEL SOCIO - ENTRE 3 Y 50 CARACTERES
-    if (document.formularioSociedad.nombreSocio.value.length > 50 ||
-        document.formularioSociedad.nombreSocio.value.length <= 2) {
-        let mensaje = 'Por favor, el nombre del socio debe tener entre 3 y 50 caracteres.';
-        document.formularioSociedad.nombreSocio.focus();
-        mostrarModalMensaje(mensaje);
-        return false;
-    }
-
-    // NOMBRE DEL SOCIO - SOLO LETRAS
-    if (/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(document.formularioSociedad.nombreSocio.value)) {
-        let mensaje = 'Por favor, el nombre del socio debe contener sólo letras.';
-        document.formularioSociedad.nombreSocio.focus();
-        mostrarModalMensaje(mensaje);
-        return false;
-    }
-
-    // PORCENTAJE DE APORTES - VACIO
-    if (document.formularioSociedad.porcentajeAportes.value.length == 0)  {      
-        let $mensaje = 'Por favor, ingresá un porcentaje de aportes.';
-        document.formularioSociedad.porcentajeAportes.focus();
-        mostrarModalMensaje($mensaje);
-       return false; 
-    }
-
-   // PORCENTAJE DE APORTES - MAXIMO 3 NUMEROS
-    if (document.formularioSociedad.porcentajeAportes.value.length > 3) {
-        let mensaje = 'Por favor, el porcentaje de aportes debe tener como máximo 3 números.';
-        document.formularioSociedad.porcentajeAportes.focus();
-        mostrarModalMensaje(mensaje);
-        return false;
-    } 
-
-    // PORCENTAJE DE APORTES - SOLO NUMEROS ¿ADMITE DECIMALES? (DEFINIR)
-    // HACER
 
     // REPRESENTANTE LEGAL/APODERADO - VACIO
     if (document.formularioSociedad.representanteLegal.value == 0 || document.formularioSociedad.representanteLegal.value== "") {
@@ -289,7 +231,88 @@ function validarTotalSocios(porcentajeASumar) {
         iconEliminar.title = "Eliminar";
         iconEliminar.classList.add("far","fa-trash-alt");
         newCell.appendChild(iconEliminar);
+        document.formularioSociedad.apellidoSocio.value='';
+        document.formularioSociedad.nombreSocio.value='';
+        document.formularioSociedad.porcentajeAportes.value='';
+
 	} else {
+        // APELLIDO DEL SOCIO
+        if (document.formularioSociedad.apellidoSocio.value.length==0 ) {    
+            let mensaje = "Por favor, ingresa el apellido del socio."
+            document.formularioSociedad.apellidoSocio.focus();    
+            mostrarModalMensaje(mensaje)
+            return false; 
+        } 
+
+        // APELLIDO DEL SOCIO - ENTRE 3 Y 50 CARACTERES
+        if (document.formularioSociedad.apellidoSocio.value.length > 50 ||
+            document.formularioSociedad.apellidoSocio.value.length <= 2) {
+            let mensaje = 'Por favor, el apellido del socio debe tener entre 3 y 50 caracteres.';
+            document.formularioSociedad.apellidoSocio.focus();
+            mostrarModalMensaje(mensaje);
+            return false;
+        }
+
+        // APELLIDO DEL SOCIO - SOLO LETRAS
+        if (/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(document.formularioSociedad.apellidoSocio.value)) {
+            let mensaje = 'Por favor, el apellido del socio debe contener sólo letras.';
+            document.formularioSociedad.apellidoSocio.focus();
+            mostrarModalMensaje(mensaje);
+            return false;
+        }
+
+        // NOMBRE DEL SOCIO - VACIO 
+        if (document.formularioSociedad.nombreSocio.value.length==0 ) {    
+            let mensaje = "Por favor, ingresa el nombre del socio."
+            document.formularioSociedad.nombreSocio.focus();    
+            mostrarModalMensaje(mensaje)
+            return false; 
+        } 
+        
+        // NOMBRE DEL SOCIO - ENTRE 3 Y 50 CARACTERES
+        if (document.formularioSociedad.nombreSocio.value.length > 50 ||
+            document.formularioSociedad.nombreSocio.value.length <= 2) {
+            let mensaje = 'Por favor, el nombre del socio debe tener entre 3 y 50 caracteres.';
+            document.formularioSociedad.nombreSocio.focus();
+            mostrarModalMensaje(mensaje);
+            return false;
+        }
+
+        // NOMBRE DEL SOCIO - SOLO LETRAS
+        if (/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(document.formularioSociedad.nombreSocio.value)) {
+            let mensaje = 'Por favor, el nombre del socio debe contener sólo letras.';
+            document.formularioSociedad.nombreSocio.focus();
+            mostrarModalMensaje(mensaje);
+            return false;
+        }
+
+        // PORCENTAJE DE APORTES - VACIO
+        if (document.formularioSociedad.porcentajeAportes.value.length == 0)  {      
+            let $mensaje = 'Por favor, ingresá un porcentaje de aportes.';
+            document.formularioSociedad.porcentajeAportes.focus();
+            mostrarModalMensaje($mensaje);
+        return false; 
+        }
+
+        // PORCENTAJE DE APORTES - MAXIMO 3 NUMEROS
+        if (document.formularioSociedad.porcentajeAportes.value.length > 3) {
+            let mensaje = 'Por favor, el porcentaje de aportes debe tener como máximo 3 números.';
+            document.formularioSociedad.porcentajeAportes.focus();
+            mostrarModalMensaje(mensaje);
+            return false;
+        } 
+
+        // PORCENTAJE DE APORTES - SOLO NUMEROS   
+        if (/^[0-9]$/.test(document.formularioSociedad.porcentajeAportes.value)) {
+            let mensaje = 'Por favor, el porcentaje de aportes debe contener sólo números.';
+            document.formularioSociedad.porcentajeAportes.focus();
+            mostrarModalMensaje(mensaje);
+            return false;
+        }
+
+        // VALIDAR QUE NO SE PUEDAN INGRESAR GUIONES (O SIGNO MENOR)
+        // HACER
+    
 		Swal.fire({
 			icon: 'warning',
 			title: 'Atención!',
