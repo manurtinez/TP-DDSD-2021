@@ -16,23 +16,29 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'name']
 
 
+class SocioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Socio
+        fields = '__all__'
+
+
 class SocioSASerializer(serializers.ModelSerializer):
     class Meta:
         model = SocioSA
-        fields = ['id', 'partner', 'sa', 'is_representative', 'percentage']
+        fields = '__all__'
 
 
 class SociedadAnonimaSerializer(serializers.ModelSerializer):
     comformation_statute = serializers.FileField(required=False)
-    partners = SocioSASerializer(many=True, read_only=True)
+    partners = SocioSASerializer(many=True)
 
     class Meta:
         model = SociedadAnonima
-        fields = ['id', 'name', 'creation_date', 'partners', 'legal_domicile',
-                  'real_domicile', 'export_countries', 'comformation_statute']
+        fields = '__all__'
 
-
-class SocioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Socio
-        fields = ['id', 'first_name', 'last_name', 'email']
+    # def create(self, validated_data):
+    #     partners = validated_data.pop('partners', None)
+    #     instance = SociedadAnonima.objects.create(**validated_data)
+    #     for p in partners:
+    #         print(p)
+    #     return instance
