@@ -35,8 +35,9 @@ class Socio(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     percentage = models.FloatField(max_length=30)
+    is_representative = models.BooleanField(default=False)
     # Este es el email del apoderado (no todos los socios parecieran tenerlo)
-    representative_email = models.CharField(max_length=30, null=True)
+    email = models.CharField(max_length=30, null=True)
 
     def __str__(self):
         return self.first_name
