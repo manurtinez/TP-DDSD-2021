@@ -13,7 +13,7 @@
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-	<link href="{% static 'form.css' %}" rel="stylesheet" type="text/css"/>
+  <link href="{% static 'form.css' %}" rel="stylesheet" type="text/css" />
   <script type="text/javascript" src="{% static 'js/validaciones.js' %}"></script>
   <title>Alta de sociedad anónima</title>
 </head>
@@ -53,7 +53,8 @@
     <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Alta de sociedad</h3>
     <div class="card-body container mb-3 ">
       <div class=" container mt-4">
-        <form action="alta" method="POST" enctype="multipart/form-data" action="" class="text-left p-3" id="formContacto" name="formularioSociedad" onsubmit="return validarFormulario();">
+        <form action="alta" method="POST" enctype="multipart/form-data" action="" class="text-left p-3"
+          id="formContacto" name="formularioSociedad" onsubmit="return validarFormulario();">
           {% csrf_token %}
 
           <h4><span class="badge rounded-pill bg-info">Sociedad</span></h4>
@@ -61,7 +62,8 @@
             <div class="input-group mb-2">
               <span class="input-group-text border-0"> Nombre:</span>
               <div class="input-group-text"><i class="fas fa-users"></i></div>
-              <input type="text" class="form-control" id="nombreSociedad" name="nombreSociedad" placeholder="Por ej. Juan Rodriguez & Roberto Fernandez Sociedad de Hecho">
+              <input type="text" class="form-control" id="nombreSociedad" name="nombreSociedad"
+                placeholder="Por ej. Juan Rodriguez & Roberto Fernandez Sociedad de Hecho">
             </div>
 
             <div class="input-group mb-3">
@@ -164,7 +166,8 @@
               <div class="input-group mb-2">
                 <span class="input-group-text border-0">Apellido:</span>
                 <div class="input-group-text"><i class="fas fa-user-circle"></i></div>
-                <input type="text" class="form-control" id="apellidoSocio" name="apellidoSocio" placeholder="Por ej. Juan Rodriguez">
+                <input type="text" class="form-control" id="apellidoSocio" name="apellidoSocio"
+                  placeholder="Por ej. Juan Rodriguez">
               </div>
             </div>
 
@@ -172,40 +175,47 @@
               <div class="input-group mb-3">
                 <span class="input-group-text border-0">Nombre:</span>
                 <div class="input-group-text"><i class="fas fa-user-alt"></i></div>
-                <input type="text" class="form-control" id="nombreSocio" name="nombreSocio" placeholder="Por ej. Juan Rodriguez">
+                <input type="text" class="form-control" id="nombreSocio" name="nombreSocio"
+                  placeholder="Por ej. Juan Rodriguez">
               </div>
             </div>
-          <div class="row">
+
             <div class="col-auto">
               <div class="input-group mb-3">
                 <span class="input-group-text border-0">Aportes:</span>
-                <input type="number" class="form-control" id="porcentajeAportes" name="porcentajeAportes" placeholder="Por ej. 50">
+                <input type="number" class="form-control" id="porcentajeAportes" name="porcentajeAportes"
+                  placeholder="Por ej. 50">
                 <div class="input-group-text"><i class="fas fa-percent"></i></div>
               </div>
             </div>
             <div class="col-auto">
-              <button type="button" onclick="validarTotalSocios(parseInt(porcentajeAportes.value))" id="agregarSocio" class="btn btn-primary pl-5">+</button>
+              <button type="button" onclick="validarTotalSocios(parseInt(porcentajeAportes.value))" id="agregarSocio"
+                class="btn btn-primary pl-5">+</button>
             </div>
-          </div>
-            <table id="tablaSocios" class="table table-primary table-hover w-50 mx-auto text-center">
-              <caption>Socios Agregados</caption>
-            
-              <thead class="table-dark ">
-                <tr class="px-5">
-                  <th scope="col" style="width: 5%;">#</th>
-                  <th scope="col" style="width: 70%;">Socio</th>
-                  <th scope="col" class="px-0" style="width: 20%;">% Porcentaje</th>
-                  <th scope="col" style="width: 5%;">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-            
-              </tbody>
-            </table>
-            <div class="input-group mb-3">
+
+            <div class="input-group mb-2">
+              <table id="tablaSocios" class="table table-primary table-hover w-50 mx-auto text-center">
+                <caption>
+                  <h4><span class="badge rounded-pill bg-info">Listado de socios ingresados</span></h4>
+                </caption>
+                <thead class="table-dark ">
+                  <tr class="px-5">
+                    <th scope="col" style="width: 5%;">#</th>
+                    <th scope="col" style="width: 70%;">Socio</th>
+                    <th scope="col" class="px-0" style="width: 20%;">Acciones (%)</th>
+                    <th scope="col" style="width: 5%;">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="input-group mb-4">
               <span class="input-group-text border-0">Representante legal/apoderado: </span>
               <div class="input-group-text"><i class="fas fa-suitcase"></i></div>
-              <select class="form-select" id="representanteLegal" name="representanteLegal" aria-label="Default select example">
+              <select class="form-select" id="representanteLegal" name="representanteLegal"
+                aria-label="Default select example">
                 <option selected value="0">Selecioná un representante legal/apoderado...</option>
                 <option value="Representante 1">Representante 1</option>
                 <option value="Representante 2">Representante 2</option>
@@ -214,19 +224,20 @@
                 <option value="Representante 5">Representante 5</option>
               </select>
               <div class="d-flex flex-row">
-                <div class="p-2 text-start fst-italic"><i class="fas fa-info-circle fa-lg"></i> Representante sugerido:</div>
+                <div class="p-2 text-start fst-italic"><i class="fas fa-info-circle fa-lg"></i> Representante sugerido:
+                </div>
                 <div class="p-2 fw-bold">Roberto Perez - 50% de aportes</div>
               </div>
             </div>
 
             <div class="text-center mt-4">
-              <button type="submit" id="submit" class="btn btn-primary mb-4 mt-3"> <i class="fas fa-save"></i>  Guardar</button>
+              <button type="submit" id="submit" class="btn btn-primary mb-4 mt-3"> <i class="fas fa-save"></i>
+                Guardar</button>
             </div>
           </div>
 
         </form>
       </div>
-
     </div>
 </body>
 
