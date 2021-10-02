@@ -236,6 +236,30 @@ function validarTotalSocios(porcentajeASumar) {
         document.formularioSociedad.porcentajeAportes.value='';
 
 	} else {
+         // DNI DEL SOCIO - VACIO
+         if (document.formularioSociedad.dniSocio.value.length==0) {    
+            let mensaje = "Por favor, ingresa el DNI del socio."
+            document.formularioSociedad.dniSocio.focus();    
+            mostrarModalMensaje(mensaje)
+            return false; 
+        } 
+         // DNI DEL SOCIO - HASTA 8 CARACTERES
+         if (document.formularioSociedad.dniSocio.value.length > 8)  {
+            let mensaje = 'Por favor, el DNI del socio debe tener hasta 8 caracteres.';
+            document.formularioSociedad.dniSocio.focus();
+            mostrarModalMensaje(mensaje);
+            return false;
+        }
+
+        // DNI DEL SOCIO - SOLO NUMEROS
+        if (!(/^[0-9]+$/.test(document.formularioSociedad.dniSocio.value)))
+        {
+            let $mensaje = 'Por favor, el DNI del socio sólo puede contener números.';
+            document.formularioSociedad.dniSocio.focus();
+            mostrarModalMensaje($mensaje);
+            return false;
+        }
+
         // APELLIDO DEL SOCIO
         if (document.formularioSociedad.apellidoSocio.value.length==0 ) {    
             let mensaje = "Por favor, ingresa el apellido del socio."
@@ -302,24 +326,49 @@ function validarTotalSocios(porcentajeASumar) {
             return false;
         } 
 
+         // PORCENTAJE DE APORTES - MAXIMO 3 NUMEROS
+         if (document.formularioSociedad.porcentajeAportes.value == 0) {
+             alert("entro");
+             console.log(document.formularioSociedad.porcentajeAportes.value);
+            let mensaje = 'Por favor, el porcentaje de aportes debe ser un número positivo.';
+            document.formularioSociedad.porcentajeAportes.focus();
+            mostrarModalMensaje(mensaje);
+            return false;
+        } 
+
         // PORCENTAJE DE APORTES - SOLO NUMEROS   
-        if (/^[0-9]$/.test(document.formularioSociedad.porcentajeAportes.value)) {
+        /*if (/^[0-9]$/.test(document.formularioSociedad.porcentajeAportes.value)) {
             let mensaje = 'Por favor, el porcentaje de aportes debe contener sólo números.';
             document.formularioSociedad.porcentajeAportes.focus();
             mostrarModalMensaje(mensaje);
             return false;
-        }
-
-        // VALIDAR QUE NO SE PUEDAN INGRESAR GUIONES (O SIGNO MENOR)
-        // HACER
+        } */
     
-		Swal.fire({
-			icon: 'warning',
-			title: 'Atención!',
-			text: 'Por favor ingrese un porcentaje menor o igual a ' + (100 - totalPorcentajeSocios)
-		})
+        if (totalPorcentajeSocios == 100) {
+            let $mensaje = 'Por favor, ya se ha completado el 100% del porcentaje de acciones.';           
+            mostrarModalMensaje($mensaje)
+            return false;
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: '¡Atención!',
+                confirmButtonColor: '#1266f1',
+                confirmButtonText: 'Cerrar',
+                text: 'Por favor ingrese un porcentaje menor o igual a ' + (100 - totalPorcentajeSocios),
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                  },
+                  hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                  }
+            })
+
+        }
+    
+		
 	}
 	refrescarTabla();
+    dniSocio.value = "";
     apellidoSocio.value = nombreSocio.value = "";
 	porcentajeAportes.value = "";
 	apellidoSocio.focus();
