@@ -212,9 +212,9 @@ function customSelect(event, multiSelect) {
 
 function validarSocio() {
 	// APELLIDO DEL SOCIO
-	if (document.formularioSociedad.nombreSocio.value.length == 0) {
+	if (document.formularioSociedad.apellidoSocio.value.length == 0) {
 		let mensaje = "Por favor, ingresa el apellido del socio."
-		document.formularioSociedad.nombreSocio.focus();
+		document.formularioSociedad.apellidoSocio.focus();
 		mostrarModalMensaje(mensaje)
 		return false;
 	}

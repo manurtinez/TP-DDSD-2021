@@ -12,14 +12,15 @@ def default_country_list():
 class SociedadAnonima(models.Model):
     name = models.CharField(max_length=30)
     creation_date = models.DateTimeField(auto_now_add=True)
-    partners = models.ManyToManyField('Socio', through='SocioSA', related_name='socio_sa')
+    partners = models.ManyToManyField(
+        'Socio', through='SocioSA')
     legal_domicile = models.CharField(max_length=30)
     real_domicile = models.CharField(max_length=30)
     export_countries = ArrayField(models.CharField(
         max_length=30), default=default_country_list)
 
     # TODO El file va a haber que definir donde se sube, por ahora local
-    comformation_statute = models.FileField(upload_to='uploads/')
+    comformation_statute = models.FileField(upload_to='uploads/', null=True)
 
     class Meta:
         ordering = ['-name']
@@ -31,6 +32,7 @@ class SociedadAnonima(models.Model):
 class Socio(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    dni = models.IntegerField(unique=True)
     # Este es el email del apoderado (no todos los socios parecieran tenerlo)
     email = models.CharField(max_length=30, null=True)
 
@@ -48,3 +50,7 @@ class SocioSA(models.Model):
     percentage = models.FloatField(max_length=4)
     # Este atributo indica si el socio es apoderado de la SA. Se puede llegar al socio en cuestion a traves de esto
     is_representative = models.BooleanField(default=False)
+
+    class Meta():
+        # Solo puede existir un par de (socio, SA)
+        unique_together = [['partner', 'sa']]

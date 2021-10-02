@@ -16,23 +16,56 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'name']
 
 
+class SocioSerializer(serializers.ModelSerializer):
+    """
+    Este serializer corresponde a la clase Socio
+    """
+    class Meta:
+        model = Socio
+        fields = '__all__'
+
+
 class SocioSASerializer(serializers.ModelSerializer):
+    """
+    Este serializer corresponde a la clase (join table) SocioSA
+    """
     class Meta:
         model = SocioSA
-        fields = ['id', 'partner', 'sa', 'is_representative', 'percentage']
+        fields = '__all__'
+
+
+class SocioPercentageSerializer(serializers.Serializer):
+    """
+    Este serializer sirve para recibir una tupla de id y porcentaje por cada socio al cargar una sociedad anonima
+    """
+    id = serializers.PrimaryKeyRelatedField(queryset=Socio.objects.all())
+    percentage = serializers.IntegerField()
 
 
 class SociedadAnonimaSerializer(serializers.ModelSerializer):
+    """
+    Este serializer corresponde a la clase SociedadAnonima (para el create)
+    """
     comformation_statute = serializers.FileField(required=False)
-    partners = SocioSASerializer(many=True, read_only=True)
+    partners = SocioPercentageSerializer(many=True)
 
     class Meta:
         model = SociedadAnonima
-        fields = ['id', 'name', 'creation_date', 'partners', 'legal_domicile',
-                  'real_domicile', 'export_countries', 'comformation_statute']
+        fields = '__all__'
 
 
-class SocioSerializer(serializers.ModelSerializer):
+class SociedadAnonimaRetrieveSerializer(serializers.ModelSerializer):
+    """
+    Este serializer corresponde a la clase SociedadAnonima (para el get). Parsea correctamente el array de partners
+    """
+    comformation_statute = serializers.FileField(required=False)
+    # ! El nombre de este campo va a ser mejorado con el codigo comentado de abajo
+    sociosa_set = SocioSASerializer(many=True)
+
     class Meta:
-        model = Socio
-        fields = ['id', 'first_name', 'last_name', 'email']
+        model = SociedadAnonima
+        fields = '__all__'
+
+    #     def get_partners(self, obj):
+    #     return SocioSASerializer(instance=obj.sociosa_set.all(), many=True)
+    # partners = serializers.SerializerMethodField()
