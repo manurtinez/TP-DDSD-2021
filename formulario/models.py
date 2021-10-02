@@ -20,7 +20,7 @@ class SociedadAnonima(models.Model):
         max_length=30), default=default_country_list)
 
     # TODO El file va a haber que definir donde se sube, por ahora local
-    comformation_statute = models.FileField(upload_to='uploads/')
+    comformation_statute = models.FileField(upload_to='uploads/', null=True)
 
     class Meta:
         ordering = ['-name']
@@ -51,6 +51,6 @@ class SocioSA(models.Model):
     # Este atributo indica si el socio es apoderado de la SA. Se puede llegar al socio en cuestion a traves de esto
     is_representative = models.BooleanField(default=False)
 
-    # class Meta():
-    #     # Solo puede existir un par de (socio, SA)
-    #     unique_together = [['partner', 'sa']]
+    class Meta():
+        # Solo puede existir un par de (socio, SA)
+        unique_together = [['partner', 'sa']]
