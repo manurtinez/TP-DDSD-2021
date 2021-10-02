@@ -11,7 +11,7 @@ def default_country_list():
 
 class SociedadAnonima(models.Model):
     name = models.CharField(max_length=30)
-    creation_date = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateField()
     partners = models.ManyToManyField(
         'Socio', through='SocioSA')
     legal_domicile = models.CharField(max_length=30)
@@ -21,6 +21,8 @@ class SociedadAnonima(models.Model):
 
     # TODO El file va a haber que definir donde se sube, por ahora local
     comformation_statute = models.FileField(upload_to='uploads/', null=True)
+
+    representative_email = models.CharField(max_length=30)
 
     class Meta:
         ordering = ['-name']
@@ -34,7 +36,6 @@ class Socio(models.Model):
     last_name = models.CharField(max_length=30)
     dni = models.IntegerField(unique=True)
     # Este es el email del apoderado (no todos los socios parecieran tenerlo)
-    email = models.CharField(max_length=30, null=True)
 
     class Meta:
         ordering = ['-first_name']
