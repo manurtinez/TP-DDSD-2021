@@ -15,7 +15,7 @@ function validarFormulario() {
 		return false;
 	}
 
-	// NOMBRE DEL SOCIO - ENTRE 3 Y 50 CARACTERES
+	// NOMBRE DEL SOCIEDAD - ENTRE 3 Y 50 CARACTERES
 	if (document.formularioSociedad.nombreSociedad.value.length > 50 ||
 		document.formularioSociedad.nombreSociedad.value.length <= 2) {
 		let mensaje = 'Por favor, el nombre de la sociedad debe tener entre 3 y 50 caracteres.';
@@ -175,7 +175,33 @@ function validarFormulario() {
 		return false;
 	}
 
+	// fetch
+	registrarSocioAPI();
+
+
+
 	return true;
+}
+
+function registrarSocioAPI() {
+	fetch('http://localhost:8000/sociedad-anonima/socio', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+
+		},
+		body: JSON.stringify({
+			first_name: 'Juan',
+			last_name : 'MarasPrueba',
+			dni: '3369311',
+			email: 'matimosquet@gmail.com'
+		}) 		
+	})
+//	.then(response => response.json())
+//	.then(json => console.log(json))
+	//console.log("Response "+response);
+//	console.log("json "+json);
+
 }
 
 
@@ -211,7 +237,11 @@ function customSelect(event, multiSelect) {
 }
 
 function validarSocio() {
-	// APELLIDO DEL SOCIO
+
+	// USAR ESTAS FUNCIONES EN EL SWEET ALERT
+
+	
+	// APELLIDO DEL SOCIO - VACIO
 	if (document.formularioSociedad.apellidoSocio.value.length == 0) {
 		let mensaje = "Por favor, ingresa el apellido del socio."
 		document.formularioSociedad.apellidoSocio.focus();
@@ -261,6 +291,7 @@ function validarSocio() {
 		return false;
 	}
 
+
 	// PORCENTAJE DE APORTES - VACIO
 	if (document.formularioSociedad.porcentajeAportes.value.length == 0) {
 		let $mensaje = 'Por favor, ingresá un porcentaje de aportes.';
@@ -303,6 +334,65 @@ function validarSocio() {
 		return false;
 	}
 
+	return true;
+}
+
+function validarInsercionSocio(){
+	// APELLIDO DEL SOCIO - VACIO
+	if (document.formularioSociedad.apellidoSocio.value.length == 0) {
+		let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
+		document.formularioSociedad.apellidoSocio.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+	// NOMBRE DEL SOCIO - VACIO 
+	if (document.formularioSociedad.nombreSocio.value.length == 0) {
+		let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
+		document.formularioSociedad.nombreSocio.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+	// PORCENTAJE DE APORTES - VACIO
+	if (document.formularioSociedad.porcentajeAportes.value.length == 0) {
+		let $mensaje = 'Por favor, ingresá un porcentaje de aportes.';
+		document.formularioSociedad.porcentajeAportes.focus();
+		mostrarModalMensaje($mensaje);
+		return false;
+	}
+
+	// PORCENTAJE DE APORTES - MAXIMO 3 NUMEROS
+	if (document.formularioSociedad.porcentajeAportes.value.length > 3) {
+		let mensaje = 'Por favor, el porcentaje de aportes debe tener como máximo 3 números.';
+		document.formularioSociedad.porcentajeAportes.focus();
+		mostrarModalMensaje(mensaje);
+		return false;
+	}
+
+	// // *Revisar PORCENTAJE DE APORTES - SOLO NUMEROS   
+	// if (/^[0-9]$/.test(document.formularioSociedad.porcentajeAportes.valueAsNumber)) {
+	// 	let mensaje = 'Por favor, el porcentaje de aportes debe contener sólo números.';
+	// 	document.formularioSociedad.porcentajeAportes.focus();
+	// 	mostrarModalMensaje(mensaje);
+	// 	return false;
+	// }
+
+	// VALIDAR QUE NO SE PUEDAN INGRESAR GUIONES (O SIGNO MENOR)
+	// HACER
+
+	// PORCENTAJE DE APORTES - CONTROLAR SUMA
+	if (totalPorcentajeSocios + porcentajeAportes.valueAsNumber > 100) {
+		let mensaje = 'Por favor ingrese un porcentaje menor o igual a ' + (100 - totalPorcentajeSocios);
+		porcentajeAportes.focus();
+		mostrarModalMensaje(mensaje);
+		return false;
+	}
+	// PORCENTAJE DE APORTES - NUMEROS NEGATIVOS
+	if (porcentajeAportes.valueAsNumber < 0) {
+		let mensaje = 'Por favor ingrese un porcentaje, mayor a 0 y menor o igual a ' + (100 - totalPorcentajeSocios);
+		porcentajeAportes.focus();
+		mostrarModalMensaje(mensaje);
+		return false;
+	}
 	return true;
 }
 
@@ -414,16 +504,27 @@ function validarDniSocio() {
 		mostrarModalMensaje($mensaje);
 		return false;
 	}
+	return true
 }
 
 async function getSocioAsync() {	
-	let response = await fetch('localhost/sociedad-anonima/socio?dni=' + dni);
-	let socio = await response.json();
+	let response = await fetch('http://localhost:8000/sociedad-anonima/socio?dni=' + dniSocio.value);
+	let socio = await response.json(); 
+	// fetch('http://localhost:8000/sociedad-anonima/socio?dni=' + dniSocio.value) 
+	// 	.then(response => response.json())
+	// 	.then(json => console.log(json))
+	// 	console.log(response);
+	// 	debugger;
+				
+
 	if (socio.length >= 1) {
-		apellidoSocio.disabled = nombreSocio.readonly = true;
-		apellidoSocio.value = socio.apellido;
-		nombreSocio.value = socio.nombre;
-		containerAportes.hidden = containerSocio.hidden = false;
+		apellidoSocio.disabled = true;
+		nombreSocio.disabled = true;
+
+		apellidoSocio.value = socio[0].last_name;
+		nombreSocio.value = socio[0].first_name;
+		containerAportes.hidden = false;
+		containerSocio.hidden = false;
 	} else {
 		// let mensaje = "No se ha encontrado el socio, por favor ingresalo."
 		// apellidoSocio.focus();
@@ -450,7 +551,22 @@ function registrarSocio(){
 		reverseButtons: true,
 		showLoaderOnConfirm: true,
 		preConfirm: (socio) => {  
-			return fetch(`localhost/sociedad-anonima/registrar-socio?nombre=${nombreSocioRegistro.value}&apellido=${apellidoSocioRegistro.value}`)
+			return fetch('http://localhost:8000/sociedad-anonima/socio', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+
+			},
+			body: JSON.stringify({
+				first_name: nombreSocioRegistro.value,
+				last_name : apellidoSocioRegistro.value,
+				dni: '3369311',
+				email: 'matimosquet@gmail.com'
+				}) 		
+			})
+
+			
+			/*
 				.then(response => {
 					if (!response.ok) {
 						throw new Error(response.statusText)
@@ -461,8 +577,26 @@ function registrarSocio(){
 					Swal.showValidationMessage(
 						`${error}. No se pudo crear el socio`
 					)
-				})
+				}) */
 		},
+		/*
+		fetch('http://localhost:8000/sociedad-anonima/socio', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+
+		},
+		body: JSON.stringify({
+			first_name: nombreSocioRegistro.value,
+			last_name : apellidoSocioRegistro.value,
+			dni: '3369311',
+			email: 'matimosquet@gmail.com'
+			}) 		
+		})
+
+
+	
+
 		allowOutsideClick: () => !Swal.isLoading()
 	}).then((result) => {
 		if (result.isConfirmed) {
@@ -470,6 +604,6 @@ function registrarSocio(){
 				title: `${result.value.socio}'s avatar`,
 				imageUrl: result.value.avatar_url
 			})
-		}
-	})
+		}*/
+	})	
 }

@@ -165,12 +165,12 @@
           </div>
         </div>
         <div class="col-auto cmb-4">
-          <button type="button" onclick="if(validarDni()){getSocioAsync()}" id="btnBuscarSocio" class="btn btn-primary pl-5"><i
+          <button type="button" onclick="if(validarDniSocio()){getSocioAsync()}" id="btnBuscarSocio" class="btn btn-primary pl-5"><i
               class="fas fa-search"></i></button>
         </div>
       </div>
 
-      <div class="row" id="containerSocio" >
+      <div class="row" id="containerSocio" hidden>
         <div class="col-auto cmb-4">
           <div class="input-group">
             <span class="input-group-text border-0">Apellido:</span>
@@ -187,13 +187,14 @@
               placeholder="Por ej. Juan Rodriguez">
           </div>
         </div>
+        <!--
         <div class="col-auto cmb-4">
-          <button type="button" onclick="" id="btnRegistrarSocio" class="btn btn-primary "><i
+          <button type="button" onclick="registrarSocioAPI()" id="btnRegistrarSocio" class="btn btn-primary "><i
               class="fas fa-user-plus"></i></button>
         </div>
+        -->
       </div>
-
-      <div class="row" id="containerAportes" >
+      <div class="row" id="containerAportes" hidden>
         <div class="col-auto cmb-4">
           <div class="input-group">
             <span class="input-group-text border-0">Aportes:</span>
@@ -203,7 +204,7 @@
           </div>
         </div>
         <div class="col-auto cmb-4">
-          <button type="button" onclick="if (validarSocio()){agregarSocio(parseInt(porcentajeAportes.value))}"
+          <button type="button" onclick="if (validarInsercionSocio()){agregarSocio(parseInt(porcentajeAportes.value))}"
             id="btnAgregarSocio" class="btn btn-primary pl-5">+</button>
         </div>
       </div>
