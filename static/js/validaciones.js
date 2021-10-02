@@ -177,23 +177,6 @@ function validarFormulario() {
 }
 
 
-function mostrarModalMensaje(mensaje) {
-    Swal.fire({
-      icon: 'warning',            
-      title: '¡Atención!',
-      text: mensaje,
-      confirmButtonColor: '#1266f1',
-      confirmButtonText: 'Cerrar',
-      showClass: {
-          popup: 'animate__animated animate__fadeInDown'
-        },
-        hideClass: {
-          popup: 'animate__animated animate__fadeOutUp'
-        }
-    })
-
-}
-
 function customSelect(event,multiSelect) {
 	optionIndex = event.target.index;
 	if(opcionesSeleccionadas.has(optionIndex)){
@@ -335,6 +318,7 @@ function validarTotalSocios(porcentajeASumar) {
             mostrarModalMensaje(mensaje);
             return false;
         } 
+      
 
         // PORCENTAJE DE APORTES - SOLO NUMEROS   
         /*if (/^[0-9]$/.test(document.formularioSociedad.porcentajeAportes.value)) {
@@ -349,29 +333,17 @@ function validarTotalSocios(porcentajeASumar) {
             mostrarModalMensaje($mensaje)
             return false;
         } else {
-            Swal.fire({
-                icon: 'warning',
-                title: '¡Atención!',
-                confirmButtonColor: '#1266f1',
-                confirmButtonText: 'Cerrar',
-                text: 'Por favor ingrese un porcentaje menor o igual a ' + (100 - totalPorcentajeSocios),
-                showClass: {
-                    popup: 'animate__animated animate__fadeInDown'
-                  },
-                  hideClass: {
-                    popup: 'animate__animated animate__fadeOutUp'
-                  }
-            })
-
+            porcentajeAportes.focus();
+            validarPorcentajeFaltante(100 - totalPorcentajeSocios);
+            porcentajeAportes.value = "";            
+            return false;
         }
-    
-		
 	}
 	refrescarTabla();
     dniSocio.value = "";
     apellidoSocio.value = nombreSocio.value = "";
 	porcentajeAportes.value = "";
-	apellidoSocio.focus();
+	dniSocio.focus();
 }
 
 function refrescarTabla() {
@@ -383,4 +355,37 @@ function refrescarTabla() {
             agregarSocio.disabled = true;
 		}
 	}
+}
+
+function mostrarModalMensaje(mensaje) {
+    Swal.fire({
+      icon: 'warning',            
+      title: '¡Atención!',
+      text: mensaje,
+      confirmButtonColor: '#1266f1',
+      confirmButtonText: 'Cerrar',
+      showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
+    })
+}
+
+
+function validarPorcentajeFaltante(porcentaje) {
+    Swal.fire({
+        icon: 'warning',
+        title: '¡Atención!',
+        confirmButtonColor: '#1266f1',
+        confirmButtonText: 'Cerrar',
+        text: 'Por favor ingrese un porcentaje menor o igual a ' + (porcentaje),
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+    })
 }
