@@ -38,4 +38,39 @@ caption{
 	float: left;
 }
 
+#formContacto{
+	background-color: aliceblue;
+}
 
+#bodyFormulario{
+	padding: 2rem !important;
+	background-color: white;
+}
+
+.cmy-1{
+	margin-top: 0.5rem !important;
+	margin-bottom: 0.5rem !important;
+}
+
+.cmy-2{
+	margin-top: 1rem !important;
+	margin-bottom: 1rem !important;
+}
+
+.cmy-3{
+	margin-top: 1.5rem !important;
+	margin-bottom: 1.5rem !important;
+	}
+
+.cmy-4{
+margin-top: 2rem !important;
+margin-bottom: 2rem !important;
+}
+
+.cmb-4{
+margin-bottom: 2rem !important;
+}
+
+.cursor-pointer{
+	cursor: pointer;
+}
