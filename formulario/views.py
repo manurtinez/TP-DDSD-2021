@@ -61,15 +61,16 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         """
         Este metodo define la creacion de los objetos Sociedad Anonima
         """
-        data = request.data
-
-        # Se crea la nueva SA y se guarda
-        new_sa = SociedadAnonima.objects.create(name=data['name'], legal_domicile=data['legal_domicile'],
-                                                real_domicile=data['real_domicile'], export_countries=data['export_countries'])
-        new_sa.save()
-
         serializer = SociedadAnonimaSerializer(data=request.data)
         if serializer.is_valid():
+            data = request.data
+
+            # Se crea la nueva SA y se guarda
+            new_sa = SociedadAnonima.objects.create(name=data['name'], legal_domicile=data['legal_domicile'], creation_date=data['creation_date'],
+                                                    real_domicile=data['real_domicile'], export_countries=data['export_countries'],
+                                                    representative_email=data['representative_email'])
+            new_sa.save()
+
             # Se agregan los socios que hayan venido
             partners = data['partners']
             for socio in partners:
