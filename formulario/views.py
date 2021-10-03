@@ -1,6 +1,5 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from rest_framework import status, permissions, viewsets
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from formulario.models import Socio, SociedadAnonima
@@ -12,18 +11,6 @@ import json
 # accederla
 
 # Create your views here.
-
-
-@api_view(['GET'])
-@permission_classes((permissions.AllowAny,))
-def index(request):
-    return render(request, 'index.html')
-
-
-@api_view(['GET'])
-@permission_classes((permissions.AllowAny,))
-def alta_formulario(request):
-    return render(request, 'altaDeFormulario.html')
 
 
 class SocioViewSet(viewsets.ModelViewSet):

@@ -1,12 +1,13 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
-from .views import alta_formulario, index, SocioViewSet, SociedadAnonimaViewSet
+from .views import SocioViewSet, SociedadAnonimaViewSet
 
 urlpatterns = [
-    path('sociedad-anonima/alta', alta_formulario, name="altaDeFormulario"),
+    path('sociedad-anonima/alta', TemplateView.as_view(
+        template_name='altaDeFormulario.html'), name="alta_formulario"),
     path('sociedad-anonima/sa',
          SociedadAnonimaViewSet.as_view({'get': 'list', 'post': 'create'})),
     path('sociedad-anonima/socio',
-         SocioViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('', index)
+         SocioViewSet.as_view({'get': 'list', 'post': 'create'}))
 ]
