@@ -40,6 +40,7 @@ class SocioPercentageSerializer(serializers.Serializer):
     """
     id = serializers.PrimaryKeyRelatedField(queryset=Socio.objects.all())
     percentage = serializers.IntegerField()
+    is_representative = serializers.BooleanField(default=False)
 
 
 class SociedadAnonimaSerializer(serializers.ModelSerializer):
