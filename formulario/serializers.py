@@ -40,6 +40,7 @@ class SocioPercentageSerializer(serializers.Serializer):
     """
     id = serializers.PrimaryKeyRelatedField(queryset=Socio.objects.all())
     percentage = serializers.IntegerField()
+    is_representative = serializers.BooleanField(default=False)
 
 
 class SociedadAnonimaSerializer(serializers.ModelSerializer):
@@ -64,8 +65,19 @@ class SociedadAnonimaRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SociedadAnonima
-        fields = '__all__'
+        fields = ['name', 'real_domicile', 'legal_domicile', 'creation_date',
+                  'comformation_statute', 'export_countries', 'representative_email', 'sociosa_set']
+        read_only_fields = (
+            'id',
+        )
 
     #     def get_partners(self, obj):
     #     return SocioSASerializer(instance=obj.sociosa_set.all(), many=True)
     # partners = serializers.SerializerMethodField()
+
+
+class FileSerializer(serializers.Serializer):
+    """
+    Este serializer corresponde al archivo de estatuto subido para una sociedad anonima
+    """
+    file = serializers.FileField(required=True)

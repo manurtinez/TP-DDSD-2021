@@ -1,9 +1,10 @@
 from django.shortcuts import redirect
 from rest_framework import status, permissions, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from formulario.models import Socio, SociedadAnonima
-from formulario.serializers import SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
+from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
 import json
 
@@ -64,13 +65,24 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                 partner = Socio.objects.get(pk=socio['id'])
                 # !! Por ahora el porcentaje esta hardcodeado hasta que este el array de socios del front
                 new_sa.partners.add(
-                    partner, through_defaults={'percentage': socio['percentage']})
+                    partner, through_defaults={'percentage': socio['percentage'], 'is_representative': socio.get('is_representative', False)})
             return redirect('/')
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=True, methods=['post'], url_name='upload_file')
+    def upload_file(self, request, pk=None):
+        sa = self.get_object()
+        serializer = FileSerializer(data=request.data)
+        if serializer.is_valid():
+            file = request.data['file']
+            sa.comformation_statute.save(file.name, file, save=True)
+            return Response({'status': 'Archivo guardado con exito'})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.request.method == 'POST':
             return SociedadAnonimaSerializer
         else:
             return SociedadAnonimaRetrieveSerializer
