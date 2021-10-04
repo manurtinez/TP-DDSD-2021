@@ -49,8 +49,8 @@
     </div>
   </nav>
 
-  <form action="alta" method="POST" enctype="multipart/form-data" action="" class="card container shadow pb-4 px-4 my-5"
-    id="formContacto" name="formularioSociedad" onsubmit="return validarFormulario();">
+  <form action={% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data" class="card container shadow pb-4 px-4 my-5"
+    id="formContacto" name="formularioSociedad" onsubmit="return validarFormulario(event);">
     {% csrf_token %}
    <!-- <input type="hidden" name="csrfmiddlewaretoken" value="pHK2CZzBB323BM2Nq7DE2sxnQoBG1jPl" disabled="">-->
     <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Alta de sociedad</h3>

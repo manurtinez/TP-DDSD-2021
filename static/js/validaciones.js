@@ -5,7 +5,8 @@ const columnaNombre = 1;
 const columnaPorcentaje = 2;
 const opcionesSeleccionadas = new Set();
 
-function validarFormulario() {
+function validarFormulario(event) {
+	event.preventDefault()
 
 	// NOMBRE DE LA SOCIEDAD
 	if (document.formularioSociedad.nombreSociedad.value.length == 0) {
@@ -183,7 +184,7 @@ function validarFormulario() {
 }
 
 function registrarSocioAPI() {
-	fetch('http://localhost:8000/sociedad_anonima/socio', {
+	fetch('http://localhost:8000/socio/', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -221,9 +222,9 @@ function getCookie(name) {
 const csrftoken = getCookie('csrftoken');
 
 
-function registrarSociedad() {
+async function registrarSociedad() {
 
-	fetch('http://localhost:8000/sociedad-anonima/sa', {
+	const response = await fetch('http://localhost:8000/sociedad_anonima/', {
 		method: 'POST',
 		headers: {
 			'X-CSRFToken': csrftoken,
@@ -239,7 +240,11 @@ function registrarSociedad() {
 					"Bolivia, Paraguay, Venezuela"],
 				creation_date: document.formularioSociedad.fechaCreacion.value			
 			}) 		
-		})
+		});
+	const parsedResponse = await response.json();
+	// Aca habria que hacer el segundo request para subir el file,
+	// redireccionar a la pagina correspondiende
+	console.log(parsedResponse);
 }
 
 
@@ -546,9 +551,9 @@ function validarDniSocio() {
 }
 
 async function getSocioAsync() {	
-	let response = await fetch('http://localhost:8000/sociedad_anonima/socio?dni=' + dniSocio.value);
+	let response = await fetch('http://localhost:8000/socio?dni=' + dniSocio.value);
 	let socio = await response.json(); 
-	// fetch('http://localhost:8000/sociedad_anonima/socio?dni=' + dniSocio.value) 
+	// fetch('http://localhost:8000/socio?dni=' + dniSocio.value) 
 	// 	.then(response => response.json())
 	// 	.then(json => console.log(json))
 	// 	console.log(response);
@@ -589,7 +594,7 @@ function registrarSocio(){
 		reverseButtons: true,
 		showLoaderOnConfirm: true,
 		preConfirm: (socio) => {  
-			return fetch('http://localhost:8000/sociedad_anonima/socio', {
+			return fetch('http://localhost:8000/socio/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -618,7 +623,7 @@ function registrarSocio(){
 				}) */
 		},
 		/*
-		fetch('http://localhost:8000/sociedad_anonima/socio', {
+		fetch('http://localhost:8000/socio/', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
