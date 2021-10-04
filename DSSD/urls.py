@@ -17,8 +17,18 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 
+from rest_framework.schemas import get_schema_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
-    path('', include('formulario.urls'))
+    path('', include('formulario.urls')),
+
+    # Estos path son para la documentacion de swagger / openapi
+    path('openapi', get_schema_view(title='Docs del proyecto',
+         description='Aca se describen los endpoints de la api'), name='openapi-schema'),
+    path('docs/', TemplateView.as_view(
+        template_name='swagger.html',
+        extra_context={'schema_url': 'openapi-schema'}
+    ), name='swagger-ui'),
 ]
