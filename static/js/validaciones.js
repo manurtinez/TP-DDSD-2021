@@ -14,7 +14,7 @@ function validarFormulario() {
 		mostrarModalMensaje(mensaje)
 		return false;
 	}
-	
+
 
 	// NOMBRE DEL SOCIEDAD - ENTRE 3 Y 50 CARACTERES
 	if (document.formularioSociedad.nombreSociedad.value.length > 50 ||
@@ -191,32 +191,32 @@ function registrarSocioAPI() {
 		},
 		body: JSON.stringify({
 			first_name: 'Juan',
-			last_name : 'MarasPrueba',
+			last_name: 'MarasPrueba',
 			dni: '3369311',
 			email: 'matimosquet@gmail.com'
-		}) 		
+		})
 	})
-//	.then(response => response.json())
-//	.then(json => console.log(json))
+	//	.then(response => response.json())
+	//	.then(json => console.log(json))
 	//console.log("Response "+response);
-//	console.log("json "+json);
+	//	console.log("json "+json);
 
 }
 
 function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
+	let cookieValue = null;
+	if (document.cookie && document.cookie !== '') {
+		const cookies = document.cookie.split(';');
+		for (let i = 0; i < cookies.length; i++) {
+			const cookie = cookies[i].trim();
+			// Does this cookie string begin with the name we want?
+			if (cookie.substring(0, name.length + 1) === (name + '=')) {
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				break;
+			}
+		}
+	}
+	return cookieValue;
 }
 const csrftoken = getCookie('csrftoken');
 
@@ -230,16 +230,20 @@ function registrarSociedad() {
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
-				name: document.formularioSociedad.nombreSociedad.value,
-				real_domicile: document.formularioSociedad.domicilioReal.value,
-				legal_domicile: document.formularioSociedad.domicilioLegal.value,
-				partners: [ {"id": 1, "percentage": 50}],
-				representative_email: document.formularioSociedad.mailApoderado.value,
-				export_countries: [
-					"Bolivia, Paraguay, Venezuela"],
-				creation_date: document.formularioSociedad.fechaCreacion.value			
-			}) 		
+			name: document.formularioSociedad.nombreSociedad.value,
+			real_domicile: document.formularioSociedad.domicilioReal.value,
+			legal_domicile: document.formularioSociedad.domicilioLegal.value,
+			partners: [{
+				"id": 1,
+				"percentage": 50
+			}],
+			representative_email: document.formularioSociedad.mailApoderado.value,
+			export_countries: [
+				"Bolivia, Paraguay, Venezuela"
+			],
+			creation_date: document.formularioSociedad.fechaCreacion.value
 		})
+	})
 }
 
 
@@ -274,62 +278,24 @@ function customSelect(event, multiSelect) {
 	event.preventDefault();
 }
 
-function validarSocio() {
 
-	// USAR ESTAS FUNCIONES EN EL SWEET ALERT
-
-	
+function validarInsercionSocio() {
+/*
 	// APELLIDO DEL SOCIO - VACIO
 	if (document.formularioSociedad.apellidoSocio.value.length == 0) {
-		let mensaje = "Por favor, ingresa el apellido del socio."
+		let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
 		document.formularioSociedad.apellidoSocio.focus();
 		mostrarModalMensaje(mensaje)
 		return false;
 	}
-
-	// APELLIDO DEL SOCIO - ENTRE 3 Y 50 CARACTERES
-	if (document.formularioSociedad.apellidoSocio.value.length > 50 ||
-		document.formularioSociedad.apellidoSocio.value.length <= 2) {
-		let mensaje = 'Por favor, el apellido del socio debe tener entre 3 y 50 caracteres.';
-		document.formularioSociedad.apellidoSocio.focus();
-		mostrarModalMensaje(mensaje);
-		return false;
-	}
-
-	// APELLIDO DEL SOCIO - SOLO LETRAS
-	if (/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(document.formularioSociedad.apellidoSocio.value)) {
-		let mensaje = 'Por favor, el apellido del socio debe contener sólo letras.';
-		document.formularioSociedad.apellidoSocio.focus();
-		mostrarModalMensaje(mensaje);
-		return false;
-	}
-
 	// NOMBRE DEL SOCIO - VACIO 
 	if (document.formularioSociedad.nombreSocio.value.length == 0) {
-		let mensaje = "Por favor, ingresa el nombre del socio."
+		let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
 		document.formularioSociedad.nombreSocio.focus();
 		mostrarModalMensaje(mensaje)
 		return false;
 	}
-
-	// NOMBRE DEL SOCIO - ENTRE 3 Y 50 CARACTERES
-	if (document.formularioSociedad.nombreSocio.value.length > 50 ||
-		document.formularioSociedad.nombreSocio.value.length <= 2) {
-		let mensaje = 'Por favor, el nombre del socio debe tener entre 3 y 50 caracteres.';
-		document.formularioSociedad.nombreSocio.focus();
-		mostrarModalMensaje(mensaje);
-		return false;
-	}
-
-	// NOMBRE DEL SOCIO - SOLO LETRAS
-	if (/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(document.formularioSociedad.nombreSocio.value)) {
-		let mensaje = 'Por favor, el nombre del socio debe contener sólo letras.';
-		document.formularioSociedad.nombreSocio.focus();
-		mostrarModalMensaje(mensaje);
-		return false;
-	}
-
-
+*/
 	// PORCENTAJE DE APORTES - VACIO
 	if (document.formularioSociedad.porcentajeAportes.value.length == 0) {
 		let $mensaje = 'Por favor, ingresá un porcentaje de aportes.';
@@ -346,86 +312,23 @@ function validarSocio() {
 		return false;
 	}
 
-	// // *Revisar PORCENTAJE DE APORTES - SOLO NUMEROS   
-	// if (/^[0-9]$/.test(document.formularioSociedad.porcentajeAportes.valueAsNumber)) {
-	// 	let mensaje = 'Por favor, el porcentaje de aportes debe contener sólo números.';
-	// 	document.formularioSociedad.porcentajeAportes.focus();
-	// 	mostrarModalMensaje(mensaje);
-	// 	return false;
-	// }
-
-	// VALIDAR QUE NO SE PUEDAN INGRESAR GUIONES (O SIGNO MENOR)
-	// HACER
-
-	// PORCENTAJE DE APORTES - CONTROLAR SUMA
-	if (totalPorcentajeSocios + porcentajeAportes.valueAsNumber > 100) {
-		let mensaje = 'Por favor ingrese un porcentaje menor o igual a ' + (100 - totalPorcentajeSocios);
-		porcentajeAportes.focus();
-		mostrarModalMensaje(mensaje);
-		return false;
-	}
-	// PORCENTAJE DE APORTES - NUMEROS NEGATIVOS
-	if (porcentajeAportes.valueAsNumber < 0) {
-		let mensaje = 'Por favor ingrese un porcentaje, mayor a 0 y menor o igual a ' + (100 - totalPorcentajeSocios);
-		porcentajeAportes.focus();
-		mostrarModalMensaje(mensaje);
-		return false;
-	}
-
-	return true;
-}
-
-function validarInsercionSocio(){
-	// APELLIDO DEL SOCIO - VACIO
-	if (document.formularioSociedad.apellidoSocio.value.length == 0) {
-		let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
-		document.formularioSociedad.apellidoSocio.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-	// NOMBRE DEL SOCIO - VACIO 
-	if (document.formularioSociedad.nombreSocio.value.length == 0) {
-		let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
-		document.formularioSociedad.nombreSocio.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-	// PORCENTAJE DE APORTES - VACIO
-	if (document.formularioSociedad.porcentajeAportes.value.length == 0) {
-		let $mensaje = 'Por favor, ingresá un porcentaje de aportes.';
+	// PORCENTAJE DE APORTES - SOLO NUMEROS   
+	if (!(/^-?[0-9]+$/.test(document.formularioSociedad.porcentajeAportes.value))) {
+		let $mensaje = 'Por favor, el DNI del socio sólo puede contener números.';
 		document.formularioSociedad.porcentajeAportes.focus();
 		mostrarModalMensaje($mensaje);
 		return false;
 	}
 
-	// PORCENTAJE DE APORTES - MAXIMO 3 NUMEROS
-	if (document.formularioSociedad.porcentajeAportes.value.length > 3) {
-		let mensaje = 'Por favor, el porcentaje de aportes debe tener como máximo 3 números.';
-		document.formularioSociedad.porcentajeAportes.focus();
-		mostrarModalMensaje(mensaje);
-		return false;
-	}
-
-	// // *Revisar PORCENTAJE DE APORTES - SOLO NUMEROS   
-	// if (/^[0-9]$/.test(document.formularioSociedad.porcentajeAportes.valueAsNumber)) {
-	// 	let mensaje = 'Por favor, el porcentaje de aportes debe contener sólo números.';
-	// 	document.formularioSociedad.porcentajeAportes.focus();
-	// 	mostrarModalMensaje(mensaje);
-	// 	return false;
-	// }
-
-	// VALIDAR QUE NO SE PUEDAN INGRESAR GUIONES (O SIGNO MENOR)
-	// HACER
-
 	// PORCENTAJE DE APORTES - CONTROLAR SUMA
-	if (totalPorcentajeSocios + porcentajeAportes.valueAsNumber > 100) {
+	if (totalPorcentajeSocios + parseInt(porcentajeAportes.value) > 100) {
 		let mensaje = 'Por favor ingrese un porcentaje menor o igual a ' + (100 - totalPorcentajeSocios);
 		porcentajeAportes.focus();
 		mostrarModalMensaje(mensaje);
 		return false;
 	}
 	// PORCENTAJE DE APORTES - NUMEROS NEGATIVOS
-	if (porcentajeAportes.valueAsNumber < 0) {
+	if (parseInt(porcentajeAportes.value) < 0) {
 		let mensaje = 'Por favor ingrese un porcentaje, mayor a 0 y menor o igual a ' + (100 - totalPorcentajeSocios);
 		porcentajeAportes.focus();
 		mostrarModalMensaje(mensaje);
@@ -446,6 +349,8 @@ function agregarSocio(porcentajeAportado) {
 		btnAgregarSocio.disabled = true;
 		divRepresentanteSugerido.hidden = false;
 	}
+	containerAportes.hidden = true;
+	containerSocio.hidden = true;
 	let filaSocio = agregarSocioEnTabla();
 	if (porcentajeAportado > porcentajeRepresentanteSugeridoActual) {
 		idFilaRepresentanteSugerido = filaSocio;
@@ -456,7 +361,7 @@ function agregarSocio(porcentajeAportado) {
 	agregarSocioEnSelect();
 	apellidoSocio.value = nombreSocio.value = "";
 	porcentajeAportes.value = "";
-	dniSocio.value="";
+	dniSocio.value = "";
 	dniSocio.focus();
 }
 
@@ -482,7 +387,7 @@ function agregarSocioEnTabla() {
 	iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "bg-white", "rounded", "shadow");
 	iconEliminar.addEventListener('click', eliminarSocio.bind(this, newRow));
 	newCell.appendChild(iconEliminar);
-	return newRow.rowIndex; 
+	return newRow.rowIndex;
 }
 
 function agregarSocioEnSelect() {
@@ -497,16 +402,20 @@ function eliminarSocio(rowSocio) {
 	let index = rowSocio.rowIndex;
 	// TODO Cambiar columna porcentaje por input number
 	totalPorcentajeSocios -= parseInt(rowSocio.cells[columnaPorcentaje].textContent);
-	if (btnAgregarSocio.disabled) {btnAgregarSocio.disabled = false;}
+	if (btnAgregarSocio.disabled) {
+		btnAgregarSocio.disabled = false;
+	}
 	rowSocio.remove()
 	for (index; index < tablaSocios.rows.length; index++) {
 		tablaSocios.rows[index].cells[0].textContent = tablaSocios.rows[index].rowIndex;
 	}
 	refrescarTabla_Select();
 	// Revisar indice con opciones del select
-	if(representanteLegal.options[index].selected){representanteLegal.options[0].selected=true}
+	if (representanteLegal.options[index].selected) {
+		representanteLegal.options[0].selected = true
+	}
 	representanteLegal.options[index].remove();
-	if (index == idFilaRepresentanteSugerido){
+	if (index == idFilaRepresentanteSugerido) {
 		// TODO calcular maximo y buscar por representante
 	}
 }
@@ -545,17 +454,16 @@ function validarDniSocio() {
 	return true
 }
 
-async function getSocioAsync() {	
-	let response = await fetch('http://localhost:8000/sociedad_anonima/socio?dni=' + dniSocio.value);
-	let socio = await response.json(); 
+async function getSocioAsync() {
+	let response = await fetch('http://localhost:8000/socio?dni=' + dniSocio.value);
+	let socio = await response.json();
 	// fetch('http://localhost:8000/sociedad_anonima/socio?dni=' + dniSocio.value) 
 	// 	.then(response => response.json())
 	// 	.then(json => console.log(json))
 	// 	console.log(response);
-	// 	debugger;
-				
+	// 	debugger;		
 
-	if (socio.length >= 1) {
+	if (socio.length > 0) {
 		apellidoSocio.disabled = true;
 		nombreSocio.disabled = true;
 
@@ -572,39 +480,90 @@ async function getSocioAsync() {
 	}
 }
 
-function registrarSocio(){
+function checkRegistro() {
+	if ((nombreSocioRegistro.value.length > 2) && (nombreSocioRegistro.value.length < 50) && (!/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(nombreSocioRegistro.value)) && (apellidoSocioRegistro.value.length) > 2 && (apellidoSocioRegistro.value.length) < 50 && (!/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(apellidoSocioRegistro.value))) {
+		btnRegistrarSocio.disabled = false;
+		validacionApellido.hidden = true;
+		validacionNombre.hidden = true;
+	} else {
+		btnRegistrarSocio.disabled = true;
+	}
+}
+
+function validarRegistroSocio() {
+
+	// APELLIDO DEL SOCIO - VACIO
+	if (apellidoSocioRegistro.value.length == 0) {
+		validacionApellidoTexto.textContent = "Por favor, ingresa el apellido del socio.";
+		validacionApellido.hidden = false;
+		apellidoSocioRegistro.focus();
+	}
+
+	// NOMBRE DEL SOCIO - VACIO 
+	if (nombreSocioRegistro.value.length == 0) {
+		validacionNombreTexto.textContent = "Por favor, ingresa el nombre del socio."
+		validacionNombre.hidden = false;
+		nombreSocioRegistro.focus();
+		return false;
+	}
+
+	// APELLIDO DEL SOCIO - ENTRE 3 Y 50 CARACTERES
+	if (apellidoSocioRegistro.value.length > 50 || apellidoSocioRegistro.value.length <= 2) {
+		validacionApellidoTexto.textContent = 'Por favor, el apellido del socio debe tener entre 3 y 50 caracteres.';
+		validacionApellido.hidden = false;
+		apellidoSocioRegistro.focus();
+
+	}
+
+	// NOMBRE DEL SOCIO - ENTRE 3 Y 50 CARACTERES
+	if (nombreSocioRegistro.value.length > 50 || nombreSocioRegistro.value.length <= 2) {
+		validacionNombreTexto.textContent = 'Por favor, el nombre del socio debe tener entre 3 y 50 caracteres.';
+		validacionNombre.hidden = false;
+		nombreSocioRegistro.focus();
+		return false;
+	}
+
+	// APELLIDO DEL SOCIO - SOLO LETRAS
+	if (/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(apellidoSocioRegistro.value)) {
+		validacionApellidoTexto.textContent = 'Por favor, el apellido del socio debe contener sólo letras.';
+		validacionApellido.hidden = false;
+		apellidoSocioRegistro.focus();
+	}
+
+	// NOMBRE DEL SOCIO - SOLO LETRAS
+	if (/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(nombreSocioRegistro.value)) {
+		validacionNombreTexto.textContent = 'Por favor, el nombre del socio debe contener sólo letras.';
+		validacionNombre.hidden = false;
+		nombreSocioRegistro.focus();
+		return false;
+	}
+
+}
+
+
+
+
+function registrarSocio() {
 	Swal.fire({
 		title: 'El socio no se ha encontrado',
-		html:
-    '<div class="swal2-html-container">Por favor registrelo</div>' +
-		'<label for="nombreSocioRegistro">Nombre</label>'+
-    '<input type="text" id="nombreSocioRegistro" placeholder="Ingrese el nombre" class="swal2-input">'+
-		'<label for="apellidoSocioRegistro">Apellido</label>'+
-		'<input type="text" id="apellidoSocioRegistro" placeholder="Ingrese el apellido" class="swal2-input">',
-		customClass: {htmlContainer:''},
+		html: '<div class="swal2-html-container mt-0">Por favor registrelo</div>' +
+			'<p class="note note-warning p-1 mt-2 mb-0" id="validacionNombre" hidden><strong>Importante: </strong><small id="validacionNombreTexto"></small></p>' +
+			'<label for="nombreSocioRegistro">Nombre</label>' +
+			'<input type="text" id="nombreSocioRegistro" oninput="checkRegistro()" placeholder="Ingrese el nombre" class="swal2-input">' +
+			'<p class="note note-warning p-1 mt-2 mb-0" id="validacionApellido" hidden><strong>Importante: </strong><small id="validacionApellidoTexto"></small></p>' +
+			'<label for="apellidoSocioRegistro">Apellido</label>' +
+			'<input type="text" id="apellidoSocioRegistro" oninput="checkRegistro()" placeholder="Ingrese el apellido" class="swal2-input">',
+		customClass: {
+			htmlContainer: ''
+		},
 		cancelButtonText: 'Cancelar',
 		showCancelButton: true,
 		showConfirmButton: true,
 		confirmButtonText: 'Registrar socio',
 		reverseButtons: true,
 		showLoaderOnConfirm: true,
-		preConfirm: (socio) => {  
-			return fetch('http://localhost:8000/sociedad_anonima/socio', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-
-			},
-			body: JSON.stringify({
-				first_name: nombreSocioRegistro.value,
-				last_name : apellidoSocioRegistro.value,
-				dni: '3369311',
-				email: 'matimosquet@gmail.com'
-				}) 		
-			})
-
-			
-			/*
+		preConfirm: (socio) => {
+			return fetch(`localhost/socio?nombre=${nombreSocioRegistro.value}&apellido=${apellidoSocioRegistro.value}`)
 				.then(response => {
 					if (!response.ok) {
 						throw new Error(response.statusText)
@@ -615,9 +574,69 @@ function registrarSocio(){
 					Swal.showValidationMessage(
 						`${error}. No se pudo crear el socio`
 					)
-				}) */
+				})
 		},
-		/*
+		allowOutsideClick: () => !Swal.isLoading()
+	}).then((result) => {
+		if (result.isConfirmed) {
+			Swal.fire({
+				title: `${result.value.socio}'s avatar`,
+				imageUrl: result.value.avatar_url
+			})
+		}
+	})
+	let buttonSwal = document.getElementsByClassName("swal2-confirm")[0];
+	buttonSwal.addEventListener('mouseover', validarRegistroSocio.bind(this));
+	buttonSwal.id = "btnRegistrarSocio";
+	buttonSwal.disabled = true;
+}
+
+// function registrarSocio(){
+// 	Swal.fire({
+// 		title: 'El socio no se ha encontrado',
+// 		html:
+//     '<div class="swal2-html-container">Por favor registrelo</div>' +
+// 		'<label for="nombreSocioRegistro">Nombre</label>'+
+//     '<input type="text" id="nombreSocioRegistro" placeholder="Ingrese el nombre" class="swal2-input">'+
+// 		'<label for="apellidoSocioRegistro">Apellido</label>'+
+// 		'<input type="text" id="apellidoSocioRegistro" placeholder="Ingrese el apellido" class="swal2-input">',
+// 		customClass: {htmlContainer:''},
+// 		cancelButtonText: 'Cancelar',
+// 		showCancelButton: true,
+// 		showConfirmButton: true,
+// 		confirmButtonText: 'Registrar socio',
+// 		reverseButtons: true,
+// 		showLoaderOnConfirm: true,
+// 		preConfirm: (socio) => {  
+// 			return fetch('http://localhost:8000/sociedad_anonima/socio', {
+// 			method: 'POST',
+// 			headers: {
+// 				'Content-Type': 'application/json',
+
+// 			},
+// 			body: JSON.stringify({
+// 				first_name: nombreSocioRegistro.value,
+// 				last_name : apellidoSocioRegistro.value,
+// 				dni: '3369311',
+// 				email: 'matimosquet@gmail.com'
+// 				}) 		
+// 			})
+
+
+/*
+	.then(response => {
+		if (!response.ok) {
+			throw new Error(response.statusText)
+		}
+		return response.json()
+	})
+	.catch(error => {
+		Swal.showValidationMessage(
+			`${error}. No se pudo crear el socio`
+		)
+	}) */
+// },
+/*
 		fetch('http://localhost:8000/sociedad_anonima/socio', {
 		method: 'POST',
 		headers: {
@@ -643,5 +662,5 @@ function registrarSocio(){
 				imageUrl: result.value.avatar_url
 			})
 		}*/
-	})	
-}
+// 	})	
+// }

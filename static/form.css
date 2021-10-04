@@ -1,76 +1,77 @@
 /* Form */
-.custom-table-dark{
+.custom-table-dark {
 	--mdb-table-bg: #403f3f;
 }
 
-.custom-table-dark{
-	background-color:	#403f3f !important;
+.custom-table-dark {
+	background-color: #403f3f !important;
 }
 
-.custom-table-dark{
+.custom-table-dark {
 	--mdb-table-bg: #403f3f;
 }
 
-caption{
-  caption-side:top;
-  text-align: center;
-  font-weight: bold;
-  font-size: large;
+caption {
+	caption-side: top;
+	text-align: center;
+	font-weight: bold;
+	font-size: large;
 }
 
-.select-checkbox option{
+.select-checkbox option {
 	font-family: "Font Awesome 5 Free";
 	padding-left: 10px;
 	text-align: right;
-	cursor:pointer;
-	border-bottom:1px solid #403f3f;
+	cursor: pointer;
+	border-bottom: 1px solid #403f3f;
 	font-size: larger;
 }
 
 .select-checkbox option::before {
-  content: "\f0c8";
+	content: "\f0c8";
 	width: 1.3em;
-  margin-left: 2px;
-	float: left;
-}
-.select-checkbox option:checked::before {
-  content: "\f14a";
+	margin-left: 2px;
 	float: left;
 }
 
-#formContacto{
+.select-checkbox option:checked::before {
+	content: "\f14a";
+	float: left;
+}
+
+#formContacto {
 	background-color: aliceblue;
 }
 
-#bodyFormulario{
+#bodyFormulario {
 	padding: 2rem !important;
 	background-color: white;
 }
 
-.cmy-1{
+.cmy-1 {
 	margin-top: 0.5rem !important;
 	margin-bottom: 0.5rem !important;
 }
 
-.cmy-2{
+.cmy-2 {
 	margin-top: 1rem !important;
 	margin-bottom: 1rem !important;
 }
 
-.cmy-3{
+.cmy-3 {
 	margin-top: 1.5rem !important;
 	margin-bottom: 1.5rem !important;
-	}
-
-.cmy-4{
-margin-top: 2rem !important;
-margin-bottom: 2rem !important;
 }
 
-.cmb-4{
-margin-bottom: 2rem !important;
+.cmy-4 {
+	margin-top: 2rem !important;
+	margin-bottom: 2rem !important;
 }
 
-.cursor-pointer{
+.cmb-4 {
+	margin-bottom: 2rem !important;
+}
+
+.cursor-pointer {
 	cursor: pointer;
 }
