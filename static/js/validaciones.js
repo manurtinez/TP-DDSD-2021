@@ -5,7 +5,8 @@ const columnaNombre = 1;
 const columnaPorcentaje = 2;
 const opcionesSeleccionadas = new Set();
 
-function validarFormulario() {
+function validarFormulario(event) {
+	event.preventDefault()
 
 	// NOMBRE DE LA SOCIEDAD
 	if (document.formularioSociedad.nombreSociedad.value.length == 0) {
@@ -183,7 +184,7 @@ function validarFormulario() {
 }
 
 function registrarSocioAPI() {
-	fetch('http://localhost:8000/sociedad_anonima/socio', {
+	fetch('http://localhost:8000/socio/', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -221,29 +222,29 @@ function getCookie(name) {
 const csrftoken = getCookie('csrftoken');
 
 
-function registrarSociedad() {
+async function registrarSociedad() {
 
-	fetch('http://localhost:8000/sociedad-anonima/sa', {
+	const response = await fetch('http://localhost:8000/sociedad_anonima/', {
 		method: 'POST',
 		headers: {
 			'X-CSRFToken': csrftoken,
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
-			name: document.formularioSociedad.nombreSociedad.value,
-			real_domicile: document.formularioSociedad.domicilioReal.value,
-			legal_domicile: document.formularioSociedad.domicilioLegal.value,
-			partners: [{
-				"id": 1,
-				"percentage": 50
-			}],
-			representative_email: document.formularioSociedad.mailApoderado.value,
-			export_countries: [
-				"Bolivia, Paraguay, Venezuela"
-			],
-			creation_date: document.formularioSociedad.fechaCreacion.value
-		})
-	})
+				name: document.formularioSociedad.nombreSociedad.value,
+				real_domicile: document.formularioSociedad.domicilioReal.value,
+				legal_domicile: document.formularioSociedad.domicilioLegal.value,
+				partners: [ {"id": 1, "percentage": 50}],
+				representative_email: document.formularioSociedad.mailApoderado.value,
+				export_countries: [
+					"Bolivia, Paraguay, Venezuela"],
+				creation_date: document.formularioSociedad.fechaCreacion.value			
+			}) 		
+		});
+	const parsedResponse = await response.json();
+	// Aca habria que hacer el segundo request para subir el file,
+	// redireccionar a la pagina correspondiende
+	console.log(parsedResponse);
 }
 
 
@@ -457,7 +458,6 @@ function validarDniSocio() {
 async function getSocioAsync() {
 	let response = await fetch('http://localhost:8000/socio?dni=' + dniSocio.value);
 	let socio = await response.json();
-	// fetch('http://localhost:8000/sociedad_anonima/socio?dni=' + dniSocio.value) 
 	// 	.then(response => response.json())
 	// 	.then(json => console.log(json))
 	// 	console.log(response);
@@ -547,13 +547,14 @@ function registrarSocio() {
 	Swal.fire({
 		title: 'El socio no se ha encontrado',
 		html: '<div class="swal2-html-container mt-0">Por favor registrelo</div>' +
-			'<p class="note note-warning p-1 mt-2 mb-0" id="validacionNombre" hidden><strong>Importante: </strong><small id="validacionNombreTexto"></small></p>' +
 			'<label for="nombreSocioRegistro">Nombre</label>' +
 			'<input type="text" id="nombreSocioRegistro" oninput="checkRegistro()" placeholder="Ingrese el nombre" class="swal2-input">' +
-			'<p class="note note-warning p-1 mt-2 mb-0" id="validacionApellido" hidden><strong>Importante: </strong><small id="validacionApellidoTexto"></small></p>' +
+			'<p class="note note-warning p-1 mt-3 mb-0" id="validacionNombre" hidden><strong>Importante: </strong><small id="validacionNombreTexto"></small></p>' +
 			'<label for="apellidoSocioRegistro">Apellido</label>' +
-			'<input type="text" id="apellidoSocioRegistro" oninput="checkRegistro()" placeholder="Ingrese el apellido" class="swal2-input">',
-		customClass: {
+			'<input type="text" id="apellidoSocioRegistro" oninput="checkRegistro()" placeholder="Ingrese el apellido" class="swal2-input">'+
+			'<p class="note note-warning p-1 mt-3 mb-0" id="validacionApellido" hidden><strong>Importante: </strong><small id="validacionApellidoTexto"></small></p>',
+
+			customClass: {
 			htmlContainer: ''
 		},
 		cancelButtonText: 'Cancelar',
@@ -563,7 +564,68 @@ function registrarSocio() {
 		reverseButtons: true,
 		showLoaderOnConfirm: true,
 		preConfirm: (socio) => {
-			return fetch(`localhost/socio?nombre=${nombreSocioRegistro.value}&apellido=${apellidoSocioRegistro.value}`)
+			return fetch('http://localhost:8000/socio/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+	
+				},
+				body: JSON.stringify({
+					first_name: nombreSocioRegistro.value,
+					last_name : apellidoSocioRegistro.value,
+					dni: '3369311',
+					email: 'matimosquet@gmail.com'
+					}) 		
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(response.statusText)
+					}
+					return response.json()
+				})
+				.catch(error => {
+					Swal.showValidationMessage(
+						`${error}. No se pudo crear el socio`
+					)
+				})
+		},
+		allowOutsideClick: () => !Swal.isLoading()
+	}).then((result) => {
+		if (result.isConfirmed) {
+			Swal.fire({
+				title: `${result.value.socio}'s avatar`,
+				imageUrl: result.value.avatar_url
+			})
+		}
+	})
+	let buttonSwal = document.getElementsByClassName("swal2-confirm")[0];
+	buttonSwal.addEventListener('mouseover', validarRegistroSocio.bind(this));
+	buttonSwal.id = "btnRegistrarSocio";
+	buttonSwal.disabled = true;
+}
+
+
+
+// 		preConfirm: (socio) => {  
+// 			return fetch('http://localhost:8000/socio/', {
+// 			method: 'POST',
+// 			headers: {
+// 				'Content-Type': 'application/json',
+
+// 			},
+// 			body: JSON.stringify({
+// 				first_name: nombreSocioRegistro.value,
+// 				last_name : apellidoSocioRegistro.value,
+// 				dni: '3369311',
+// 				email: 'matimosquet@gmail.com'
+// 				}) 		
+// 			})
+// 		}
+// 	})
+// }
+	
+			
+			/*
 				.then(response => {
 					if (!response.ok) {
 						throw new Error(response.statusText)

@@ -66,7 +66,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                 # !! Por ahora el porcentaje esta hardcodeado hasta que este el array de socios del front
                 new_sa.partners.add(
                     partner, through_defaults={'percentage': socio['percentage'], 'is_representative': socio.get('is_representative', False)})
-            return redirect('/')
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
