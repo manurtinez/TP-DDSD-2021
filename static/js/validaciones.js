@@ -184,7 +184,7 @@ function validarFormulario() {
 }
 
 function registrarSocioAPI() {
-	fetch('http://localhost:8000/sociedad-anonima/socio', {
+	fetch('http://localhost:8000/sociedad_anonima/socio', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -508,9 +508,9 @@ function validarDniSocio() {
 }
 
 async function getSocioAsync() {	
-	let response = await fetch('http://localhost:8000/sociedad-anonima/socio?dni=' + dniSocio.value);
+	let response = await fetch('http://localhost:8000/sociedad_anonima/socio?dni=' + dniSocio.value);
 	let socio = await response.json(); 
-	// fetch('http://localhost:8000/sociedad-anonima/socio?dni=' + dniSocio.value) 
+	// fetch('http://localhost:8000/sociedad_anonima/socio?dni=' + dniSocio.value) 
 	// 	.then(response => response.json())
 	// 	.then(json => console.log(json))
 	// 	console.log(response);
@@ -551,7 +551,7 @@ function registrarSocio(){
 		reverseButtons: true,
 		showLoaderOnConfirm: true,
 		preConfirm: (socio) => {  
-			return fetch('http://localhost:8000/sociedad-anonima/socio', {
+			return fetch('http://localhost:8000/sociedad_anonima/socio', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -580,7 +580,7 @@ function registrarSocio(){
 				}) */
 		},
 		/*
-		fetch('http://localhost:8000/sociedad-anonima/socio', {
+		fetch('http://localhost:8000/sociedad_anonima/socio', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

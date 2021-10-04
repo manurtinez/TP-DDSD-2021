@@ -71,7 +71,10 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post'], url_name='upload_file')
-    def upload_file(self, request, pk=None):
+    def subir_archivo(self, request, pk=None):
+        """
+        Este action maneja la accion de agregar un archivo manifesto a la sociedad anonima.
+        """
         sa = self.get_object()
         serializer = FileSerializer(data=request.data)
         if serializer.is_valid():
@@ -82,7 +85,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
+        if self.action == 'create':
             return SociedadAnonimaSerializer
         else:
             return SociedadAnonimaRetrieveSerializer
