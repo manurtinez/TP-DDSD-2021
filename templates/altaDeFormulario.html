@@ -51,7 +51,8 @@
 
   <form action="alta" method="POST" enctype="multipart/form-data" action="" class="card container shadow pb-4 px-4 my-5"
     id="formContacto" name="formularioSociedad" onsubmit="return validarFormulario();">
-    <!-- {% csrf_token %} -->
+    {% csrf_token %}
+   <!-- <input type="hidden" name="csrfmiddlewaretoken" value="pHK2CZzBB323BM2Nq7DE2sxnQoBG1jPl" disabled="">-->
     <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Alta de sociedad</h3>
     <div class="card-body shadow container my-4 text-left" id="bodyFormulario">
       <h4><span class="badge rounded-pill bg-info">Sociedad</span></h4>

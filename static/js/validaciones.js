@@ -14,6 +14,7 @@ function validarFormulario() {
 		mostrarModalMensaje(mensaje)
 		return false;
 	}
+	
 
 	// NOMBRE DEL SOCIEDAD - ENTRE 3 Y 50 CARACTERES
 	if (document.formularioSociedad.nombreSociedad.value.length > 50 ||
@@ -149,7 +150,7 @@ function validarFormulario() {
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
-
+ // COMENTAR
 	// ESTADOS DE EXPORTACION - VACIO
 	if (document.formularioSociedad.estadoDeExportacion.value == 0 || document.formularioSociedad.estadoDeExportacion.value== "") {
 		let $mensaje = 'Por favor, seleccioná un estado.';
@@ -157,7 +158,7 @@ function validarFormulario() {
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
-	*/
+	
 
 	// VALIDAR QUE EL PORCENTAJE  DE APORTES HAYA LLLEGADO AL 100%
 	if (totalPorcentajeSocios < 100) {
@@ -174,11 +175,9 @@ function validarFormulario() {
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
-
-	// fetch
-	registrarSocioAPI();
-
-
+	*/
+	//registrarSocioAPI();
+	registrarSociedad();
 
 	return true;
 }
@@ -202,6 +201,45 @@ function registrarSocioAPI() {
 	//console.log("Response "+response);
 //	console.log("json "+json);
 
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+
+function registrarSociedad() {
+
+	fetch('http://localhost:8000/sociedad-anonima/sa', {
+		method: 'POST',
+		headers: {
+			'X-CSRFToken': csrftoken,
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+				name: document.formularioSociedad.nombreSociedad.value,
+				real_domicile: document.formularioSociedad.domicilioReal.value,
+				legal_domicile: document.formularioSociedad.domicilioLegal.value,
+				partners: [ {"id": 1, "percentage": 50}],
+				representative_email: document.formularioSociedad.mailApoderado.value,
+				export_countries: [
+					"Bolivia, Paraguay, Venezuela"],
+				creation_date: document.formularioSociedad.fechaCreacion.value			
+			}) 		
+		})
 }
 
 
