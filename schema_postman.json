@@ -1,0 +1,235 @@
+{
+	"info": {
+		"_postman_id": "b5bf39d6-f172-427a-a17a-4c0ddd2cbb99",
+		"name": "django DSSD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "socios",
+			"item": [
+				{
+					"name": "traer socios",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"hola\",\r\n    \"last_name\": \"chau\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/socio/",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"socio",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "agregar socio",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"hola\",\r\n    \"last_name\": \"chau\",\r\n    \"dni\": 1234\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/socio",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"socio"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sociedad anonima",
+			"item": [
+				{
+					"name": "traer sociedades",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/sociedad-anonima/",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sociedad-anonima",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "crear sociedad",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"asd\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"percentage\": 70,\r\n            \"is_representative\": true\r\n        }\r\n    ],\r\n    \"export_countries\": [\r\n        \"argentina\",\r\n        \"brasil\"\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"asd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/sociedad_anonima/",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sociedad_anonima",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subir achivo estatuto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/eula.2052.txt"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8000/sociedad-anonima/1/subir_archivo/",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sociedad-anonima",
+								"1",
+								"subir_archivo",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "bonita",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "walter.bates",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "bpm",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/bonita/loginservice",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"loginservice"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "execution task",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "walter.bates",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "walterbates",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/bonita/API/bpm/userTask/1/execution",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"userTask",
+								"1",
+								"execution"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
