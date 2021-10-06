@@ -7,6 +7,7 @@ const columnaPorcentaje = 2;
 const opcionesSeleccionadas = new Set();
 var idSocioAgregado;
 const sociosEnSociedad = [];
+var sociosIngresados = false;
 
 
 function validarFormulario(event) {
@@ -182,15 +183,20 @@ function validarFormulario(event) {
 	}
 	*/
 	//registrarSocioAPI();
-	registrarSociedad();
-	Swal.fire({
-		position: 'top',
-		icon: 'success',
-		title: 'La sociedad ha sido guardada correctamente!',
-		showConfirmButton: true,
-		confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
-	})
-	return true;
+	if (sociosIngresados) {
+		registrarSociedad();
+		Swal.fire({
+			position: 'top',
+			icon: 'success',
+			title: 'La sociedad ha sido guardada correctamente!',
+			showConfirmButton: true,
+			confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
+		})
+		return true;
+	} else {
+		mostrarModalMensaje('Existen datos de los socios que aún no fueron ingresados. Por favor, revise los mismos.');
+
+	}
 }
 
 function registrarSocioAPI() {
@@ -261,14 +267,12 @@ async function registrarSociedad() {
 			method: 'POST',
 			body: formData,
 		});
-		if (fileResponse.status === 200) {
+		if (fileResponse.status !== 200) {
 			// Por ahora uso un alert porque el modal es solo para errores como esta, para corregir luego
-			alert('La solicitud fue cargada con exito!');
-			// Redireccionar a la siguiente pagina
-		} else {
-			mostrarModalMensaje('Hubo algun error al subir el archivo.');
+				mostrarModalMensaje('Hubo algun error al subir el archivo. Por favor, reintentelo');		
+		} 		
 			// TODO Aca deberiamos, por ejemplo, pedir que vuelva a intentar subir SOLO el archivo
-		}
+		
 	} 
 	else {
 		mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
@@ -363,6 +367,7 @@ function validarInsercionSocio() {
 		mostrarModalMensaje(mensaje);
 		return false;
 	}
+	sociosIngresados = true;
 	return true;
 }
 
