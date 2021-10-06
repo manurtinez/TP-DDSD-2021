@@ -241,10 +241,28 @@ async function registrarSociedad() {
 				creation_date: document.formularioSociedad.fechaCreacion.value			
 			}) 		
 		});
-	const parsedResponse = await response.json();
-	// Aca habria que hacer el segundo request para subir el file,
-	// redireccionar a la pagina correspondiende
-	console.log(parsedResponse);
+	if (response.status === 201) {
+		const parsedResponse = await response.json();
+		
+		// Se sube el archivo de estatuto 
+		const formData = new FormData();
+		formData.append('file', document.getElementById('estatuto').files[0]);
+		const fileResponse = await fetch(`http://localhost:8000/sociedad_anonima/${parsedResponse.id}/subir_archivo/`, {
+			method: 'POST',
+			body: formData,
+		});
+		if (fileResponse.status === 200) {
+			// Por ahora uso un alert porque el modal es solo para errores como esta, para corregir luego
+			alert('La solicitud fue cargada con exito!');
+			// Redireccionar a la siguiente pagina
+		} else {
+			mostrarModalMensaje('Hubo algun error al subir el archivo.');
+			// TODO Aca deberiamos, por ejemplo, pedir que vuelva a intentar subir SOLO el archivo
+		}
+	} 
+	else {
+		mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+	}
 }
 
 

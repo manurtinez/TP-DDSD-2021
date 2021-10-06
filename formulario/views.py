@@ -41,7 +41,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     `update` and `destroy` para el modelo SociedadAnonima.
     """
     queryset = SociedadAnonima.objects.all()
-    serializer_class = SociedadAnonimaSerializer
+    serializer_class = SociedadAnonimaRetrieveSerializer
     # IMPORTANTE cambiar esto cuando haya autenticacion
     permission_classes = [permissions.AllowAny]
 
@@ -57,7 +57,6 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             new_sa = SociedadAnonima.objects.create(name=data['name'], legal_domicile=data['legal_domicile'], creation_date=data['creation_date'],
                                                     real_domicile=data['real_domicile'], export_countries=data['export_countries'],
                                                     representative_email=data['representative_email'])
-            new_sa.save()
 
             # Se agregan los socios que hayan venido
             partners = data['partners']
@@ -66,7 +65,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                 # !! Por ahora el porcentaje esta hardcodeado hasta que este el array de socios del front
                 new_sa.partners.add(
                     partner, through_defaults={'percentage': socio['percentage'], 'is_representative': socio.get('is_representative', False)})
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+            # Tengo que agregar el ID de la nueva instancia al serializer para devolverlo
+            response_data = serializer.data
+            response_data['id'] = new_sa.id
+            return Response(data=response_data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -84,8 +87,8 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return SociedadAnonimaSerializer
-        else:
-            return SociedadAnonimaRetrieveSerializer
+    # def get_serializer_class(self):
+    #     if self.action == 'create':
+    #         return SociedadAnonimaSerializer
+    #     else:
+    #         return SociedadAnonimaRetrieveSerializer
