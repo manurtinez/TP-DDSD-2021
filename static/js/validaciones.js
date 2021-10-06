@@ -1,9 +1,13 @@
 var totalPorcentajeSocios = 0;
 var porcentajeRepresentanteSugeridoActual = 0;
 var idFilaRepresentanteSugerido;
+const porcentajesSocios = [];
 const columnaNombre = 1;
 const columnaPorcentaje = 2;
 const opcionesSeleccionadas = new Set();
+var idSocioAgregado;
+const sociosEnSociedad = [];
+
 
 function validarFormulario(event) {
 	event.preventDefault()
@@ -179,7 +183,13 @@ function validarFormulario(event) {
 	*/
 	//registrarSocioAPI();
 	registrarSociedad();
-
+	Swal.fire({
+		position: 'top',
+		icon: 'success',
+		title: 'La sociedad ha sido guardada correctamente!',
+		showConfirmButton: true,
+		confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
+	})
 	return true;
 }
 
@@ -234,7 +244,7 @@ async function registrarSociedad() {
 				name: document.formularioSociedad.nombreSociedad.value,
 				real_domicile: document.formularioSociedad.domicilioReal.value,
 				legal_domicile: document.formularioSociedad.domicilioLegal.value,
-				partners: [ {"id": 1, "percentage": 50}],
+				partners: sociosEnSociedad,
 				representative_email: document.formularioSociedad.mailApoderado.value,
 				export_countries: [
 					"Bolivia, Paraguay, Venezuela"],
@@ -349,21 +359,29 @@ function agregarSocio(porcentajeAportado) {
 		})
 		btnAgregarSocio.disabled = true;
 		divRepresentanteSugerido.hidden = false;
+		containerDni.hidden = true;
 	}
 	containerAportes.hidden = true;
 	containerSocio.hidden = true;
 	let filaSocio = agregarSocioEnTabla();
+	agregarSocioEnSociedad(porcentajeAportado);
 	if (porcentajeAportado > porcentajeRepresentanteSugeridoActual) {
 		idFilaRepresentanteSugerido = filaSocio;
 		porcentajeRepresentanteSugeridoActual = porcentajeAportado;
-		representanteSugerido.textContent = apellidoSocio.value + ' ' + nombreSocio.value + ' - ' + porcentajeAportado + '% de aportes';
+		representanteSugerido.textContent = apellidoSocio.value + ' ' + nombreSocio.value + ' - ' + porcentajeAportado;
 	}
 	refrescarTabla_Select();
 	agregarSocioEnSelect();
+	porcentajesSocios.push(porcentajeAportado);
 	apellidoSocio.value = nombreSocio.value = "";
 	porcentajeAportes.value = "";
 	dniSocio.value = "";
 	dniSocio.focus();
+}
+
+function agregarSocioEnSociedad(porcentajeAportado){
+	let socio = {id:idSocioAgregado, percentage:porcentajeAportado};
+	sociosEnSociedad.push(socio);
 }
 
 function agregarSocioEnTabla() {
@@ -394,39 +412,60 @@ function agregarSocioEnTabla() {
 function agregarSocioEnSelect() {
 	let newOption = document.createElement("option");
 	newOption.text = apellidoSocio.value + ' ' + nombreSocio.value;
-	// TODO Traer id del socio pedido   
-	newOption.value = "idSocio";
+	newOption.value = idSocioAgregado;
 	representanteLegal.add(newOption);
 }
 
+function eliminarSocioEnSelect(index){
+		if (representanteLegal.options[index].selected) {
+			representanteLegal.options[0].selected = true
+		}
+		representanteLegal.options[index].remove();
+}
+
+
 function eliminarSocio(rowSocio) {
+	containerDni.hidden = false;
 	let index = rowSocio.rowIndex;
+	let indexSocio = rowSocio.rowIndex;
 	// TODO Cambiar columna porcentaje por input number
 	totalPorcentajeSocios -= parseInt(rowSocio.cells[columnaPorcentaje].textContent);
 	if (btnAgregarSocio.disabled) {
 		btnAgregarSocio.disabled = false;
 	}
+	eliminarSocioEnSelect(index);
+
 	rowSocio.remove()
 	for (index; index < tablaSocios.rows.length; index++) {
 		tablaSocios.rows[index].cells[0].textContent = tablaSocios.rows[index].rowIndex;
 	}
+	if (indexSocio == idFilaRepresentanteSugerido) {
+		idFilaRepresentanteSugerido = encontrarMaximoRepresentante(indexSocio);
+		representanteSugerido.textContent = idFilaRepresentanteSugerido ? representanteLegal.options[idFilaRepresentanteSugerido].textContent : "";
+	}
 	refrescarTabla_Select();
-	// Revisar indice con opciones del select
-	if (representanteLegal.options[index].selected) {
-		representanteLegal.options[0].selected = true
-	}
-	representanteLegal.options[index].remove();
-	if (index == idFilaRepresentanteSugerido) {
-		// TODO calcular maximo y buscar por representante
-	}
 }
 
 function refrescarTabla_Select() {
 	if (tablaSocios.tBodies[0].rows.length > 0) {
 		tablaSocios.hidden = representanteLegal.disabled = false;
 	} else {
-		tablaSocios.hidden = representanteLegal.disabled = true
+		divRepresentanteSugerido.hidden = tablaSocios.hidden = representanteLegal.disabled = true
 	}
+}
+
+function encontrarMaximoRepresentante(indexActual){
+		porcentajesSocios.splice(indexActual-1,1);
+		var indexMaxPorcentaje;
+		var maxPorcentaje = 0;
+		for (let index = 0; index < porcentajesSocios.length; index++){
+			if (porcentajesSocios[index] > maxPorcentaje){
+				maxPorcentaje = porcentajesSocios[index];
+				indexMaxPorcentaje = index;
+			}
+		}
+
+		return indexMaxPorcentaje+1;
 }
 
 function validarDniSocio() {
@@ -466,7 +505,7 @@ async function getSocioAsync() {
 	if (socio.length > 0) {
 		apellidoSocio.disabled = true;
 		nombreSocio.disabled = true;
-
+		idSocioAgregado = socio[0].id;
 		apellidoSocio.value = socio[0].last_name;
 		nombreSocio.value = socio[0].first_name;
 		containerAportes.hidden = false;
@@ -478,6 +517,10 @@ async function getSocioAsync() {
 		// return;
 		registrarSocio();
 	}
+}
+
+function enterPress(){
+	return (event.key == "Enter");
 }
 
 function checkRegistro() {
@@ -603,126 +646,3 @@ function registrarSocio() {
 	buttonSwal.id = "btnRegistrarSocio";
 	buttonSwal.disabled = true;
 }
-
-
-
-// 		preConfirm: (socio) => {  
-// 			return fetch('http://localhost:8000/socio/', {
-// 			method: 'POST',
-// 			headers: {
-// 				'Content-Type': 'application/json',
-
-// 			},
-// 			body: JSON.stringify({
-// 				first_name: nombreSocioRegistro.value,
-// 				last_name : apellidoSocioRegistro.value,
-// 				dni: '3369311',
-// 				email: 'matimosquet@gmail.com'
-// 				}) 		
-// 			})
-// 		}
-// 	})
-// }
-	
-			
-			/*
-				.then(response => {
-					if (!response.ok) {
-						throw new Error(response.statusText)
-					}
-					return response.json()
-				})
-				.catch(error => {
-					Swal.showValidationMessage(
-						`${error}. No se pudo crear el socio`
-					)
-				})
-		},
-		allowOutsideClick: () => !Swal.isLoading()
-	}).then((result) => {
-		if (result.isConfirmed) {
-			Swal.fire({
-				title: `${result.value.socio}'s avatar`,
-				imageUrl: result.value.avatar_url
-			})
-		}
-	})
-	let buttonSwal = document.getElementsByClassName("swal2-confirm")[0];
-	buttonSwal.addEventListener('mouseover', validarRegistroSocio.bind(this));
-	buttonSwal.id = "btnRegistrarSocio";
-	buttonSwal.disabled = true;
-}
-
-// function registrarSocio(){
-// 	Swal.fire({
-// 		title: 'El socio no se ha encontrado',
-// 		html:
-//     '<div class="swal2-html-container">Por favor registrelo</div>' +
-// 		'<label for="nombreSocioRegistro">Nombre</label>'+
-//     '<input type="text" id="nombreSocioRegistro" placeholder="Ingrese el nombre" class="swal2-input">'+
-// 		'<label for="apellidoSocioRegistro">Apellido</label>'+
-// 		'<input type="text" id="apellidoSocioRegistro" placeholder="Ingrese el apellido" class="swal2-input">',
-// 		customClass: {htmlContainer:''},
-// 		cancelButtonText: 'Cancelar',
-// 		showCancelButton: true,
-// 		showConfirmButton: true,
-// 		confirmButtonText: 'Registrar socio',
-// 		reverseButtons: true,
-// 		showLoaderOnConfirm: true,
-// 		preConfirm: (socio) => {  
-// 			return fetch('http://localhost:8000/sociedad_anonima/socio', {
-// 			method: 'POST',
-// 			headers: {
-// 				'Content-Type': 'application/json',
-
-// 			},
-// 			body: JSON.stringify({
-// 				first_name: nombreSocioRegistro.value,
-// 				last_name : apellidoSocioRegistro.value,
-// 				dni: '3369311',
-// 				email: 'matimosquet@gmail.com'
-// 				}) 		
-// 			})
-
-
-/*
-	.then(response => {
-		if (!response.ok) {
-			throw new Error(response.statusText)
-		}
-		return response.json()
-	})
-	.catch(error => {
-		Swal.showValidationMessage(
-			`${error}. No se pudo crear el socio`
-		)
-	}) */
-// },
-/*
-		fetch('http://localhost:8000/sociedad_anonima/socio', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-
-		},
-		body: JSON.stringify({
-			first_name: nombreSocioRegistro.value,
-			last_name : apellidoSocioRegistro.value,
-			dni: '3369311',
-			email: 'matimosquet@gmail.com'
-			}) 		
-		})
-
-
-	
-
-		allowOutsideClick: () => !Swal.isLoading()
-	}).then((result) => {
-		if (result.isConfirmed) {
-			Swal.fire({
-				title: `${result.value.socio}'s avatar`,
-				imageUrl: result.value.avatar_url
-			})
-		}*/
-// 	})	
-// }

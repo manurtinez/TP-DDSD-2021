@@ -44,7 +44,6 @@ caption {
 }
 
 #bodyFormulario {
-	padding: 2rem !important;
 	background-color: white;
 }
 
@@ -74,4 +73,15 @@ caption {
 
 .cursor-pointer {
 	cursor: pointer;
+}
+
+.etiqueta-form{
+	border-top-right-radius: 50rem;
+	border-bottom-right-radius: 50rem;
+	padding-right: 3rem !important;;
+}
+
+.container-form{
+	padding-left: 2rem !important;
+	padding-right: 2rem !important;
 }
