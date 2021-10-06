@@ -164,7 +164,7 @@ function validarFormulario(event) {
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
-	
+*/	
 
 	// VALIDAR QUE EL PORCENTAJE  DE APORTES HAYA LLLEGADO AL 100%
 	if (totalPorcentajeSocios < 100) {
@@ -181,8 +181,7 @@ function validarFormulario(event) {
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
-	*/
-	//registrarSocioAPI();
+
 	if (sociosIngresados) {
 		registrarSociedad();
 		Swal.fire({
@@ -199,26 +198,6 @@ function validarFormulario(event) {
 	}
 }
 
-function registrarSocioAPI() {
-	fetch('http://localhost:8000/socio/', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-
-		},
-		body: JSON.stringify({
-			first_name: 'Juan',
-			last_name: 'MarasPrueba',
-			dni: '3369311',
-			email: 'matimosquet@gmail.com'
-		})
-	})
-	//	.then(response => response.json())
-	//	.then(json => console.log(json))
-	//console.log("Response "+response);
-	//	console.log("json "+json);
-
-}
 
 function getCookie(name) {
 	let cookieValue = null;
