@@ -50,8 +50,8 @@
   </nav>
 
   <form action={% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data"
-    class="card container shadow pb-4 px-4 my-5" id="formContacto" name="formularioSociedad"
-    onsubmit="return validarFormulario(event);">
+    class="card container shadow pb-4 px-4 my-5" id="formularioSociedad" name="formularioSociedad"
+    onsubmit="return validarFormulario(event);" onkeydown="return event.key != 'Enter';">
     {% csrf_token %}
     <!-- <input type="hidden" name="csrfmiddlewaretoken" value="pHK2CZzBB323BM2Nq7DE2sxnQoBG1jPl" disabled="">-->
     <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Alta de sociedad</h3>
@@ -163,7 +163,7 @@
             <div class="input-group">
               <span class="input-group-text border-0">DNI:</span>
               <div class="input-group-text"><i class="far fa-address-card"></i></div>
-              <input type="text" onkeypress="if(enterPress()){if (validarDniSocio()){getSocioAsync()}}" class="form-control" id="dniSocio" name="dniSocio" placeholder="Por ej. 28872367">
+              <input type="text" onkeydown="if(enterPress()){if (validarDniSocio()){getSocioAsync()}}" class="form-control" id="dniSocio" name="dniSocio" placeholder="Por ej. 28872367">
             </div>
           </div>
           <div class="col-auto cmy-4">
@@ -177,7 +177,7 @@
             <div class="input-group">
               <span class="input-group-text border-0">Apellido:</span>
               <div class="input-group-text"><i class="fas fa-user-circle"></i></div>
-              <input type="text" class="form-control" id="apellidoSocio" name="apellidoSocio"
+              <input type="text" class="form-control text-capitalize" id="apellidoSocio" name="apellidoSocio"
                 placeholder="Por ej. Juan Rodriguez">
             </div>
           </div>
@@ -185,7 +185,7 @@
             <div class="input-group">
               <span class="input-group-text border-0">Nombre:</span>
               <div class="input-group-text"><i class="fas fa-user-alt"></i></div>
-              <input type="text" class="form-control" id="nombreSocio" name="nombreSocio"
+              <input type="text" class="form-control text-capitalize" id="nombreSocio" name="nombreSocio"
                 placeholder="Por ej. Juan Rodriguez">
             </div>
           </div>
@@ -201,7 +201,7 @@
             <div class="input-group">
               <span class="input-group-text border-0">Aportes:</span>
               <input type="text" class="form-control" id="porcentajeAportes" name="porcentajeAportes"
-                placeholder="Por ej. 50" onkeypress="if(enterPress()){if (validarInsercionSocio()){agregarSocio(parseInt(porcentajeAportes.value))}}">
+                placeholder="Por ej. 50" onkeydown="if(enterPress()){if (validarInsercionSocio()){agregarSocio(parseInt(porcentajeAportes.value))}}">
               <div class="input-group-text"><i class="fas fa-percent"></i></div>
             </div>
           </div>
@@ -241,7 +241,7 @@
           </div>
           <div class="col-auto p-2 text-start" id="divRepresentanteSugerido" hidden><i
               class="fas fa-info-circle fa-lg"></i><span class="fst-italic">Representante sugerido: </span>
-            <span id="representanteSugerido" class="fw-bold"></span><span class="fw-bold">% de aportes</span>
+            <span id="representanteSugerido" class="fw-bold"></span><span class="fw-bold">% de aportes)</span>
           </div>
         </div>
       </section>

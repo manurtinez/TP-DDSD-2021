@@ -1,13 +1,16 @@
 var totalPorcentajeSocios = 0;
 var porcentajeRepresentanteSugeridoActual = 0;
+var idSocioAgregado;
 var idFilaRepresentanteSugerido;
 const porcentajesSocios = [];
 const columnaNombre = 1;
 const columnaPorcentaje = 2;
+// Paises y estados seleccionados
 const opcionesSeleccionadas = new Set();
-var idSocioAgregado;
+// Para buscar si el socio ya existia
+const idSociosAgregados = new Set();
+// Arreglo de objetos con el id y el porcentaje del socio aportado
 const sociosEnSociedad = [];
-var sociosIngresados = false;
 
 
 function validarFormulario(event) {
@@ -31,15 +34,6 @@ function validarFormulario(event) {
 		return false;
 	}
 
-	// NOMBRE DE LA SOCIEDAD - SOLO LETRAS
-	/*
-	if (/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(document.formularioSociedad.nombreSociedad.value)) {
-		let mensaje = 'Por favor, el nombre de la sociedad debe contener solo letras.';
-		document.formularioSociedad.nombreSociedad.focus();
-		mostrarModalMensaje(mensaje);
-		return false;
-	}
-	*/
 
 	// FECHA DE CREACION - VACIO
 	if (document.formularioSociedad.fechaCreacion.value.length == 0) {
@@ -164,7 +158,7 @@ function validarFormulario(event) {
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
-*/	
+*/
 
 	// VALIDAR QUE EL PORCENTAJE  DE APORTES HAYA LLLEGADO AL 100%
 	if (totalPorcentajeSocios < 100) {
@@ -175,27 +169,22 @@ function validarFormulario(event) {
 	}
 
 	// REPRESENTANTE LEGAL/APODERADO - VACIO
-	if (document.formularioSociedad.representanteLegal.value == 0 || document.formularioSociedad.representanteLegal.value == "") {
+	if (representanteLegal.options.selectedIndex == 0) {
 		let $mensaje = 'Por favor, seleccioná un representante legal/apoderado.';
 		document.formularioSociedad.representanteLegal.focus();
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
 
-	if (sociosIngresados) {
-		registrarSociedad();
-		Swal.fire({
-			position: 'top',
-			icon: 'success',
-			title: 'La sociedad ha sido guardada correctamente!',
-			showConfirmButton: true,
-			confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
-		})
-		return true;
-	} else {
-		mostrarModalMensaje('Existen datos de los socios que aún no fueron ingresados. Por favor, revise los mismos.');
-
-	}
+	registrarSociedad();
+	Swal.fire({
+		position: 'top',
+		icon: 'success',
+		title: 'La sociedad ha sido guardada correctamente!',
+		showConfirmButton: true,
+		confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
+	})
+	return true;
 }
 
 
@@ -226,19 +215,20 @@ async function registrarSociedad() {
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
-				name: document.formularioSociedad.nombreSociedad.value,
-				real_domicile: document.formularioSociedad.domicilioReal.value,
-				legal_domicile: document.formularioSociedad.domicilioLegal.value,
-				partners: sociosEnSociedad,
-				representative_email: document.formularioSociedad.mailApoderado.value,
-				export_countries: [
-					"Bolivia, Paraguay, Venezuela"],
-				creation_date: document.formularioSociedad.fechaCreacion.value			
-			}) 		
-		});
+			name: document.formularioSociedad.nombreSociedad.value,
+			real_domicile: document.formularioSociedad.domicilioReal.value,
+			legal_domicile: document.formularioSociedad.domicilioLegal.value,
+			partners: sociosEnSociedad,
+			representative_email: document.formularioSociedad.mailApoderado.value,
+			export_countries: [
+				"Bolivia, Paraguay, Venezuela"
+			],
+			creation_date: document.formularioSociedad.fechaCreacion.value
+		})
+	});
 	if (response.status === 201) {
 		const parsedResponse = await response.json();
-		
+
 		// Se sube el archivo de estatuto 
 		const formData = new FormData();
 		formData.append('file', document.getElementById('estatuto').files[0]);
@@ -246,14 +236,10 @@ async function registrarSociedad() {
 			method: 'POST',
 			body: formData,
 		});
-		if (fileResponse.status !== 200) {
-			// Por ahora uso un alert porque el modal es solo para errores como esta, para corregir luego
-				mostrarModalMensaje('Hubo algun error al subir el archivo. Por favor, reintentelo');		
-		} 		
-			// TODO Aca deberiamos, por ejemplo, pedir que vuelva a intentar subir SOLO el archivo
-		
-	} 
-	else {
+		if (fileResponse.status !== 200) {		
+			mostrarModalMensaje('Hubo algun error al subir el archivo. Por favor, reintentelo');
+		}
+	} else {
 		mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
 	}
 }
@@ -292,22 +278,22 @@ function customSelect(event, multiSelect) {
 
 
 function validarInsercionSocio() {
-/*
-	// APELLIDO DEL SOCIO - VACIO
-	if (document.formularioSociedad.apellidoSocio.value.length == 0) {
-		let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
-		document.formularioSociedad.apellidoSocio.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-	// NOMBRE DEL SOCIO - VACIO 
-	if (document.formularioSociedad.nombreSocio.value.length == 0) {
-		let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
-		document.formularioSociedad.nombreSocio.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-*/
+	/*
+		// APELLIDO DEL SOCIO - VACIO
+		if (document.formularioSociedad.apellidoSocio.value.length == 0) {
+			let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
+			document.formularioSociedad.apellidoSocio.focus();
+			mostrarModalMensaje(mensaje)
+			return false;
+		}
+		// NOMBRE DEL SOCIO - VACIO 
+		if (document.formularioSociedad.nombreSocio.value.length == 0) {
+			let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
+			document.formularioSociedad.nombreSocio.focus();
+			mostrarModalMensaje(mensaje)
+			return false;
+		}
+	*/
 	// PORCENTAJE DE APORTES - VACIO
 	if (document.formularioSociedad.porcentajeAportes.value.length == 0) {
 		let $mensaje = 'Por favor, ingresá un porcentaje de aportes.';
@@ -346,7 +332,7 @@ function validarInsercionSocio() {
 		mostrarModalMensaje(mensaje);
 		return false;
 	}
-	sociosIngresados = true;
+
 	return true;
 }
 
@@ -367,10 +353,10 @@ function agregarSocio(porcentajeAportado) {
 	containerSocio.hidden = true;
 	let filaSocio = agregarSocioEnTabla();
 	agregarSocioEnSociedad(porcentajeAportado);
-	if (porcentajeAportado > porcentajeRepresentanteSugeridoActual) {
+	if (porcentajeAportado >= porcentajeRepresentanteSugeridoActual) {
 		idFilaRepresentanteSugerido = filaSocio;
 		porcentajeRepresentanteSugeridoActual = porcentajeAportado;
-		representanteSugerido.textContent = apellidoSocio.value + ' ' + nombreSocio.value + ' - ' + porcentajeAportado;
+		representanteSugerido.textContent = apellidoSocio.value + ' ' + nombreSocio.value + ' (' + porcentajeAportado;
 	}
 	refrescarTabla_Select();
 	agregarSocioEnSelect();
@@ -381,8 +367,12 @@ function agregarSocio(porcentajeAportado) {
 	dniSocio.focus();
 }
 
-function agregarSocioEnSociedad(porcentajeAportado){
-	let socio = {id:idSocioAgregado, percentage:porcentajeAportado};
+function agregarSocioEnSociedad(porcentajeAportado) {
+	let socio = {
+		id: idSocioAgregado,
+		percentage: porcentajeAportado
+	};
+	idSociosAgregados.add(idSocioAgregado);
 	sociosEnSociedad.push(socio);
 }
 
@@ -406,7 +396,7 @@ function agregarSocioEnTabla() {
 	iconEliminar.title = "Eliminar";
 	// iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "btn", "btn-white");
 	iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "bg-white", "rounded", "shadow");
-	iconEliminar.addEventListener('click', eliminarSocio.bind(this, newRow));
+	iconEliminar.addEventListener('click', eliminarSocio.bind(this, newRow, idSocioAgregado));
 	newCell.appendChild(iconEliminar);
 	return newRow.rowIndex;
 }
@@ -418,34 +408,55 @@ function agregarSocioEnSelect() {
 	representanteLegal.add(newOption);
 }
 
-function eliminarSocioEnSelect(index){
-		if (representanteLegal.options[index].selected) {
-			representanteLegal.options[0].selected = true
-		}
-		representanteLegal.options[index].remove();
+function eliminarSocioEnSelect(index) {
+	if (representanteLegal.options[index].selected) {
+		representanteLegal.options[0].selected = true
+	}
+	representanteLegal.options[index].remove();
 }
 
 
-function eliminarSocio(rowSocio) {
-	containerDni.hidden = false;
-	let index = rowSocio.rowIndex;
-	let indexSocio = rowSocio.rowIndex;
-	// TODO Cambiar columna porcentaje por input number
-	totalPorcentajeSocios -= parseInt(rowSocio.cells[columnaPorcentaje].textContent);
-	if (btnAgregarSocio.disabled) {
-		btnAgregarSocio.disabled = false;
-	}
-	eliminarSocioEnSelect(index);
+function eliminarSocio(rowSocio, idSocio) {
 
-	rowSocio.remove()
-	for (index; index < tablaSocios.rows.length; index++) {
-		tablaSocios.rows[index].cells[0].textContent = tablaSocios.rows[index].rowIndex;
-	}
-	if (indexSocio == idFilaRepresentanteSugerido) {
-		idFilaRepresentanteSugerido = encontrarMaximoRepresentante(indexSocio);
-		representanteSugerido.textContent = idFilaRepresentanteSugerido ? representanteLegal.options[idFilaRepresentanteSugerido].textContent : "";
-	}
-	refrescarTabla_Select();
+	Swal.fire({
+		title: '¿Estás seguro de eliminar al socio?',
+		icon: 'warning',
+		reverseButtons: true,
+		showCancelButton: true,
+		cancelButtonText: 'Cancelar',
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Aceptar'
+	}).then((result) => {
+		if (result.isConfirmed) {
+			containerDni.hidden = false;
+			let index = rowSocio.rowIndex;
+			let indexSocio = rowSocio.rowIndex;
+			totalPorcentajeSocios -= parseInt(rowSocio.cells[columnaPorcentaje].textContent);
+			if (btnAgregarSocio.disabled) {
+				btnAgregarSocio.disabled = false;
+			}
+			eliminarSocioEnSelect(index);
+			idSociosAgregados.delete(idSocio);
+			let indexFinded = sociosEnSociedad.findIndex(socio => socio.id === idSocio);
+			sociosEnSociedad.splice(indexFinded, 1);
+			porcentajesSocios.splice(indexSocio - 1, 1);
+			rowSocio.remove()
+			for (index; index < tablaSocios.rows.length; index++) {
+				tablaSocios.rows[index].cells[0].textContent = tablaSocios.rows[index].rowIndex;
+			}
+			if (indexSocio == idFilaRepresentanteSugerido) {
+				porcentajeRepresentanteSugeridoActual = 0;
+				if (idSociosAgregados.size > 0) {
+					idFilaRepresentanteSugerido = encontrarMaximoRepresentante();
+					representanteSugerido.textContent = representanteLegal.options[idFilaRepresentanteSugerido].textContent+' ('+porcentajeRepresentanteSugeridoActual;
+				} else {
+					representanteSugerido.textContent = "";
+				}
+			}
+			refrescarTabla_Select();
+		}
+	})
 }
 
 function refrescarTabla_Select() {
@@ -456,18 +467,15 @@ function refrescarTabla_Select() {
 	}
 }
 
-function encontrarMaximoRepresentante(indexActual){
-		porcentajesSocios.splice(indexActual-1,1);
-		var indexMaxPorcentaje;
-		var maxPorcentaje = 0;
-		for (let index = 0; index < porcentajesSocios.length; index++){
-			if (porcentajesSocios[index] > maxPorcentaje){
-				maxPorcentaje = porcentajesSocios[index];
-				indexMaxPorcentaje = index;
-			}
+function encontrarMaximoRepresentante() {
+	var indexMaxPorcentaje;
+	for (let index = 0; index < porcentajesSocios.length; index++) {
+		if (porcentajesSocios[index] > porcentajeRepresentanteSugeridoActual) {
+			porcentajeRepresentanteSugeridoActual = porcentajesSocios[index];
+			indexMaxPorcentaje = index;
 		}
-
-		return indexMaxPorcentaje+1;
+	}
+	return indexMaxPorcentaje + 1;
 }
 
 function validarDniSocio() {
@@ -478,6 +486,15 @@ function validarDniSocio() {
 		mostrarModalMensaje(mensaje)
 		return false;
 	}
+
+	// DNI DEL SOCIO - HASTA 8 CARACTERES
+	if (document.formularioSociedad.dniSocio.value.length < 7) {
+		let mensaje = 'Por favor, el DNI del socio debe tener como mínimo 7 caracteres.';
+		document.formularioSociedad.dniSocio.focus();
+		mostrarModalMensaje(mensaje);
+		return false;
+	}
+
 	// DNI DEL SOCIO - HASTA 8 CARACTERES
 	if (document.formularioSociedad.dniSocio.value.length > 8) {
 		let mensaje = 'Por favor, el DNI del socio debe tener hasta 8 caracteres.';
@@ -493,47 +510,54 @@ function validarDniSocio() {
 		mostrarModalMensaje($mensaje);
 		return false;
 	}
+
 	return true
+}
+
+function mostrarCamposAportes() {
+	containerAportes.hidden = false;
+	containerSocio.hidden = false;
+	porcentajeAportes.focus();
 }
 
 async function getSocioAsync() {
 	let response = await fetch('http://localhost:8000/socio?dni=' + dniSocio.value);
 	let socio = await response.json();
-	// 	.then(response => response.json())
-	// 	.then(json => console.log(json))
-	// 	console.log(response);
-	// 	debugger;		
 
 	if (socio.length > 0) {
+		idSocioAgregado = socio[0].id;
+		if (idSociosAgregados.has(idSocioAgregado)) {
+			let mensaje = "El socio ya está ingresado.";
+			dniSocio.value = "";
+			dniSocio.focus();
+			mostrarModalMensaje(mensaje);
+			return false;
+		}
 		apellidoSocio.disabled = true;
 		nombreSocio.disabled = true;
-		idSocioAgregado = socio[0].id;
 		apellidoSocio.value = socio[0].last_name;
 		nombreSocio.value = socio[0].first_name;
-		containerAportes.hidden = false;
-		containerSocio.hidden = false;
+		mostrarCamposAportes();
 	} else {
-		// let mensaje = "No se ha encontrado el socio, por favor ingresalo."
-		// apellidoSocio.focus();
-		// mostrarModalMensaje(mensaje)
-		// return;
 		registrarSocio();
 	}
 }
 
-function enterPress(){
+function enterPress() {
 	return (event.key == "Enter");
 }
 
 function checkRegistro() {
-	if ((nombreSocioRegistro.value.length > 2) && (nombreSocioRegistro.value.length < 50) && (!/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(nombreSocioRegistro.value)) && (apellidoSocioRegistro.value.length) > 2 && (apellidoSocioRegistro.value.length) < 50 && (!/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(apellidoSocioRegistro.value))) {
-		btnRegistrarSocio.disabled = false;
-		validacionApellido.hidden = true;
+	let nombreValido, apellidoValido;
+	if (nombreValido = ((nombreSocioRegistro.value.length > 2) && (nombreSocioRegistro.value.length < 50) && (!/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(nombreSocioRegistro.value)))) {
 		validacionNombre.hidden = true;
-	} else {
-		btnRegistrarSocio.disabled = true;
 	}
+	if (apellidoValido = ((apellidoSocioRegistro.value.length > 2) && (apellidoSocioRegistro.value.length < 50) && (!/[^a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+/.test(apellidoSocioRegistro.value)))) {
+		validacionApellido.hidden = true;
+	}
+	btnRegistrarSocio.disabled = !(nombreValido && apellidoValido);
 }
+
 
 function validarRegistroSocio() {
 
@@ -585,21 +609,18 @@ function validarRegistroSocio() {
 
 }
 
-
-
-
 function registrarSocio() {
 	Swal.fire({
 		title: 'El socio no se ha encontrado',
 		html: '<div class="swal2-html-container mt-0">Por favor registrelo</div>' +
 			'<label for="nombreSocioRegistro">Nombre</label>' +
-			'<input type="text" id="nombreSocioRegistro" oninput="checkRegistro()" placeholder="Ingrese el nombre" class="swal2-input">' +
+			'<input type="text" id="nombreSocioRegistro" onkeydown="if(enterPress()){apellidoSocioRegistro.focus();}checkRegistro()" placeholder="Ingrese el nombre" class="swal2-input">' +
 			'<p class="note note-warning p-1 mt-3 mb-0" id="validacionNombre" hidden><strong>Importante: </strong><small id="validacionNombreTexto"></small></p>' +
 			'<label for="apellidoSocioRegistro">Apellido</label>' +
-			'<input type="text" id="apellidoSocioRegistro" oninput="checkRegistro()" placeholder="Ingrese el apellido" class="swal2-input">'+
+			'<input type="text" id="apellidoSocioRegistro" oninput="checkRegistro()" placeholder="Ingrese el apellido" class="swal2-input">' +
 			'<p class="note note-warning p-1 mt-3 mb-0" id="validacionApellido" hidden><strong>Importante: </strong><small id="validacionApellidoTexto"></small></p>',
 
-			customClass: {
+		customClass: {
 			htmlContainer: ''
 		},
 		cancelButtonText: 'Cancelar',
@@ -610,17 +631,15 @@ function registrarSocio() {
 		showLoaderOnConfirm: true,
 		preConfirm: (socio) => {
 			return fetch('http://localhost:8000/socio/', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-	
-				},
-				body: JSON.stringify({
-					first_name: nombreSocioRegistro.value,
-					last_name : apellidoSocioRegistro.value,
-					dni: '3369311',
-					email: 'matimosquet@gmail.com'
-					}) 		
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						first_name: nombreSocioRegistro.value,
+						last_name: apellidoSocioRegistro.value,
+						dni: dniSocio.value
+					})
 				})
 				.then(response => {
 					if (!response.ok) {
@@ -637,14 +656,15 @@ function registrarSocio() {
 		allowOutsideClick: () => !Swal.isLoading()
 	}).then((result) => {
 		if (result.isConfirmed) {
-			Swal.fire({
-				title: `${result.value.socio}'s avatar`,
-				imageUrl: result.value.avatar_url
-			})
+			idSocioAgregado = result.value.id;
+			apellidoSocio.value = result.value.first_name;
+			nombreSocio.value = result.value.last_name;
+			mostrarCamposAportes();
 		}
 	})
 	let buttonSwal = document.getElementsByClassName("swal2-confirm")[0];
 	buttonSwal.addEventListener('mouseover', validarRegistroSocio.bind(this));
 	buttonSwal.id = "btnRegistrarSocio";
 	buttonSwal.disabled = true;
+	nombreSocioRegistro.focus();
 }
