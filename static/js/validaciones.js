@@ -177,13 +177,6 @@ function validarFormulario(event) {
 	}
 
 	registrarSociedad();
-	Swal.fire({
-		position: 'top',
-		icon: 'success',
-		title: 'La sociedad ha sido guardada correctamente!',
-		showConfirmButton: true,
-		confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
-	})
 	return true;
 }
 
@@ -207,7 +200,6 @@ const csrftoken = getCookie('csrftoken');
 
 
 async function registrarSociedad() {
-
 	const response = await fetch(localHost+'/sociedad_anonima/', {
 		method: 'POST',
 		headers: {
@@ -227,6 +219,13 @@ async function registrarSociedad() {
 		})
 	});
 	if (response.status === 201) {
+		Swal.fire({
+			position: 'top',
+			icon: 'success',
+			title: 'La sociedad ha sido guardada correctamente!',
+			showConfirmButton: true,
+			confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
+		})
 		const parsedResponse = await response.json();
 
 		// Se sube el archivo de estatuto 
@@ -488,12 +487,12 @@ function validarDniSocio() {
 	}
 
 	// DNI DEL SOCIO - HASTA 8 CARACTERES
-	// if (document.formularioSociedad.dniSocio.value.length < 7) {
-	// 	let mensaje = 'Por favor, el DNI del socio debe tener como mínimo 7 caracteres.';
-	// 	document.formularioSociedad.dniSocio.focus();
-	// 	mostrarModalMensaje(mensaje);
-	// 	return false;
-	// }
+	if (document.formularioSociedad.dniSocio.value.length < 7) {
+		let mensaje = 'Por favor, el DNI del socio debe tener como mínimo 7 caracteres.';
+		document.formularioSociedad.dniSocio.focus();
+		mostrarModalMensaje(mensaje);
+		return false;
+	}
 
 	// DNI DEL SOCIO - HASTA 8 CARACTERES
 	if (document.formularioSociedad.dniSocio.value.length > 8) {
@@ -533,8 +532,6 @@ async function getSocioAsync() {
 			mostrarModalMensaje(mensaje);
 			return false;
 		}
-		apellidoSocio.disabled = true;
-		nombreSocio.disabled = true;
 		apellidoSocio.value = socio[0].last_name;
 		nombreSocio.value = socio[0].first_name;
 		mostrarCamposAportes();

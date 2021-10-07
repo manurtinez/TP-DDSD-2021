@@ -71,8 +71,20 @@ caption {
 	margin-bottom: 2rem !important;
 }
 
+.cursor-default{
+	cursor: default !important;
+}
+
 .cursor-pointer {
-	cursor: pointer;
+	cursor: pointer !important;
+}
+
+.cursor-wait{
+	cursor: wait !important; 
+}
+
+.cursor-progress{
+	cursor: progress !important;
 }
 
 .etiqueta-form{
