@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
-import json
+from utils.bonita_service import bonita_api_call, bonita_login
 
 # IMPORTANTE por ahora esta API esta abierta, sin embargo cuando llegue el momento va a tener que autenticarse para
 # accederla
@@ -69,6 +69,10 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             # Tengo que agregar el ID de la nueva instancia al serializer para devolverlo
             response_data = serializer.data
             response_data['id'] = new_sa.id
+
+            # Se inicia el proceso en bonita
+            self.start_bonita_process()
+
             return Response(data=response_data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -92,3 +96,18 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     #         return SociedadAnonimaSerializer
     #     else:
     #         return SociedadAnonimaRetrieveSerializer
+
+    def start_bonita_process(self):
+        """
+        Este metodo dispara una instancia del proceso en bonita.
+        NOTA: hay que refactorizar el login y implementar manejo de excepciones.
+        """
+        # Por ahora, el login hardcodeado cada vez que se crea una SA
+        bonita_login()
+
+        # Esto devuelve un array de procesos, en nuestro caso, uno solo, como Dict
+        bonita_process = bonita_api_call('process', 'get', '?s=Proceso')[0]
+
+        # Se arranca la instancia (caso) del proceso
+        bonita_api_call('case', 'post', data={
+                        "processDefinitionId": bonita_process['id']})
