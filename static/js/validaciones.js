@@ -526,7 +526,7 @@ async function getSocioAsync() {
 	let response = await fetch('http://localhost:8000/socio?dni=' + dniSocio.value, {
 		method: 'GET',
 			headers: {
-				mode: 'cors',				
+				'Access-Control-Allow-Origin': '*',			
 			},
 	});
 	let socio = await response.json();
