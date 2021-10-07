@@ -29,17 +29,16 @@ def bonita_login():
 
 
 def bonita_api_call(resource,  method, url_params='', data={}):
-    try:
-        response = requests.request(method, url='http://localhost:8080/bonita/API/bpm/'+resource+url_params,
-                                    cookies={
-                                        'JSESSIONID': session_store['jsessionid']
-                                    },
-                                    headers={
-                                        'X-Bonita-API-Token': session_store['bonita_api_token']
-                                    },
-                                    data=json.dumps(data)
-                                    )
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(e)
-        return None
+    response = requests.request(method, url='http://localhost:8080/bonita/API/bpm/'+resource+url_params,
+                                cookies={
+                                    'JSESSIONID': session_store['jsessionid']
+                                },
+                                headers={
+                                    'X-Bonita-API-Token': session_store['bonita_api_token']
+                                },
+                                data=json.dumps(data)
+                                )
+    if (int(str(response.status_code)[0]) == 4):
+        raise requests.exceptions.RequestException(
+            f'El request para recurso {resource} de bonita fallo con codigo {response.status_code}')
+    return response.json() if resource != 'caseVariable' else True
