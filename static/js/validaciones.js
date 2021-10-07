@@ -11,7 +11,7 @@ const opcionesSeleccionadas = new Set();
 const idSociosAgregados = new Set();
 // Arreglo de objetos con el id y el porcentaje del socio aportado
 const sociosEnSociedad = [];
-
+const localHost = window.location.origin;
 
 function validarFormulario(event) {
 	event.preventDefault()
@@ -208,7 +208,7 @@ const csrftoken = getCookie('csrftoken');
 
 async function registrarSociedad() {
 
-	const response = await fetch('http://localhost:8000/sociedad_anonima/', {
+	const response = await fetch(localHost+'/sociedad_anonima/', {
 		method: 'POST',
 		headers: {
 			'X-CSRFToken': csrftoken,
@@ -232,7 +232,7 @@ async function registrarSociedad() {
 		// Se sube el archivo de estatuto 
 		const formData = new FormData();
 		formData.append('file', document.getElementById('estatuto').files[0]);
-		const fileResponse = await fetch(`http://localhost:8000/sociedad_anonima/${parsedResponse.id}/subir_archivo/`, {
+		const fileResponse = await fetch(`${localHost}/sociedad_anonima/${parsedResponse.id}/subir_archivo/`, {
 			method: 'POST',
 			body: formData,
 		});
@@ -521,8 +521,7 @@ function mostrarCamposAportes() {
 }
 
 async function getSocioAsync() {
-	let localURL = window.location.protocol+'//'+window.location.hostname+":"+window.location.port;
-	let response = await fetch(localURL+'/socio?dni=' + dniSocio.value,{mode: 'cors'});
+	let response = await fetch(localHost+'/socio?dni=' + dniSocio.value);
 	let socio = await response.json();
 
 	if (socio.length > 0) {
@@ -631,7 +630,7 @@ function registrarSocio() {
 		reverseButtons: true,
 		showLoaderOnConfirm: true,
 		preConfirm: (socio) => {
-			return fetch('http://localhost:8000/socio/', {
+			return fetch(localHost+'/socio/', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
