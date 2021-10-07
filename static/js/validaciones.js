@@ -236,12 +236,9 @@ async function registrarSociedad() {
 			method: 'POST',
 			body: formData,
 		});
-		if (fileResponse.status !== 200) {
-			// Por ahora uso un alert porque el modal es solo para errores como esta, para corregir luego
+		if (fileResponse.status !== 200) {		
 			mostrarModalMensaje('Hubo algun error al subir el archivo. Por favor, reintentelo');
 		}
-		// TODO Aca deberiamos, por ejemplo, pedir que vuelva a intentar subir SOLO el archivo
-
 	} else {
 		mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
 	}
@@ -531,9 +528,9 @@ async function getSocioAsync() {
 		idSocioAgregado = socio[0].id;
 		if (idSociosAgregados.has(idSocioAgregado)) {
 			let mensaje = "El socio ya está ingresado.";
-			mostrarModalMensaje(mensaje);
 			dniSocio.value = "";
 			dniSocio.focus();
+			mostrarModalMensaje(mensaje);
 			return false;
 		}
 		apellidoSocio.disabled = true;
