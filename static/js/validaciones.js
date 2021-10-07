@@ -488,12 +488,12 @@ function validarDniSocio() {
 	}
 
 	// DNI DEL SOCIO - HASTA 8 CARACTERES
-	if (document.formularioSociedad.dniSocio.value.length < 7) {
-		let mensaje = 'Por favor, el DNI del socio debe tener como mínimo 7 caracteres.';
-		document.formularioSociedad.dniSocio.focus();
-		mostrarModalMensaje(mensaje);
-		return false;
-	}
+	// if (document.formularioSociedad.dniSocio.value.length < 7) {
+	// 	let mensaje = 'Por favor, el DNI del socio debe tener como mínimo 7 caracteres.';
+	// 	document.formularioSociedad.dniSocio.focus();
+	// 	mostrarModalMensaje(mensaje);
+	// 	return false;
+	// }
 
 	// DNI DEL SOCIO - HASTA 8 CARACTERES
 	if (document.formularioSociedad.dniSocio.value.length > 8) {
@@ -521,7 +521,8 @@ function mostrarCamposAportes() {
 }
 
 async function getSocioAsync() {
-	let response = await fetch('http://localhost:8000/socio?dni=' + dniSocio.value);
+	let localURL = window.location.protocol+'//'+window.location.hostname+":"+window.location.port;
+	let response = await fetch(localURL+'/socio?dni=' + dniSocio.value,{mode: 'cors'});
 	let socio = await response.json();
 
 	if (socio.length > 0) {
