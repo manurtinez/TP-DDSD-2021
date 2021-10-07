@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+import environ
 from rest_framework import status, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -7,6 +7,10 @@ from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
 from utils.bonita_service import bonita_api_call, bonita_login
+
+# # el objeto env se usa para traer las variables de entorno
+env = environ.Env()
+environ.Env.read_env()
 
 # IMPORTANTE por ahora esta API esta abierta, sin embargo cuando llegue el momento va a tener que autenticarse para
 # accederla
@@ -50,6 +54,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         Este metodo define la creacion de los objetos Sociedad Anonima
         """
         serializer = SociedadAnonimaSerializer(data=request.data)
+
         if serializer.is_valid():
             data = request.data
 
@@ -70,8 +75,9 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             response_data = serializer.data
             response_data['id'] = new_sa.id
 
-            # Se inicia el proceso en bonita
-            self.start_bonita_process()
+            # Se inicia el proceso en bonita si se esta local
+            if env('DJANGO_DEVELOPMENT') == 'True':
+                self.start_bonita_process()
 
             return Response(data=response_data, status=status.HTTP_201_CREATED)
         else:

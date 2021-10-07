@@ -10,10 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from pathlib import Path
 import os
 import environ
-import dj_database_url
 import django_heroku
 
 # # el objeto env se usa para traer las variables de entorno
