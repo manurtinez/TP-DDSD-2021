@@ -240,7 +240,7 @@ async function registrarSociedad() {
 			mostrarModalMensaje('Hubo algun error al subir el archivo. Por favor, reintentelo');
 		}
 	} else {
-		mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+		// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
 	}
 }
 
