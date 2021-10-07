@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b5bf39d6-f172-427a-a17a-4c0ddd2cbb99",
+		"_postman_id": "e5f30ca2-2bd3-4d9d-b193-79c38c580721",
 		"name": "django DSSD",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -54,13 +54,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8000/socio",
+							"raw": "localhost:8000/socio/",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
-								"socio"
+								"socio",
+								""
 							]
 						}
 					},
@@ -97,7 +98,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"asd\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"percentage\": 70,\r\n            \"is_representative\": true\r\n        }\r\n    ],\r\n    \"export_countries\": [\r\n        \"argentina\",\r\n        \"brasil\"\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"asd\"\r\n}",
+							"raw": "{\r\n    \"name\": \"asd\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30\r\n        }\r\n    ],\r\n    \"export_countries\": [\r\n        \"argentina\",\r\n        \"brasil\"\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"asd\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -224,6 +225,128 @@
 								"userTask",
 								"1",
 								"execution"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listar procesos definidos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{bonita_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"processDefinitionId\":\"5777042023671752656\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/process?s=Proceso",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"process"
+							],
+							"query": [
+								{
+									"key": "s",
+									"value": "Proceso"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "instanciar caso de proceso con ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{bonita_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"processDefinitionId\": \"5133440462881207664\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/case",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"case"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "setear variable para caso",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{bonita_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"java.lang.String\",\n    \"value\": \"name\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/caseVariable/3005/nombre",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"caseVariable",
+								"3005",
+								"nombre"
 							]
 						}
 					},
