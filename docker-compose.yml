@@ -25,7 +25,8 @@ services:
       - DATABASE_URL
     volumes:
       - .:/code
-    ports:
-      - 8000:8000
+    network_mode: "host"
+    extra_hosts:
+      - "db:127.0.0.1"
 volumes: 
   db-data:
