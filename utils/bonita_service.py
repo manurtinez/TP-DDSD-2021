@@ -29,6 +29,15 @@ def bonita_login():
 
 
 def bonita_api_call(resource,  method, url_params='', data={}):
+    """
+    Esta funcion realiza un request HTTP al recurso de la API de bonita que se necesite.
+
+    Params:
+        * resource (str): El recurso al cual llamar, por ejemplo, "process", "case", etc.
+        * method (str): El metodo HTTP a utilizar, por ejemplo, "get", "post", "put".
+        * url_params? (str): Parametros adicionales de URL, o extension. Por ejemplo, "?id=1" o "/id/variable".
+        * data? (dict): El body del request. Por ejemplo, { id: 1, name: "asd" }
+    """
     response = requests.request(method, url='http://localhost:8080/bonita/API/bpm/'+resource+url_params,
                                 cookies={
                                     'JSESSIONID': session_store['jsessionid']
