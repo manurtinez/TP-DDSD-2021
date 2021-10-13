@@ -56,7 +56,7 @@
     <!-- <input type="hidden" name="csrfmiddlewaretoken" value="pHK2CZzBB323BM2Nq7DE2sxnQoBG1jPl" disabled="">-->
     <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Alta de sociedad</h3>
     <div class="card-body shadow my-4 text-left px-0 py-4" id="bodyFormulario">
-      <h4><span class="badge etiqueta-form bg-info">Sociedad</span></h4>
+      <h4><span class="badge etiqueta-form bg-primary">Sociedad</span></h4>
       <section class="container container-form" id="containerSociedad">
         <div class="input-group cmy-4">
           <span class="input-group-text border-0"> Nombre:</span>
@@ -155,7 +155,7 @@
         </div>
       </section>
 
-      <h4><span class="badge etiqueta-form bg-info">Socios</span></h4>
+      <h4><span class="badge etiqueta-form bg-primary">Socios</span></h4>
       
       <section class="container container-form" id="containerSocios">
         <div class="row" id="containerDni">
@@ -168,7 +168,7 @@
           </div>
           <div class="col-auto cmy-4">
             <button type="button" onclick="if(validarDniSocio()){getSocioAsync()}" id="btnBuscarSocio"
-              class="btn btn-primary pl-5"><i class="fas fa-search"></i></button>
+              class="btn btn-info pl-5"><i class="fas fa-search"></i></button>
           </div>
         </div>
 
@@ -202,18 +202,18 @@
           <div class="col-auto cmb-4">
             <button type="button"
               onclick="if (validarInsercionSocio()){agregarSocio(parseInt(porcentajeAportes.value))}"
-              id="btnAgregarSocio" class="btn btn-primary pl-5">+</button>
+              id="btnAgregarSocio" class="btn btn-info pl-5">+</button>
           </div>
-        </div>
-        <table id="tablaSocios" class="table table-primary table-hover w-50 mx-auto text-center cmb-4" hidden>
+        </div>                      
+        <table id="tablaSocios" class="table table-hover table-bordered w-50 mx-auto text-center cmb-4" hidden>
           <caption>
-            <h4><span class="badge rounded-pill bg-info">Listado de socios ingresados</span></h4>
+            <h4><span class="badge rounded-pill bg-primary">Listado de socios ingresados</span></h4>
           </caption>
-          <thead class="table-dark ">
+          <thead class="table-primary">
             <tr class="px-5">
               <th scope="col" style="width: 5%;">#</th>
-              <th scope="col" style="width: 70%;">Socio</th>
-              <th scope="col" class="px-0" style="width: 20%;">% Porcentaje</th>
+              <th scope="col" style="width: 50%;">Socio</th>
+              <th scope="col" class="px-0" style="width: 20%;">% aportes</th>
               <th scope="col" style="width: 5%;">Acciones</th>
             </tr>
           </thead>
@@ -242,7 +242,7 @@
 
     </div>
     <div class="text-center">
-      <button type="submit" id="submit" class="btn btn-primary mb-4 mt-3"> <i class="fas fa-save"></i>
+      <button type="submit" id="submit" class="btn btn-info mb-4 mt-3"> <i class="fas fa-save"></i>
         Guardar</button>
     </div>
   </form>
