@@ -44,10 +44,21 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     Este ViewSet provee acciones `list`, `create`, `retrieve`,
     `update` and `destroy` para el modelo SociedadAnonima.
     """
-    queryset = SociedadAnonima.objects.all()
     serializer_class = SociedadAnonimaRetrieveSerializer
     # IMPORTANTE cambiar esto cuando haya autenticacion
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        """
+        Se admite un parametro 'name', para filtrar sociedades por nombre, y ver si ya existen.
+        Sin este filtro, se devuelven todas las sociedades
+        """
+        queryset = SociedadAnonima.objects.all()
+        name = self.request.query_params.get('name')
+        if name:
+            # El filter se hace por nombre completo, entonces, debe coincidir completamente
+            queryset = queryset.filter(name=name.lower())
+        return queryset
 
     def create(self, request):
         """
