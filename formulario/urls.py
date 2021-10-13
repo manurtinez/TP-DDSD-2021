@@ -15,5 +15,7 @@ router.register(r'socio', SocioViewSet, basename='socio')
 urlpatterns = [
     path('', include(router.urls)),
     path('sociedad_anonima/alta', TemplateView.as_view(
-        template_name='altaDeFormulario.html'), name="alta_formulario")
+        template_name='altaDeFormulario.html'), name="alta_formulario"), 
+    path('sociedad_anonima/ver', TemplateView.as_view(
+        template_name='verSociedadPublica.html'), name="ver_sociedad_publica")
 ]

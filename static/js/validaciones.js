@@ -176,6 +176,7 @@ function validarFormulario(event) {
 		return false;
 	}
 
+	// TODO mover afuera de la funcion y utilizar el booleano que retorna esta funcion
 	registrarSociedad();
 	return true;
 }
@@ -211,6 +212,7 @@ async function registrarSociedad() {
 			real_domicile: document.formularioSociedad.domicilioReal.value,
 			legal_domicile: document.formularioSociedad.domicilioLegal.value,
 			partners: sociosEnSociedad,
+			idApoderado: representanteLegal.value,
 			representative_email: document.formularioSociedad.mailApoderado.value,
 			export_countries: [
 				"Bolivia, Paraguay, Venezuela"
