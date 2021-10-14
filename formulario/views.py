@@ -57,7 +57,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         name = self.request.query_params.get('name')
         if name:
             # El filter se hace por nombre completo, entonces, debe coincidir completamente
-            queryset = queryset.filter(name=name.lower())
+            queryset = queryset.filter(name__iexact=name.lower())
         return queryset
 
     def create(self, request):
