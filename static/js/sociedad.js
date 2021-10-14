@@ -3,7 +3,7 @@
 // Paises y estados seleccionados
 const opcionesSeleccionadas = new Set();
 
-function validarFormulario(event) {
+async function validarFormulario(event) {
 	event.preventDefault()
 
 	// NOMBRE DE LA SOCIEDAD
@@ -165,7 +165,7 @@ function validarFormulario(event) {
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
-	if(existeSociedadConNombre(nombreSociedad.value)){
+	if(await existeSociedadConNombre(nombreSociedad.value)){
 		let mensaje = 'Ya existe una sociedad con ese nombre, por favor introduzca otro.';
 		document.formularioSociedad.nombreSociedad.focus();
 		mostrarModalMensaje(mensaje)
@@ -223,11 +223,7 @@ async function registrarSociedad() {
 }
 
 async function existeSociedadConNombre(nombre) {
-	let response = await fetch(localHost + '/sociedad_anonima?name=' + nombre).then(response => response.json());
-	let sociedad = response[0];
-	if (sociedad) {
-		return sociedad;
-	} else {
-		return false;
-	}
+	let response = await fetch(localHost + '/sociedad_anonima?name=' + nombre);
+	const response_parseada = await response.json()
+	return response_parseada.length === 0 ? false : true
 }
