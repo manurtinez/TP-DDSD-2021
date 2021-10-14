@@ -89,6 +89,6 @@ def start_bonita_process(new_sa):
         #             'type': java_types[type(value).__name__], 'value': value})
 
         return True
-    except requests.exceptions.RequestException as e:
+    except (requests.exceptions.RequestException, KeyError) as e:
         print(e)
         return False
