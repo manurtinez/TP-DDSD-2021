@@ -165,6 +165,12 @@ function validarFormulario(event) {
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
+	if(existeSociedadConNombre(nombreSociedad.value)){
+		let mensaje = 'Ya existe una sociedad con ese nombre, por favor introduzca otro.';
+		document.formularioSociedad.nombreSociedad.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
 
 	// TODO mover afuera de la funcion y utilizar el booleano que retorna esta funcion
 	registrarSociedad();
@@ -213,5 +219,15 @@ async function registrarSociedad() {
 		}
 	} else {
 		// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+	}
+}
+
+async function existeSociedadConNombre(nombre) {
+	let response = await fetch(localHost + '/sociedad_anonima?name=' + nombre).then(response => response.json());
+	let sociedad = response[0];
+	if (sociedad) {
+		return sociedad;
+	} else {
+		return false;
 	}
 }
