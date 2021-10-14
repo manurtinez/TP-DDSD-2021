@@ -10,7 +10,7 @@ def default_country_list():
 
 
 class SociedadAnonima(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
     creation_date = models.DateField()
     partners = models.ManyToManyField(
         'Socio', through='SocioSA')
