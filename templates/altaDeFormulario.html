@@ -166,11 +166,11 @@
             <div class="input-group">
               <span class="input-group-text border-0">DNI:</span>
               <div class="input-group-text"><i class="far fa-address-card"></i></div>
-              <input type="text" onkeydown="if(enterPress(event)){if (validarDniSocio()){getSocioAsync()}}" class="form-control" id="dniSocio" name="dniSocio" placeholder="Por ej. 28872367">
+              <input type="text" onkeydown="if(enterPress(event)){if (validarDniSocio()){buscarSocio(this.value)}}" class="form-control" id="dniSocio" name="dniSocio" placeholder="Por ej. 28872367">
             </div>
           </div>
           <div class="col-auto cmy-4">
-            <button type="button" onclick="if(validarDniSocio()){getSocioAsync()}" id="btnBuscarSocio"
+            <button type="button" onclick="if(validarDniSocio()){buscarSocio(dniSocio.value)}" id="btnBuscarSocio"
               class="btn btn-info pl-5"><i class="fas fa-search"></i></button>
           </div>
         </div>

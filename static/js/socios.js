@@ -257,22 +257,31 @@ function mostrarCamposAportes() {
 	porcentajeAportes.focus();
 }
 
-async function getSocioAsync() {
-	let response = await fetch(localHost+'/socio?dni=' + dniSocio.value);
-	let socio = await response.json();
+async function existeSocioConDni(dni) {
+	// Se contempla solamente el caso positivo si se encontro al socio o si no. Faltan agregar los casos para otras respuestas del servidor
+	let response = await fetch(localHost + '/socio?dni=' + dni).then(response => response.json());
+	let socio = response[0];
+	if (socio) {
+		return socio;
+	} else {
+		return false;
+	}
+}
 
-	if (socio.length > 0) {
-		idSocioAgregado = socio[0].id;
-		if (idSociosAgregados.has(idSocioAgregado)) {
+async function buscarSocio(inputDni) {
+	if (socio = await existeSocioConDni(inputDni)) {
+		idSocioAgregado = socio.id;
+		if (idSociosAgregados.has(socio.id)) {
 			let mensaje = "El socio ya está ingresado.";
 			dniSocio.value = "";
 			dniSocio.focus();
 			mostrarModalMensaje(mensaje);
 			return false;
+		} else {
+			apellidoSocio.value = socio.last_name;
+			nombreSocio.value = socio.first_name;
+			mostrarCamposAportes();
 		}
-		apellidoSocio.value = socio[0].last_name;
-		nombreSocio.value = socio[0].first_name;
-		mostrarCamposAportes();
 	} else {
 		registrarSocio();
 	}
