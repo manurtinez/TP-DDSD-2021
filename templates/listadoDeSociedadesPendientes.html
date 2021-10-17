@@ -21,7 +21,7 @@
 <body class="bg-light" onload="refrescarTabla_Select()">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'alta_formulario' %}">Sistema de Sociedades</a>
+      <a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
         aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -33,58 +33,60 @@
     class="card container shadow pb-4 px-4 my-5" id="formularioSociedad" name="formularioSociedad"
     onsubmit="return validarFormulario(event);" onkeydown="return event.key != 'Enter';">
     {% csrf_token %}
-    <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Información pública de sociedades</h3>
+    <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Listado de sociedades pendientes de
+      aprobación </h3>
     <div class="card-body shadow my-4 text-left px-0 py-4" id="bodyFormulario">
-      <h4><span class="badge etiqueta-form bg-primary">Sociedad</span></h4>
-
-      <section class="container container-form" id="containerSociedad">
-        <div class="input-group cmy-4">
-          <span class="input-group-text border-0"> Nombre:</span>
-          <div class="input-group-text"><i class="fas fa-users"></i></div>
-          <input type="text" class="form-control w-auto" id="nombreSociedad" name="nombreSociedad"
-            value="Por ej. Juan Rodriguez & Roberto Fernandez Sociedad de Hecho" disabled>
-        </div>
-
-        <div class="input-group  cmb-4">
-          <span class="input-group-text border-0">Fecha de creación: </span>
-          <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-          <input type="text" class="form-control" id="fechaCreacion" name="fechaCreacion" value="23/09/2021" disabled>
-        </div>
-
-        <div class="input-group  cmb-4">
-          <span class="input-group-text border-0">Código QR: </span>
-          <div class="card" style="width: 18rem;">
-            <img src="https://cuefede.files.wordpress.com/2012/07/qrplanet.png"  draggable="false"  class="card-img-top" alt="..." />
-          </div>
-        </div>
-      </section>
-
-      <h4><span class="badge etiqueta-form bg-primary">Socios</span></h4>
-
-      <section class="container container-form" id="containerSocios">
+    
+      <section class=" " id="containerSocios">
 
         <table id="tablaSocios" class="table table-hover table-bordered w-50 mx-auto text-center cmb-4 text-nowrap">
           <caption>
-            <h4><span class="badge rounded-pill bg-primary">Listado de socios</span></h4>
+            <h4><span class="badge rounded-pill bg-primary">Información de las sociedades</span></h4>
           </caption>
           <thead class="table-primary">
             <tr class="px-5">
-              <th scope="col">Apellido y nombre</th>
-              <th scope="col">Porcentaje de acciones</th>
+              <th scope="col">Nombre</th>
+              <th scope="col" style="width: 55%;">Fecha de creación</th>
+              <th scope="col" style="width: 75%;">Domicilio legal</th>
+              <th scope="col">Domicilio real</th>
+              <th scope="col">Representante legal</th>
+              <th scope="col">Mail representante legal</th>
+              <th scope="col">Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Mark</td>
               <td>Mark</td>
+              <td>Mark</td>
+              <td>Mark</td>
+              <td>Mark</td>
+              <td>Mark</td>
+              <td> <a href="{% url 'index' %}" class="btn btn-info ">Ver </a>                
+                 <a href="{% url 'index' %}" class="btn btn-info">Aprobar</a>
+              </td>
             </tr>
             <tr>
               <td>Jacob</td>
               <td>Jacob</td>
+              <td>Jacob</td>
+              <td>Jacob</td>
+              <td>Jacob</td>
+              <td>Jacob</td>
+              <td> <a href="{% url 'index' %}" class="btn btn-info ">Ver </a>                
+                <a href="{% url 'index' %}" class="btn btn-info">Aprobar</a>
+             </td>
             </tr>
             <tr>
               <td>Larry the Bird</td>
               <td>Larry the Bird</td>
+              <td>Larry the Bird</td>
+              <td>Larry the Bird</td>
+              <td>Larry the Bird</td>
+              <td>Larry the Bird</td>
+              <td> <a href="{% url 'index' %}" class="btn btn-info ">Ver </a>                
+                <a href="{% url 'index' %}" class="btn btn-info">Aprobar</a>
+             </td>
             </tr>
           </tbody>
         </table>
