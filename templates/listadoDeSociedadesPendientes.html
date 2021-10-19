@@ -19,7 +19,7 @@
   <!-- JavaScript -->
   <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/mesaEntradas.js' %}"></script>
-  <title>Alta de sociedad anónima</title>
+  <title>Listado de sociedades pendientes</title>
 </head>
 
 <body class="bg-light" onload="getSociedadesPendientesAprobacion()">
@@ -63,25 +63,86 @@
       </section>
     </div>
     <div class="text-center">
-
       <h5 class="mt-3"><a href="{% url 'index' %}" class="btn btn-info mb-4 mt-3"><i
             class="fas fa-arrow-circle-left"></i> Volver al inicio </a></h5>
     </div>
   </main>
 
+  <!-- MODAL DETALLE DE SOCIEDAD -->
   <div class="modal fade" id="modalVerDetalle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalVerDetalle">Modal title</h5>
+          <h5 class="modal-title" id="modalVerDetalle"> Detalle de la sociedad</h5>
           <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">...</div>
+        <div class="modal-body">
+          <h4><span class="badge rounded-pill bg-primary">Sociedad</span></h4>
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0"> Nombre:</span>         
+            <span class="input-group-text border-0" id="nombreSociedad"> Matias Mosquera Society</span>
+          </div>  
+  
+          <div class="input-group  cmy-2">
+            <span class="input-group-text border-0">Fecha de creación: </span>  
+            <span class="input-group-text border-0" id="fechaCreacion">12/08/2021 </span>                    
+          </div>
+
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0">Domicilio legal: </span>
+            <span class="input-group-text border-0" id="domicilioLegal">La casa de Gerardo</span>            
+          </div>
+    
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0">Domicilio real: </span>
+            <span class="input-group-text border-0" id="domicilioReal">La casa de Marisa</span>            
+          </div>
+
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0">Mail del apoderado: </span>
+            <span class="input-group-text border-0" id="mailApoderado">matimosquet@gmail.com</span>            
+          </div>
+          
+         <h4><span class="badge rounded-pill  mt-3 bg-primary">Listado de socios</span></h4>
+
+        <div class="input-group cmy-2">
+          <span class="input-group-text border-0">Representante legal: </span>
+          <span class="input-group-text border-0" id="mailApoderado">Luis Mariano</span>            
+        </div>
+
+         <table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2 text-nowrap">
+          <thead class="table-primary">
+            <tr class="px-5">
+              <th scope="col">DNI</th>
+              <th scope="col">Apellido y nombre</th>
+              <th scope="col">Porcentaje de acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>      
+               <td>37998542</td>
+              <td>Mark</td>
+              <td>Mark</td>
+            </tr>
+            <tr>
+              <td>23654789</td>
+              <td>Jacob</td>
+              <td>Jacob</td>
+            </tr>
+            <tr>
+              <td>24856208</td>
+              <td>Larry the Bird</td>
+              <td>Larry the Bird</td>
+            </tr>
+          </tbody>
+        </table>
+     
+        </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
-            Close
+          <button type="button" class="btn btn-info">Aprobar</button>
+          <button type="button" class="btn btn-light" data-mdb-dismiss="modal">Cancelar
           </button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+ 
         </div>
       </div>
     </div>
