@@ -1,157 +1,10 @@
 {
 	"info": {
-		"_postman_id": "e5f30ca2-2bd3-4d9d-b193-79c38c580721",
-		"name": "django DSSD",
+		"_postman_id": "ccf28d03-2516-44df-bd34-eab2a1ceef49",
+		"name": "proyecto DSSD",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
-		{
-			"name": "socios",
-			"item": [
-				{
-					"name": "traer socios",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"first_name\": \"hola\",\r\n    \"last_name\": \"chau\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8000/socio/",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"socio",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "agregar socio",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"first_name\": \"hola\",\r\n    \"last_name\": \"chau\",\r\n    \"dni\": 1234\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8000/socio/",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"socio",
-								""
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "sociedad anonima",
-			"item": [
-				{
-					"name": "traer sociedades",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8000/sociedad-anonima/",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"sociedad-anonima",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "crear sociedad",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"asd\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30\r\n        }\r\n    ],\r\n    \"export_countries\": [\r\n        \"argentina\",\r\n        \"brasil\"\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"asd\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8000/sociedad_anonima/",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"sociedad_anonima",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "subir achivo estatuto",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "file",
-									"type": "file",
-									"src": "/C:/eula.2052.txt"
-								}
-							]
-						},
-						"url": {
-							"raw": "localhost:8000/sociedad-anonima/1/subir_archivo/",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"sociedad-anonima",
-								"1",
-								"subir_archivo",
-								""
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
 		{
 			"name": "bonita",
 			"item": [
@@ -347,6 +200,673 @@
 								"caseVariable",
 								"3005",
 								"nombre"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get process by Name",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:8080/bonita/api/bpm/process?name=Direccion Nacional de Personas Juridicas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"api",
+								"bpm",
+								"process"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Direccion Nacional de Personas Juridicas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "lista cases",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/case?f=processDefinitionId=7495271316608092434",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"case"
+							],
+							"query": [
+								{
+									"key": "f",
+									"value": "processDefinitionId=7495271316608092434"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "case by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/case/6003?d=started_by&d=processDefinitionId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"case",
+								"6003"
+							],
+							"query": [
+								{
+									"key": "d",
+									"value": "started_by"
+								},
+								{
+									"key": "d",
+									"value": "processDefinitionId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "current task para un caseID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/api/bpm/activity?p=0&c=10&f=caseId=6003",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"api",
+								"bpm",
+								"activity"
+							],
+							"query": [
+								{
+									"key": "p",
+									"value": "0"
+								},
+								{
+									"key": "c",
+									"value": "10"
+								},
+								{
+									"key": "f",
+									"value": "caseId=6003"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "lista usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/identity/user?f=enabled=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"identity",
+								"user"
+							],
+							"query": [
+								{
+									"key": "f",
+									"value": "enabled=true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "lista actores por lane bonita studio",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/actor?f=process_id=5284516130895142430",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"actor"
+							],
+							"query": [
+								{
+									"key": "f",
+									"value": "process_id=5284516130895142430"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "info Task by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/userTask/120002",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"userTask",
+								"120002"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "task contract by id (NO SE USA)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/userTask/120006/contract",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"userTask",
+								"120006",
+								"contract"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "asignar task to user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"assigned_id\": \"2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bonita/api/bpm/humanTask/120006",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"api",
+								"bpm",
+								"humanTask",
+								"120006"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list to do user task",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/humanTask?d=rootContainerId&f=state=ready&f=user_id=2&o=displayName+ASC&p=0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"humanTask"
+							],
+							"query": [
+								{
+									"key": "c",
+									"value": "50",
+									"disabled": true
+								},
+								{
+									"key": "d",
+									"value": "rootContainerId"
+								},
+								{
+									"key": "f",
+									"value": "state=ready"
+								},
+								{
+									"key": "f",
+									"value": "user_id=2"
+								},
+								{
+									"key": "o",
+									"value": "displayName+ASC"
+								},
+								{
+									"key": "p",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list assigned user task",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/humanTask?c=50&d=rootContainerId&f=state=ready&f=assigned_id=2&o=displayName+ASC&p=0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"humanTask"
+							],
+							"query": [
+								{
+									"key": "c",
+									"value": "50"
+								},
+								{
+									"key": "d",
+									"value": "rootContainerId"
+								},
+								{
+									"key": "f",
+									"value": "state=ready"
+								},
+								{
+									"key": "f",
+									"value": "assigned_id=2"
+								},
+								{
+									"key": "o",
+									"value": "displayName+ASC"
+								},
+								{
+									"key": "p",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "execution task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/userTask/120006/execution",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"userTask",
+								"120006",
+								"execution"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "django",
+			"item": [
+				{
+					"name": "socios",
+					"item": [
+						{
+							"name": "traer socios",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"first_name\": \"hola\",\r\n    \"last_name\": \"chau\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8000/socio/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"socio",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "agregar socio",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"first_name\": \"hola\",\r\n    \"last_name\": \"chau\",\r\n    \"dni\": 1234\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8000/socio/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"socio",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "sociedad anonima",
+					"item": [
+						{
+							"name": "traer sociedades",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8000/sociedad-anonima/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"sociedad-anonima",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "crear sociedad",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"asd\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30\r\n        }\r\n    ],\r\n    \"export_countries\": [\r\n        \"argentina\",\r\n        \"brasil\"\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"asd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8000/sociedad_anonima/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"sociedad_anonima",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "subir achivo estatuto",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/eula.2052.txt"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8000/sociedad-anonima/1/subir_archivo/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"sociedad-anonima",
+										"1",
+										"subir_archivo",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "api estampillado",
+			"item": [
+				{
+					"name": "registrar user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"escribano\",\n    \"password\": \"1234\",\n    \"email\": \"escribano@escribano.com.ar\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://infinite-inlet-30043.herokuapp.com/register",
+							"protocol": "https",
+							"host": [
+								"infinite-inlet-30043",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtener JWT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"escribano\",\n    \"password\": \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://infinite-inlet-30043.herokuapp.com/api/login_check",
+							"protocol": "https",
+							"host": [
+								"infinite-inlet-30043",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"login_check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listado de estampillados",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://infinite-inlet-30043.herokuapp.com/api/estampillado",
+							"protocol": "https",
+							"host": [
+								"infinite-inlet-30043",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"estampillado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "crear estampillado",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://infinite-inlet-30043.herokuapp.com/api/estampillado",
+							"protocol": "https",
+							"host": [
+								"infinite-inlet-30043",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"estampillado"
 							]
 						}
 					},
