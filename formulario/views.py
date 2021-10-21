@@ -3,6 +3,8 @@ from rest_framework import status, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
@@ -45,20 +47,12 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     `update` and `destroy` para el modelo SociedadAnonima.
     """
     serializer_class = SociedadAnonimaRetrieveSerializer
+    queryset = SociedadAnonima.objects.all()
     # IMPORTANTE cambiar esto cuando haya autenticacion
     permission_classes = [permissions.AllowAny]
-
-    def get_queryset(self):
-        """
-        Se admite un parametro 'name', para filtrar sociedades por nombre, y ver si ya existen.
-        Sin este filtro, se devuelven todas las sociedades
-        """
-        queryset = SociedadAnonima.objects.all()
-        name = self.request.query_params.get('name')
-        if name:
-            # El filter se hace por nombre completo, entonces, debe coincidir completamente
-            queryset = queryset.filter(name__iexact=name.lower())
-        return queryset
+    # Filtros para permitir buscar por name y hash
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name', 'stamp_hash']
 
     def create(self, request):
         """
@@ -78,7 +72,6 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             partners = data['partners']
             for socio in partners:
                 partner = Socio.objects.get(pk=socio['id'])
-                # !! Por ahora el porcentaje esta hardcodeado hasta que este el array de socios del front
                 new_sa.partners.add(
                     partner, through_defaults={'percentage': socio['percentage'], 'is_representative': socio.get('is_representative', False)})
 
@@ -108,9 +101,3 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             return Response({'status': 'Archivo guardado con exito'})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def get_serializer_class(self):
-    #     if self.action == 'create':
-    #         return SociedadAnonimaSerializer
-    #     else:
-    #         return SociedadAnonimaRetrieveSerializer

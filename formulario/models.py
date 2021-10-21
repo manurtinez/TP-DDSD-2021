@@ -23,6 +23,7 @@ class SociedadAnonima(models.Model):
     comformation_statute = models.FileField(upload_to='uploads/', null=True)
 
     representative_email = models.CharField(max_length=30)
+    stamp_hash = models.CharField(max_length=50, unique=True, null=True)
 
     class Meta:
         ordering = ['-name']
