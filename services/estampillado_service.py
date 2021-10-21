@@ -30,13 +30,16 @@ def register_user(username, password, email):
         return False
 
 
-def obtain_token(username, password):
+# POR AHORA, esto no recibe parametros, siempre autoriza al mismo usuario
+def obtain_token():
     """
     Obtener token JWT para un determinado user y guardarlo en sesion
     """
+    username = 'escribano'
+    password = '1234'
     # Si el token ya existe, directamente devolverlo
     try:
-        token = session_store[username+'jwt']
+        token = session_store['estampillado_'+username+'_jwt']
         return token
     # El token no estaba
     except KeyError as e:
@@ -50,6 +53,25 @@ def obtain_token(username, password):
                 env('API_ESTAMPILLADO_URL')+'/api/login_check', headers=headers, data=data)
             response.raise_for_status()
             json_response = response.json()
-            return json_response.token
+            session_store['estampillado_'+username +
+                          '_jwt'] = json_response['token']
+            return json_response['token']
         except (requests.exceptions.RequestException, requests.exceptions.HTTPError) as e:
             print(e)
+
+
+# Por ahora, el hash va a estar HARDCODEADO, siempre devuelve mismo QR
+# TODO para proximas entregas, se va a implementar el resto del servicio
+def obtain_by_hash():
+    hash = '89ff31470d00b95eaf0895fd95f5d321'
+    headers = {
+        'Authorization': f'Bearer {obtain_token()}'
+    }
+    try:
+        response = requests.get(
+            env('API_ESTAMPILLADO_URL')+'/api/estampillado/'+hash, headers=headers)
+        response.raise_for_status()
+        json_response = response.json()
+        return json_response
+    except (requests.exceptions.RequestException, requests.exceptions.HTTPError) as e:
+        print(e)

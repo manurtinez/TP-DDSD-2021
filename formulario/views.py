@@ -9,6 +9,7 @@ from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
 from services.bonita_service import start_bonita_process
+from services.estampillado_service import obtain_by_hash
 
 # # el objeto env se usa para traer las variables de entorno
 env = environ.Env()
@@ -101,3 +102,20 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             return Response({'status': 'Archivo guardado con exito'})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True)
+    def solicitar_estampillado(self, request, pk=None):
+        sa = self.get_object()
+        # TODO implementar
+        pass
+
+    @action(detail=True)
+    def obtener_estampillado(self, request, pk=None):
+        sa = self.get_object()
+        hash = sa.stamp_hash
+        # Por ahora no se envia el hash
+        response = obtain_by_hash()
+        if response:
+            return Response(data=response, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_502_BAD_GATEWAY)
