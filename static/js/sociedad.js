@@ -171,7 +171,7 @@ async function validarFormulario(event) {
 		mostrarModalMensaje(mensaje)
 		return false;
 	}
-
+	setSocioRepresentante(representanteLegal.selectedIndex-1);
 	// TODO mover afuera de la funcion y utilizar el booleano que retorna esta funcion
 	registrarSociedad();
 	return true;
@@ -224,6 +224,6 @@ async function registrarSociedad() {
 
 async function existeSociedadConNombre(nombre) {
 	let response = await fetch(localHost + '/sociedad_anonima?name=' + nombre);
-	const response_parseada = await response.json()
-	return response_parseada.length === 0 ? false : true
+	const response_parseada = await response.json();
+	return response_parseada.length === 0 ? false : true;
 }
