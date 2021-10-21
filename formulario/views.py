@@ -8,7 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
-from utils.bonita_service import start_bonita_process
+from services.bonita_service import start_bonita_process
 
 # # el objeto env se usa para traer las variables de entorno
 env = environ.Env()
