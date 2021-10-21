@@ -58,3 +58,9 @@ function enterPress(event) {
 	}
 }
 
+function agregarOptionEnSelect(select, text, value){
+	let newOption = document.createElement("option");
+	newOption.text = text;
+	newOption.value = value;
+	select.add(newOption);
+}

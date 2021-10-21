@@ -189,6 +189,7 @@ function agregarSocioEnSociedad(porcentajeAportado) {
 	};
 	idSociosAgregados.add(idSocioAgregado);
 	sociosEnSociedad.push(socio);
+	on
 }
 
 // Select Socios
@@ -204,6 +205,10 @@ function eliminarSocioEnSelect(index) {
 		representanteLegal.options[0].selected = true
 	}
 	representanteLegal.options[index].remove();
+}
+
+function setSocioRepresentante(index){
+	sociosEnSociedad[index].is_representative = true;
 }
 
 // Tabla Socios
