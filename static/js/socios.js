@@ -189,7 +189,7 @@ function agregarSocioEnSociedad(porcentajeAportado) {
 	};
 	idSociosAgregados.add(idSocioAgregado);
 	sociosEnSociedad.push(socio);
-
+	on
 }
 
 // Select Socios
