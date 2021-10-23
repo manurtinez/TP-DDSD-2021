@@ -30,8 +30,7 @@
     </div>
   </nav>
 
-  <form method="POST" enctype="multipart/form-data" class="card container shadow pb-4 px-4 my-5" id="formularioSociedad"
-    name="formularioSociedad" onsubmit="return validarFormulario(event);" onkeydown="return event.key != 'Enter';">
+  <main class="card container shadow pb-4 px-4 my-5" id="mainSociedad">
     {% csrf_token %}
     <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Información pública de sociedades</h3>
     <div class="card-body shadow my-4 text-left px-0 py-4" id="bodyFormulario">
@@ -84,7 +83,7 @@
       <h5 class="mt-3"><a href="{% url 'index' %}" class="btn btn-info mb-4 mt-3"><i
             class="fas fa-arrow-circle-left"></i> Volver al inicio </a></h5>
     </div>
-  </form>
+  </main>
 
 </body>
 

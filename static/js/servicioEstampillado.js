@@ -1,5 +1,5 @@
 // Esto cuando este hecho va a recibir por parametro el id de la sociedad, por ahora siempre la 1
-async function getQR(id = 1) {
+async function getQR(id) {
     const response = await fetch(`http://localhost:8000/sociedad_anonima/${id}/obtener_estampillado/`)
     const imgElement = document.getElementById('qrSociedad')
     if (response.status === 200) {
@@ -11,7 +11,7 @@ async function getQR(id = 1) {
     }
 }
 
-async function sociedadPorId(idSociedad = 1) {
+async function sociedadPorId(idSociedad) {
     // Se contempla solamente el caso positivo si se encontro la sociedad o si no. Faltan agregar los casos para otras respuestas del servidor
     let sociedad = await fetch(localHost + '/sociedad_anonima/' + idSociedad).then(response => response.json());
     return sociedad != null ? sociedad : false;
@@ -23,9 +23,11 @@ let socio = await fetch(localHost + '/socio/' + idSocio).then(response => respon
 return socio != null ? socio : false;
 }
 
-async function mostrarSociedad(idSociedad) {
-    getQR();
-    const sociedad = await sociedadPorId(idSociedad);  
+async function mostrarSociedad() {
+    let params = new URLSearchParams(location.search);
+    let nroExp = params.get('nroExpediente');
+    getQR(nroExp);
+    const sociedad = await sociedadPorId(nroExp);  
     nombreSociedad.value = sociedad.name;
     fechaCreacion.value =  fechaToString(new Date(sociedad.creation_date));
     sociedad.sociosa_set.forEach(async socioParcial => {
@@ -37,6 +39,10 @@ async function mostrarSociedad(idSociedad) {
         newCell = newRow.insertCell(-1);
         newText = document.createTextNode(`${socioParcial.percentage} %`);
         newCell.appendChild(newText);
+        if (socioParcial.is_representative) {
+			newRow.classList.add('bg-beige');
+            newRow.title="Apoderado";
+		}
 });
 
 }
