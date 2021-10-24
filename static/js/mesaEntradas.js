@@ -1,4 +1,7 @@
 
+const urlCorregir = "";
+const urlAprobar = "";
+
 async function getSociedadesPendientesAprobacion() {
 	// hacer lo mismo con el try en todas las peticiones
 	try {
@@ -35,9 +38,14 @@ async function getSociedadesPendientesAprobacion() {
 				newLink.addEventListener('click', mostrarSociedad.bind(this, sociedad.id));
 				newCell.appendChild(newLink);
 				newLink = document.createElement("a");
+				newLink.text = "Corregir";
+				newLink.href = urlCorregir+sociedad.id;
+				newLink.classList.add('btn', 'btn-warning', 'ms-2', 'px-2'); 
+				newCell.appendChild(newLink);
+				newLink = document.createElement("a");
 				newLink.text = "Aprobar";
-				newLink.href = ""+sociedad.id;
-				newLink.classList.add('btn', 'btn-info', 'ms-2', 'px-2'); 
+				newLink.href = urlAprobar+sociedad.id;
+				newLink.classList.add('btn', 'btn-success', 'ms-2', 'px-2'); 
 				newCell.appendChild(newLink);
 			});        
 		}
@@ -101,6 +109,8 @@ async function mostrarSociedad(idSociedad){
 			representanteLegal.textContent = socio.last_name + ' ' + socio.first_name;
 		}
 	});
+	btnModalCorregir.url = urlCorregir+sociedad.id;
+	btnModalAprobar.url = urlAprobar+sociedad.id;
 	const modalSociedad = new mdb.Modal(document.getElementById('modalVerDetalle'));
 	modalSociedad.show();
 }

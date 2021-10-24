@@ -6,8 +6,8 @@ async function getQR(id) {
         jsonResponse = await response.json()
         imgElement.src = `data:image/png;base64,${jsonResponse.qr}`
     } else {
-        imgElement.src = 'asd'
-        imgElement.onerror = null
+        imgElement.src = '';
+        imgElement.alt = 'El QR no ha podido ser cargado';
     }
 }
 

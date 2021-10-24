@@ -30,6 +30,15 @@
         aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+      <div class="dropdown">
+				<button class="btn btn-primary rounded-circle p-0 size-50 btn-border" type="button" id="dropdownMenuButton"
+					data-mdb-toggle="dropdown" aria-expanded="false">
+					LM
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuButton">
+					<li><a class="dropdown-item" href="">Cerrar sesión</a></li>
+				</ul>
+			</div>
     </div>
   </nav>
 
@@ -123,7 +132,8 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-info">Aprobar</button>
+          <button type="button" id="btnModalAprobar" class="btn btn-success">Aprobar</button>
+          <button type="button" id="btnModalCorregir" class="btn btn-warning">Corregir</button>
           <button type="button" class="btn btn-light" data-mdb-dismiss="modal">Cancelar
           </button>
  
