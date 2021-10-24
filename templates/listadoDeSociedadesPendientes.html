@@ -33,9 +33,7 @@
     </div>
   </nav>
 
-  <main action={% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data"
-    class="card container shadow pb-4 px-4 my-5" id="formularioSociedad" name="formularioSociedad"
-    onsubmit="return validarFormulario(event);" onkeydown="return event.key != 'Enter';">
+  <main class="card container shadow pb-4 px-4 my-5">
     {% csrf_token %}
     <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Listado de sociedades pendientes de
       aprobación </h3>

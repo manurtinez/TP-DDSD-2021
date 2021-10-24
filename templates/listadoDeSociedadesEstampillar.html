@@ -3,100 +3,148 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!--<link rel="icon" href="images/logo.ico">-->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
-  <script type="text/javascript" src="{% static 'js/validaciones.js' %}"></script>
-  <title>Alta de sociedad anónima</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Fonts -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+	<!-- Sweet alert -->
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+	<!-- CSS -->
+	<link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
+	<!-- MDB Bootstrap -->
+	<link href="{% static 'css/mdb.min.css' %}" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+	<!-- JavaScript -->
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/mesaEntradas.js' %}"></script>
+	<title>Listado de sociedades a estampillar</title>
 </head>
 
-<body class="bg-light" onload="refrescarTabla_Select()">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
-        aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </div>
-  </nav>
+<body class="bg-light" onload="getSociedadesPendientesAprobacion()">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
+				aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-  <form action={% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data"
-    class="card container shadow pb-4 px-4 my-5" id="formularioSociedad" name="formularioSociedad"
-    onsubmit="return validarFormulario(event);" onkeydown="return event.key != 'Enter';">
-    {% csrf_token %}
-    <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Listado de sociedades sin estampillado realizado </h3>
-    <div class="card-body shadow my-4 text-left px-0 py-4" id="bodyFormulario">
-    
-      <section class=" " id="containerSocios">
+			<div class="dropdown">
+				<button class="btn btn-primary rounded-circle p-0 size-50 btn-border" type="button" id="dropdownMenuButton"
+					data-mdb-toggle="dropdown" aria-expanded="false">
+					LM
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuButton">
+					<li><a class="dropdown-item" href="{% url 'listado_sociedades_pendientes_aprobacion' %}">Sociedades a evaluar</a></li>
+					<li><hr class="dropdown-divider" /></li>
+					<li> <a class="dropdown-item" href="">Cerrar sesión</a></li>
+				</ul>
+			</div>
+		</div>
 
-        <table id="tablaSocios" class="table table-hover table-bordered w-50 mx-auto text-center cmb-4 text-nowrap">
-          <caption>
-            <h4><span class="badge rounded-pill bg-primary">Información de las sociedades</span></h4>
-          </caption>
-          <thead class="table-primary">
-            <tr class="px-5">
-              <th scope="col">Nombre</th>
-              <th scope="col" style="width: 55%;">Fecha de creación</th>
-              <th scope="col" style="width: 75%;">Domicilio legal</th>
-              <th scope="col">Domicilio real</th>
-              <th scope="col">Representante legal</th>
-              <th scope="col">Mail representante legal</th>
-              <th scope="col">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td> <a href="{% url 'index' %}" class="btn btn-info ">Ver </a>                
-                 <a href="{% url 'index' %}" class="btn btn-info">Aprobar estatuto</a>
-              </td>
-            </tr>
-            <tr>
-              <td>Jacob</td>
-              <td>Jacob</td>
-              <td>Jacob</td>
-              <td>Jacob</td>
-              <td>Jacob</td>
-              <td>Jacob</td>
-              <td> <a href="{% url 'index' %}" class="btn btn-info ">Ver </a>                
-                <a href="{% url 'index' %}" class="btn btn-info">Estampillar</a>
-             </td>
-            </tr>
-            <tr>
-              <td>Larry the Bird</td>
-              <td>Larry the Bird</td>
-              <td>Larry the Bird</td>
-              <td>Larry the Bird</td>
-              <td>Larry the Bird</td>
-              <td>Larry the Bird</td>
-              <td> <a href="{% url 'index' %}" class="btn btn-info ">Ver </a>                
-                <a href="{% url 'index' %}" class="btn btn-info">Estampillar</a>
-             </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-    </div>
-    <div class="text-center">
+	</nav>
 
-      <h5 class="mt-3"><a href="{% url 'index' %}" class="btn btn-info mb-4 mt-3"><i
-            class="fas fa-arrow-circle-left"></i> Volver al inicio </a></h5>
-    </div>
-  </form>
+	<main class="card container shadow pb-4 px-4 my-5">
+		{% csrf_token %}
+		<h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Listado de sociedades a estampillar
+		</h3>
+		<div class="card-body shadow my-4 text-left px-2 py-4 bg-white" id="bodySociedades">
+
+			<section class="overflow-auto" id="containerSociedades">
+
+				<table id="tablaSociedad" class="table table-hover table-bordered w-100 mx-auto text-center cmb-4 ">
+					<caption>
+						<h4><span class="badge rounded-pill bg-primary">Información de las sociedades</span></h4>
+					</caption>
+					<thead class="table-primary">
+						<tr class="px-5">
+							<th scope="col">Nombre</th>
+							<th scope="col" class="text-nowrap">Fecha de creación</th>
+							<th scope="col" class="text-nowrap">Domicilio legal</th>
+							<th scope="col" class="text-nowrap">Representante legal</th>
+							<th scope="col" class="text-nowrap">Mail representante legal</th>
+							<th scope="col" class="text-nowrap">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</section>
+		</div>
+		<div class="text-center">
+			<h5 class="mt-3"><a href="{% url 'index' %}" class="btn btn-info mb-4 mt-3"><i
+						class="fas fa-arrow-circle-left"></i> Volver al inicio </a></h5>
+		</div>
+	</main>
+
+	<!-- MODAL DETALLE DE SOCIEDAD -->
+	<div class="modal fade" id="modalVerDetalle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title"> Detalle de la sociedad</h5>
+					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<h4><span class="badge rounded-pill bg-primary">Sociedad</span></h4>
+					<div class="input-group cmy-2">
+						<span class="input-group-text border-0"> Nombre:</span>
+						<span class="input-group-text border-0" id="nombreSociedad"></span>
+					</div>
+
+					<div class="input-group  cmy-2">
+						<span class="input-group-text border-0">Fecha de creación: </span>
+						<span class="input-group-text border-0" id="fechaCreacion"></span>
+					</div>
+
+					<div class="input-group cmy-2">
+						<span class="input-group-text border-0">Domicilio legal: </span>
+						<span class="input-group-text border-0" id="domicilioLegal"></span>
+					</div>
+
+					<div class="input-group cmy-2">
+						<span class="input-group-text border-0">Domicilio real: </span>
+						<span class="input-group-text border-0" id="domicilioReal"></span>
+					</div>
+
+					<div class="input-group cmy-2">
+						<span class="input-group-text border-0">Mail del apoderado: </span>
+						<span class="input-group-text border-0" id="mailApoderado"></span>
+					</div>
+
+					<h4><span class="badge rounded-pill  mt-3 bg-primary">Listado de socios</span></h4>
+
+					<div class="input-group cmy-2">
+						<span class="input-group-text border-0">Representante legal: </span>
+						<span class="input-group-text border-0" id="representanteLegal"></span>
+					</div>
+
+					<table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2 ">
+						<thead class="table-primary align-top">
+							<tr class="px-5">
+								<th scope="col">DNI</th>
+								<th scope="col">Apellido y nombre</th>
+								<th scope="col">Porcentaje de acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info">Estampillar</button>
+					<button type="button" class="btn btn-light" data-mdb-dismiss="modal">Cancelar
+					</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 

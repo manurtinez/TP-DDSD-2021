@@ -128,3 +128,22 @@ caption {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.size-50{
+  width: 50px;
+  height: 50px;
+}
+
+.btn-border{
+  border-right: 1px solid #0c44a0 !important;
+  border-bottom: 1px solid #0c44a0 !important;
+  border-top: 1px solid transparent !important;
+  border-left: 1px solid transparent !important;
+}
+
+.btn-border:hover{
+  border-left: 1px solid #0c44a0 !important;
+  border-top: 1px solid #0c44a0 !important;
+  border-bottom: 1px solid transparent !important; 
+  border-right: 1px solid transparent !important; 
+}

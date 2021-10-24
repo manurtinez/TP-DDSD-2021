@@ -66,6 +66,6 @@ function agregarOptionEnSelect(select, text, value){
 }
 
 function fechaToString(oDate){
-    fechaString = (oDate.getDate() + 1) + "/" + (oDate.getMonth() + 1) + "/" + oDate.getFullYear();
+    fechaString = oDate.getDate() + "/" + (oDate.getMonth() + 1) + "/" + oDate.getFullYear();
     return fechaString;
 }

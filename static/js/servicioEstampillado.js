@@ -29,7 +29,7 @@ async function mostrarSociedad() {
     getQR(nroExp);
     const sociedad = await sociedadPorId(nroExp);  
     nombreSociedad.value = sociedad.name;
-    fechaCreacion.value =  fechaToString(new Date(sociedad.creation_date));
+    fechaCreacion.value =  fechaToString(new Date(sociedad.creation_date+" 00:00"));
     sociedad.sociosa_set.forEach(async socioParcial => {
         const socio = await socioPorId(socioParcial.partner);
         let newRow = tablaSocios.tBodies[0].insertRow(-1);
