@@ -1,3 +1,6 @@
+const urlCorregir = "";
+const urlAprobar = "";
+const urlEstampillar = "";
 const localHost = window.location.origin;
 
 function getCookie(name) {

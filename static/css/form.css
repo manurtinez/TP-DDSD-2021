@@ -147,3 +147,13 @@ caption {
   border-bottom: 1px solid transparent !important; 
   border-right: 1px solid transparent !important; 
 }
+
+.btn-color-success{
+	color:white !important;
+	background-color:#4DB6AC !important;
+}
+
+.btn-color-warning{
+	color:white !important;
+	background-color: #FFC400 !important;
+}
