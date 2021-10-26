@@ -237,12 +237,10 @@ async function getSociedadesPendientesAprobacion() {
 			sociedadesAnonimas.forEach(sociedad => {
 				let newRow = tablaSociedad.tBodies[0].insertRow(-1);
 				let newCell = newRow.insertCell(-1);
-				let newText = document.createTextNode(sociedad.name);
-				var mailDelApoderado = sociedad.mailApoderado;
-				var idSociedad = sociedad.id;
+				let newText = document.createTextNode(sociedad.name);			
 				newCell.appendChild(newText);
-				newCell = newRow.insertCell(-1);
-				newText = document.createTextNode(sociedad.creation_date);
+				newCell = newRow.insertCell(-1);				
+				newText = document.createTextNode(fechaToString(new Date(sociedad.creation_date+" 00:00")));
 				newCell.appendChild(newText);
 				newCell = newRow.insertCell(-1);
 				newText = document.createTextNode(sociedad.legal_domicile);
@@ -263,7 +261,7 @@ async function getSociedadesPendientesAprobacion() {
 				newLink = document.createElement("a");
 				newLink.text = "Ver";
 				newLink.classList.add('btn', 'btn-info', 'px-2'); 
-				newLink.addEventListener('click', mostrarSociedad.bind(this, sociedad.id));
+				newLink.addEventListener('click', mostrarSociedad.bind(this, sociedad.id));				
 				newCell.appendChild(newLink);	
 				obtenerBotones(sociedad.id, newCell);				
 			});        
@@ -305,7 +303,7 @@ async function socioRepresentanteDeSociedad(socios){
 async function mostrarSociedad(idSociedad){
 	const sociedad = await sociedadPorId(idSociedad);
 	nombreSociedad.textContent = sociedad.name;
-	fechaCreacion.textContent = sociedad.creation_date;
+	fechaCreacion.textContent =  fechaToString(new Date(sociedad.creation_date+" 00:00"));
 	domicilioLegal.textContent = sociedad.legal_domicile;
 	domicilioReal.textContent = sociedad.real_domicile;
 	mailApoderado.textContent = sociedad.representative_email;
