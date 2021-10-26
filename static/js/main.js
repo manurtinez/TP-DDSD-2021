@@ -1,3 +1,7 @@
+const urlCorregir = "";
+const urlAprobar = "";
+const urlEstampillar = "";
+const urlEstatuto = "";
 const localHost = window.location.origin;
 
 function getCookie(name) {
@@ -66,6 +70,6 @@ function agregarOptionEnSelect(select, text, value){
 }
 
 function fechaToString(oDate){
-    fechaString = (oDate.getDate() + 1) + "/" + (oDate.getMonth() + 1) + "/" + oDate.getFullYear();
+    fechaString = oDate.getDate() + "/" + (oDate.getMonth() + 1) + "/" + oDate.getFullYear();
     return fechaString;
 }

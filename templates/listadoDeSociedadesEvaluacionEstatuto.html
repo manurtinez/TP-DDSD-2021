@@ -20,8 +20,8 @@
 	<!-- JavaScript -->
 	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/sociedad.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/legales.js' %}"></script>
-	<title>Listado de sociedades a estampillar</title>
+	<script type="text/javascript" src="{% static 'js/estatuto.js' %}"></script>
+	<title>Listado de sociedades a evaluación de estatuto</title>
 </head>
 
 <body class="bg-light" onload="getSociedadesPendientesAprobacion()">
@@ -40,7 +40,7 @@
 				</button>
 				<ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuButton">
 					<!-- Sociedades a evaluar el estatuto luego de ser aprobadas por ME-->
-					<li><a class="dropdown-item" href="{% url 'index' %}">Sociedades a evaluar</a></li>
+                    <li><a class="dropdown-item" href="{% url 'listado_sociedades_estampillar' %}">Sociedades a estampillar</a></li>
 					<li><hr class="dropdown-divider" /></li>
 					<li> <a class="dropdown-item" href="">Cerrar sesión</a></li>
 				</ul>
@@ -50,7 +50,7 @@
 
 	<main class="card container shadow pb-4 px-4 my-5">
 		{% csrf_token %}
-		<h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Listado de sociedades a estampillar
+		<h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Listado de sociedades a evaluación de estauto
 		</h3>
 		<div class="card-body shadow my-4 text-left px-2 py-4 bg-white" id="bodySociedades">
 
