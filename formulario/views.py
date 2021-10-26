@@ -8,7 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
-from services.bonita_service import start_bonita_process
+from services.bonita_service import assign_task, execute_task, start_bonita_process
 from services.estampillado_service import api_call_with_retry
 
 # # el objeto env se usa para traer las variables de entorno
@@ -82,9 +82,13 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
             # Se inicia el proceso en bonita si se esta local
             if env('DJANGO_DEVELOPMENT') == 'True':
-                if (not start_bonita_process(new_sa)):
+                new_case = start_bonita_process(new_sa)
+                if (not new_case):
                     print(
                         '---> Hubo algun problema al iniciar el caso de bonita. Sin embargo, la SA fue creada correctamente')
+                else:
+                    task_id = assign_task(new_case['id'])
+                    execute_task(task_id)
             return Response(data=response_data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

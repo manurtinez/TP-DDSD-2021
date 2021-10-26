@@ -15,21 +15,6 @@ session_store = SessionStore()
 # Por ahora, esto va a estar hardcodeado con el usuario de Bonita hasta proximas entregas
 
 
-def bonita_login():
-    """
-    Este metodo realiza el login del usuario en la api de bonita
-    """
-    try:
-        response = requests.post('http://localhost:8080/bonita/loginservice',
-                                 data={'username': 'walter.bates', 'password': 'bpm'})
-        session_store['jsessionid'] = response.cookies['JSESSIONID']
-        session_store['bonita_api_token'] = response.cookies['X-Bonita-API-Token']
-        return True
-    except requests.exceptions.RequestException as e:
-        print(e)
-        return False
-
-
 def bonita_api_call(resource,  method, url_params='', data={}):
     """
     Esta funcion realiza un request HTTP al recurso de la API de bonita que se necesite.
@@ -40,7 +25,8 @@ def bonita_api_call(resource,  method, url_params='', data={}):
         * url_params? (str): Parametros adicionales de URL, o extension. Por ejemplo, "?id=1" o "/id/variable".
         * data? (dict): El body del request. Por ejemplo, { id: 1, name: "asd" }
     """
-    response = requests.request(method, url='http://localhost:8080/bonita/API/bpm/'+resource+url_params,
+    print(resource + '--> ' + method)
+    response = requests.request(method, url='http://localhost:8080/bonita/API'+resource+url_params,
                                 cookies={
                                     'JSESSIONID': session_store['jsessionid']
                                 },
@@ -52,7 +38,31 @@ def bonita_api_call(resource,  method, url_params='', data={}):
     if (int(str(response.status_code)[0]) == 4):
         raise requests.exceptions.RequestException(
             f'El request para recurso {resource} de bonita fallo con codigo {response.status_code}')
-    return response.json() if resource != 'caseVariable' else True
+    try:
+        json_response = response.json()
+        return json_response
+    except json.decoder.JSONDecodeError as e:
+        print('La respuesta del servidor estaba vacia')
+        return True
+
+
+def bonita_login(user, password):
+    """
+    Este metodo realiza el login del usuario en la api de bonita
+    """
+    try:
+        response = requests.post('http://localhost:8080/bonita/loginservice',
+                                 data={'username': user, 'password': password})
+        session_store['jsessionid'] = response.cookies['JSESSIONID']
+        session_store['bonita_api_token'] = response.cookies['X-Bonita-API-Token']
+        user_response = bonita_api_call(
+            '/identity/user', 'get', '?f=enabled=true')
+        session_store['bonita_user_id'] = [us['id']
+                                           for us in user_response if us['userName'] == user][0]
+        return True
+    except requests.exceptions.RequestException as e:
+        print(e)
+        return False
 
 
 def start_bonita_process(new_sa):
@@ -62,20 +72,21 @@ def start_bonita_process(new_sa):
     """
     try:
         # Por ahora, el login hardcodeado cada vez que se crea una SA
-        bonita_login()
+        bonita_login('Apoderado1', 'bpm')
 
         # Esto devuelve un array de procesos, en nuestro caso, uno solo, como Dict
-        bonita_process = bonita_api_call('process', 'get', '?s=Proceso')[0]
+        bonita_process = bonita_api_call(
+            '/bpm/process', 'get', '?s=Proceso')[0]
 
         # Se arranca la instancia (caso) del proceso
-        bonita_case = bonita_api_call('case', 'post', data={
+        bonita_case = bonita_api_call('/bpm/case', 'post', data={
             "processDefinitionId": bonita_process['id']})
 
         # Se setean las variables id y name al caso
-        bonita_api_call('caseVariable', 'put', f'/{bonita_case["id"]}/id', {
+        bonita_api_call('/bpm/caseVariable', 'put', f'/{bonita_case["id"]}/id', {
             'type': java_types[type(new_sa.id).__name__], 'value': new_sa.id})
 
-        bonita_api_call('caseVariable', 'put', f'/{bonita_case["id"]}/name', {
+        bonita_api_call('/bpm/caseVariable', 'put', f'/{bonita_case["id"]}/name', {
             'type': java_types[type(new_sa.name).__name__], 'value': new_sa.name})
 
         # Esta parte no fue necesaria por ahora pero la dejo por si sirve para despues
@@ -88,7 +99,32 @@ def start_bonita_process(new_sa):
         #         bonita_api_call('caseVariable', 'put', f'/{bonita_case["id"]}/{var}', {
         #             'type': java_types[type(value).__name__], 'value': value})
 
-        return True
+        return bonita_case
     except (requests.exceptions.RequestException, KeyError) as e:
+        print(e)
+        return None
+
+
+def assign_task(case_id):
+    try:
+        # Traigo task actual para el caso recibido
+        current_task = bonita_api_call(
+            '/bpm/activity', 'get', f'?p=0&c=10&f=caseId={case_id}')[0]
+
+        # Asignar task al usuario logeado
+        bonita_api_call('/bpm/humanTask/{}'.format(current_task['id']), 'put', '',
+                        {'assigned_id': session_store['bonita_user_id']})
+        return current_task['id']
+    except requests.exceptions.RequestException as e:
+        print(e)
+        return None
+
+
+def execute_task(task_id):
+    try:
+        # Asignar task al usuario logeado
+        bonita_api_call('/bpm/userTask/{}/execution'.format(task_id), 'post')
+        return True
+    except requests.exceptions.RequestException as e:
         print(e)
         return False
