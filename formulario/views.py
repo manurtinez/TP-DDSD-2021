@@ -9,7 +9,7 @@ from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
 from services.bonita_service import start_bonita_process
-from services.estampillado_service import obtain_by_hash
+from services.estampillado_service import api_call_with_retry
 
 # # el objeto env se usa para traer las variables de entorno
 env = environ.Env()
@@ -112,9 +112,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     @action(detail=True)
     def obtener_estampillado(self, request, pk=None):
         sa = self.get_object()
-        hash = sa.stamp_hash
-        # Por ahora no se envia el hash
-        response = obtain_by_hash()
+        # hash = sa.stamp_hash
+        hash = '89ff31470d00b95eaf0895fd95f5d321'
+        # Por ahora el hash hardcodeado
+        response = api_call_with_retry(
+            method='get', endpoint='/api/estampillado/', url_params=hash)
         if response:
             return Response(data=response, status=status.HTTP_200_OK)
         else:

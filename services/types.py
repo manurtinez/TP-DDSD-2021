@@ -6,3 +6,10 @@ java_types = {
     'bool': 'java.lang.Boolean',
     'datetime.date': 'java.lang.Date'  # Hmmmm
 }
+
+
+class JWTException(Exception):
+    """
+    Esta simple excepcion es para saber cuando hubo un error de JWT y actuar en consecuencia
+    """
+    pass
