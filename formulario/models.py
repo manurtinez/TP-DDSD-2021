@@ -25,6 +25,8 @@ class SociedadAnonima(models.Model):
     representative_email = models.CharField(max_length=30)
     stamp_hash = models.CharField(max_length=50, unique=True, null=True)
 
+    case_id = models.IntegerField(unique=True, null=True)
+
     class Meta:
         ordering = ['-name']
 
