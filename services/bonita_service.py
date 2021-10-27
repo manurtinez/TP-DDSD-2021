@@ -25,7 +25,6 @@ def bonita_api_call(resource,  method, url_params='', data={}):
         * url_params? (str): Parametros adicionales de URL, o extension. Por ejemplo, "?id=1" o "/id/variable".
         * data? (dict): El body del request. Por ejemplo, { id: 1, name: "asd" }
     """
-    print(resource + '--> ' + method)
     response = requests.request(method, url='http://localhost:8080/bonita/API'+resource+url_params,
                                 cookies={
                                     'JSESSIONID': session_store['jsessionid']

@@ -54,7 +54,7 @@ class SociedadAnonimaSerializer(serializers.ModelSerializer):
     class Meta:
         model = SociedadAnonima
         fields = ['name', 'legal_domicile', 'real_domicile',
-                  'creation_date', 'export_countries', 'representative_email', 'comformation_statute', 'partners', 'stamp_hash']
+                  'creation_date', 'export_countries', 'representative_email', 'comformation_statute', 'partners', 'stamp_hash', 'case_id']
 
 
 class SociedadAnonimaRetrieveSerializer(serializers.ModelSerializer):
@@ -68,7 +68,7 @@ class SociedadAnonimaRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = SociedadAnonima
         fields = ['name', 'real_domicile', 'legal_domicile', 'creation_date',
-                  'comformation_statute', 'export_countries', 'representative_email', 'sociosa_set', 'id', 'stamp_hash']
+                  'comformation_statute', 'export_countries', 'representative_email', 'sociosa_set', 'id', 'stamp_hash', 'case_id']
 
     #     def get_partners(self, obj):
     #     return SocioSASerializer(instance=obj.sociosa_set.all(), many=True)

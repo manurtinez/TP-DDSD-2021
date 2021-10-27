@@ -76,10 +76,6 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                 new_sa.partners.add(
                     partner, through_defaults={'percentage': socio['percentage'], 'is_representative': socio.get('is_representative', False)})
 
-            # Tengo que agregar el ID de la nueva instancia al serializer para devolverlo
-            response_data = serializer.data
-            response_data['id'] = new_sa.id
-
             # Se inicia el proceso en bonita si se esta local
             if env('DJANGO_DEVELOPMENT') == 'True':
                 new_case = start_bonita_process(new_sa)
@@ -87,8 +83,18 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                     print(
                         '---> Hubo algun problema al iniciar el caso de bonita. Sin embargo, la SA fue creada correctamente')
                 else:
+                    # Se creo con exito el caso, se asigna a la sociedad
+                    new_sa.case_id = new_case['id']
+                    new_sa.save()
+                    # Se asigna la tarea y se ejecuta
                     task_id = assign_task(new_case['id'])
                     execute_task(task_id)
+
+            # Tengo que agregar el ID de la nueva instancia y del caso al serializer por si se necesitan
+            response_data = serializer.data
+            response_data['id'] = new_sa.id
+            response_data['case_id'] = new_sa.case_id
+
             return Response(data=response_data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
