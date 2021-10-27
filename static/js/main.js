@@ -1,7 +1,8 @@
 const urlCorregir = "";
 const urlAprobar = "";
 const urlEstampillar = "";
-const urlEstatuto = "";
+const urlDescargarEstauto = "";
+const urlAprobarEstauto = "";
 const localHost = window.location.origin;
 
 function getCookie(name) {
