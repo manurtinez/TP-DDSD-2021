@@ -8,7 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
-from services.bonita_service import assign_task, execute_task, start_bonita_process
+from services.bonita_service import assign_task, bonita_login, execute_task, get_cases_for_task, start_bonita_process
 from services.estampillado_service import api_call_with_retry
 
 # # el objeto env se usa para traer las variables de entorno
@@ -84,7 +84,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                         '---> Hubo algun problema al iniciar el caso de bonita. Sin embargo, la SA fue creada correctamente')
                 else:
                     # Se creo con exito el caso, se asigna a la sociedad
-                    new_sa.case_id = new_case['id']
+                    new_sa.case_id = int(new_case['id'])
                     new_sa.save()
                     # Se asigna la tarea y se ejecuta
                     task_id = assign_task(new_case['id'])
@@ -127,7 +127,31 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         # Por ahora el hash hardcodeado
         response = api_call_with_retry(
             method='get', endpoint='/api/estampillado/', url_params=hash)
-        if response:
-            return Response(data=response, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_502_BAD_GATEWAY)
+        return Response(data=response, status=status.HTTP_200_OK) if response else Response(status=status.HTTP_502_BAD_GATEWAY)
+
+
+class SociedadAnonimaBonitaViewSet(viewsets.ModelViewSet):
+    """
+    Este viewset define todos los endpoints y actions necesarios para hacer operaciones con sociedades relacionadas con Bonita
+    """
+    serializer_class = SociedadAnonimaRetrieveSerializer
+    queryset = SociedadAnonima.objects.all()
+    # IMPORTANTE cambiar esto cuando haya autenticacion
+    permission_classes = [permissions.AllowAny]
+
+    # @action(detail=False, url_path=r'obtener_por_task/(?P<task_name>\d+)')
+    @action(detail=False)
+    def obtener_por_task(self, request, *args, **kwargs):
+        """
+        Este endpoint devuelve una lista de sociedades que estan parados en task_name
+
+        Params:
+            * task_name(str): nombre literal de tarea del modelo bonita. Por ejemplo: "Revisión de información"
+
+        Returns:
+            * list[int] | None
+        """
+        case_ids = get_cases_for_task(kwargs['task_name'])
+        queryset = self.get_queryset().filter(case_id__in=case_ids)
+        serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)

@@ -25,24 +25,27 @@ def bonita_api_call(resource,  method, url_params='', data={}):
         * url_params? (str): Parametros adicionales de URL, o extension. Por ejemplo, "?id=1" o "/id/variable".
         * data? (dict): El body del request. Por ejemplo, { id: 1, name: "asd" }
     """
-    response = requests.request(method, url='http://localhost:8080/bonita/API'+resource+url_params,
-                                cookies={
-                                    'JSESSIONID': session_store['jsessionid']
-                                },
-                                headers={
-                                    'X-Bonita-API-Token': session_store['bonita_api_token']
-                                },
-                                data=json.dumps(data)
-                                )
-    if (int(str(response.status_code)[0]) == 4):
-        raise requests.exceptions.RequestException(
-            f'El request para recurso {resource} de bonita fallo con codigo {response.status_code}')
     try:
+        response = requests.request(method, url='http://localhost:8080/bonita/API'+resource+url_params,
+                                    cookies={
+                                        'JSESSIONID': session_store['jsessionid']
+                                    },
+                                    headers={
+                                        'X-Bonita-API-Token': session_store['bonita_api_token']
+                                    },
+                                    data=json.dumps(data)
+                                    )
+        if (int(str(response.status_code)[0]) == 4):
+            raise requests.exceptions.RequestException(
+                f'El request para recurso {resource} de bonita fallo con codigo {response.status_code}')
         json_response = response.json()
         return json_response
-    except json.decoder.JSONDecodeError as e:
+    except json.decoder.JSONDecodeError as json_e:
         print('La respuesta del servidor estaba vacia')
         return True
+    except requests.exceptions.RequestException as req_e:
+        print(req_e)
+        return False
 
 
 def bonita_login(user, password):
@@ -104,11 +107,15 @@ def start_bonita_process(new_sa):
         return None
 
 
+def current_task_for_case(case_id):
+    return bonita_api_call(
+        '/bpm/activity', 'get', f'?p=0&c=10&f=caseId={case_id}')[0]
+
+
 def assign_task(case_id):
     try:
         # Traigo task actual para el caso recibido
-        current_task = bonita_api_call(
-            '/bpm/activity', 'get', f'?p=0&c=10&f=caseId={case_id}')[0]
+        current_task = current_task_for_case(case_id)
 
         # Asignar task al usuario logeado
         bonita_api_call('/bpm/humanTask/{}'.format(current_task['id']), 'put', '',
@@ -127,3 +134,25 @@ def execute_task(task_id):
     except requests.exceptions.RequestException as e:
         print(e)
         return False
+
+
+def get_cases_for_task(task_name):
+    """
+    Este metodo devuelve un arreglo de case_id que esten "parados" en la tarea task_name (de tipo humanTask).
+
+    Params:
+        * task_name(str): nombre literal de tarea del modelo bonita. Por ejemplo: "Revisión de información"
+
+    Returns:
+        * list[int] | None
+    """
+    try:
+        case_ids = []
+        task_list = bonita_api_call(
+            '/bpm/humanTask', 'get', f'?c=50&d=rootContainerId&o=displayName+ASC&p=0&f=displayName={task_name}')
+        for task in task_list:
+            case_ids.append(int(task['caseId']))
+        return case_ids
+    except requests.exceptions.RequestException as e:
+        print(e)
+        return None
