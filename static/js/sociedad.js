@@ -270,7 +270,7 @@ async function getSociedadesPendientesAprobacion() {
 			let newRow = tablaSociedad.tBodies[0].insertRow(-1);
 			let newCell = newRow.insertCell(-1);
 			newCell.colSpan = 6;
-			let newText = document.createTextNode("No se han encontrado sociedades pendientes de aprobación");
+			let newText = document.createTextNode("No se han encontrado sociedades");
 			newCell.appendChild(newText);
 		}
 	} catch (error) {
