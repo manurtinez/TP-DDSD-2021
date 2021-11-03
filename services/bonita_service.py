@@ -1,5 +1,7 @@
 import requests
 import json
+import environ
+import traceback
 
 from importlib import import_module
 
@@ -7,12 +9,20 @@ from django.conf import settings
 
 from .types import java_types
 
+# # el objeto env se usa para traer las variables de entorno
+env = environ.Env()
+environ.Env.read_env()
+
 SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
 # Creo el store de la sesion para guardar cookies y demas cosas
 session_store = SessionStore()
 
 # Por ahora, esto va a estar hardcodeado con el usuario de Bonita hasta proximas entregas
+
+bonita_api_url = 'http://{}:8080/bonita/API'.format(env('BONITA_HOST'))
+bonita_login_url = 'http://{}:8080/bonita/loginservice'.format(
+    env('BONITA_HOST'))
 
 
 def bonita_api_call(resource,  method, url_params='', data={}):
@@ -26,7 +36,7 @@ def bonita_api_call(resource,  method, url_params='', data={}):
         * data? (dict): El body del request. Por ejemplo, { id: 1, name: "asd" }
     """
     try:
-        response = requests.request(method, url='http://localhost:8080/bonita/API'+resource+url_params,
+        response = requests.request(method, url=bonita_api_url+resource+url_params,
                                     cookies={
                                         'JSESSIONID': session_store['jsessionid']
                                     },
@@ -40,11 +50,12 @@ def bonita_api_call(resource,  method, url_params='', data={}):
                 f'El request para recurso {resource} de bonita fallo con codigo {response.status_code}')
         json_response = response.json()
         return json_response
-    except json.decoder.JSONDecodeError as json_e:
+    except json.decoder.JSONDecodeError:
         print('La respuesta del servidor estaba vacia')
         return True
     except requests.exceptions.RequestException as req_e:
-        print(req_e)
+        print(
+            'Error al llamar API de bonita para recurso {resource} -->', req_e)
         return False
 
 
@@ -53,18 +64,21 @@ def bonita_login(user, password):
     Este metodo realiza el login del usuario en la api de bonita
     """
     try:
-        response = requests.post('http://localhost:8080/bonita/loginservice',
+        response = requests.post(bonita_login_url,
                                  data={'username': user, 'password': password})
-        session_store['jsessionid'] = response.cookies['JSESSIONID']
-        session_store['bonita_api_token'] = response.cookies['X-Bonita-API-Token']
-        user_response = bonita_api_call(
-            '/identity/user', 'get', '?f=enabled=true')
-        session_store['bonita_user_id'] = [us['id']
-                                           for us in user_response if us['userName'] == user][0]
-        return True
+        if response.status_code == 204:
+            session_store['jsessionid'] = response.cookies['JSESSIONID']
+            session_store['bonita_api_token'] = response.cookies['X-Bonita-API-Token']
+            user_response = bonita_api_call(
+                '/identity/user', 'get', '?f=enabled=true')
+            session_store['bonita_user_id'] = [us['id']
+                                               for us in user_response if us['userName'] == user][0]
+            return True
+        else:
+            raise requests.exceptions.RequestException(
+                'Credenciales incorrectas')
     except requests.exceptions.RequestException as e:
-        print(e)
-        return False
+        print('Error en el login con bonita --> ', e)
 
 
 def start_bonita_process(new_sa):
@@ -102,8 +116,8 @@ def start_bonita_process(new_sa):
         #             'type': java_types[type(value).__name__], 'value': value})
 
         return bonita_case
-    except (requests.exceptions.RequestException, KeyError) as e:
-        print(e)
+    except (requests.exceptions.RequestException, KeyError):
+        print('Error al iniciar proceso de bonita --> ', traceback.format_exc())
         return None
 
 
