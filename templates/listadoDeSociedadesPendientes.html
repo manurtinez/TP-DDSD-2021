@@ -1,256 +1,187 @@
 <!-- {% load static %} -->
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Fonts -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Sweet alert -->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-    <!-- CSS -->
-    <link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
-    <!-- MDB Bootstrap -->
-    <link
-      href="{% static 'css/mdb.min.css' %}"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
-    <!-- JavaScript -->
-    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/sociedad.js' %}"></script>
-    <script
-      type="text/javascript"
-      src="{% static 'js/mesaEntradas.js' %}"
-    ></script>
 
-    <title>Listado de sociedades pendientes</title>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Fonts -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <!-- Sweet alert -->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <!-- CSS -->
+  <link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
+  <!-- MDB Bootstrap -->
+  <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+  <!-- JavaScript -->
+  <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/sociedad.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/mesaEntradas.js' %}"></script>
 
-  <body class="bg-light" onload="getSociedadesPendientesAprobacion()">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'index' %}"
-          >Sistema de Sociedades</a
-        >
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavDarkDropdown"
-          aria-controls="navbarNavDarkDropdown"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
+  <title>Listado de sociedades pendientes</title>
+</head>
+
+<body class="bg-light" onload="getSociedadesPorTask('Revisión de información')">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="dropdown">
+        <button class="btn btn-primary rounded-circle p-0 size-50 btn-border" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
+          LM
         </button>
-        <div class="dropdown">
-          <button
-            class="btn btn-primary rounded-circle p-0 size-50 btn-border"
-            type="button"
-            id="dropdownMenuButton"
-            data-mdb-toggle="dropdown"
-            aria-expanded="false"
-          >
-            LM
-          </button>
-          <ul
-            class="dropdown-menu dropdown-menu-end text-center"
-            aria-labelledby="dropdownMenuButton"
-          >
-            <li><a class="dropdown-item" href="">Cerrar sesión</a></li>
-          </ul>
-        </div>
+        <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuButton">
+          <li><a class="dropdown-item" href="{% url 'listado_sociedades_estampillar' %}">Mis tareas</a></li>
+					<li><hr class="dropdown-divider" /></li>
+          <li><a class="dropdown-item" href="">Cerrar sesión</a></li>
+        </ul>
       </div>
-    </nav>
+    </div>
+  </nav>
 
-    <main class="card container shadow pb-4 px-4 my-5">
-      {% csrf_token %}
-      <h3 class="card-title text-center mt-5">
-        <i class="fas fa-clipboard-list"></i> Listado de sociedades pendientes
-        de aprobación
-      </h3>
-      <div
-        class="card-body shadow my-4 text-left px-2 py-4 bg-white"
-        id="bodySociedades"
-      >
-        <section class="overflow-auto" id="containerSociedades">
-          <table
-            id="tablaSociedad"
-            class="
-              table table-hover table-bordered
-              w-100
-              mx-auto
-              text-center
-              cmb-4
-            "
-          >
-            <caption>
-              <h4>
-                <span class="badge rounded-pill bg-primary"
-                  >Información de las sociedades</span
-                >
-              </h4>
-            </caption>
-            <thead class="table-primary">
+  <main class="card container shadow pb-4 px-4 my-5">
+    {% csrf_token %}
+    <h3 class="card-title text-center mt-5">
+      <i class="fas fa-clipboard-list"></i> Listado de sociedades pendientes
+      de aprobación
+    </h3>
+    <div class="card-body shadow my-4 text-left px-2 py-4 bg-white" id="bodySociedades">
+      <section class="overflow-auto" id="containerSociedades">
+        <table id="tablaSociedad" class=" table table-hover table-bordered w-100 mx-auto text-center cmb-4">
+          <caption>
+            <h4>
+              <span class="badge rounded-pill bg-primary">Información de las sociedades</span>
+            </h4>
+          </caption>
+          <thead class="table-primary">
+            <tr class="px-5">
+              <th scope="col">Nombre</th>
+              <th scope="col" class="text-nowrap">Fecha de creación</th>
+              <th scope="col" class="text-nowrap">Domicilio legal</th>
+              <th scope="col" class="text-nowrap">Representante legal</th>
+              <th scope="col" class="text-nowrap">Mail representante legal</th>
+              <th scope="col" class="text-nowrap">Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </div>
+    <div class="text-center">
+      <h5 class="mt-3">
+        <a href="{% url 'index' %}" class="btn btn-info mb-4 mt-3"><i class="fas fa-arrow-circle-left"></i> Volver al
+          inicio
+        </a>
+      </h5>
+    </div>
+  </main>
+
+  <!-- MODAL DETALLE DE SOCIEDAD -->
+  <section class="modal fade" id="modalVerDetalle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalle de la sociedad</h5>
+          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h4><span class="badge rounded-pill bg-primary">Sociedad</span></h4>
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0"> Nombre:</span>
+            <span class="input-group-text border-0" id="nombreSociedad"></span>
+          </div>
+
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0">Fecha de creación: </span>
+            <span class="input-group-text border-0" id="fechaCreacion"></span>
+          </div>
+
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0">Domicilio legal: </span>
+            <span class="input-group-text border-0" id="domicilioLegal"></span>
+          </div>
+
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0">Domicilio real: </span>
+            <span class="input-group-text border-0" id="domicilioReal"></span>
+          </div>
+
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0">Mail del apoderado:
+            </span>
+            <span class="input-group-text border-0" id="mailApoderado"></span>
+          </div>
+
+          <h4>
+            <span class="badge rounded-pill mt-3 bg-primary">Listado de socios</span>
+          </h4>
+
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0">Representante legal:
+            </span>
+            <span class="input-group-text border-0" id="representanteLegal"></span>
+          </div>
+
+          <table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
+            <thead class="table-primary align-top">
               <tr class="px-5">
-                <th scope="col">Nombre</th>
-                <th scope="col" class="text-nowrap">Fecha de creación</th>
-                <th scope="col" class="text-nowrap">Domicilio legal</th>
-                <th scope="col" class="text-nowrap">Representante legal</th>
-                <th scope="col" class="text-nowrap">
-                  Mail representante legal
-                </th>
-                <th scope="col" class="text-nowrap">Acciones</th>
+                <th scope="col">DNI</th>
+                <th scope="col">Apellido y nombre</th>
+                <th scope="col">Porcentaje de acciones</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
-        </section>
-      </div>
-      <div class="text-center">
-        <h5 class="mt-3">
-          <a href="{% url 'index' %}" class="btn btn-info mb-4 mt-3"
-            ><i class="fas fa-arrow-circle-left"></i> Volver al inicio
-          </a>
-        </h5>
-      </div>
-    </main>
-
-    <!-- MODAL DETALLE DE SOCIEDAD -->
-    <section class="modal fade" id="modalVerDetalle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Detalle de la sociedad</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-mdb-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <h4><span class="badge rounded-pill bg-primary">Sociedad</span></h4>
-            <div class="input-group cmy-2">
-              <span class="input-group-text border-0"> Nombre:</span>
-              <span
-                class="input-group-text border-0"
-                id="nombreSociedad"
-              ></span>
-            </div>
-
-            <div class="input-group cmy-2">
-              <span class="input-group-text border-0">Fecha de creación: </span>
-              <span class="input-group-text border-0" id="fechaCreacion"></span>
-            </div>
-
-            <div class="input-group cmy-2">
-              <span class="input-group-text border-0">Domicilio legal: </span>
-              <span
-                class="input-group-text border-0"
-                id="domicilioLegal"
-              ></span>
-            </div>
-
-            <div class="input-group cmy-2">
-              <span class="input-group-text border-0">Domicilio real: </span>
-              <span class="input-group-text border-0" id="domicilioReal"></span>
-            </div>
-
-            <div class="input-group cmy-2">
-              <span class="input-group-text border-0"
-                >Mail del apoderado:
-              </span>
-              <span class="input-group-text border-0" id="mailApoderado"></span>
-            </div>
-
-            <h4>
-              <span class="badge rounded-pill mt-3 bg-primary"
-                >Listado de socios</span
-              >
-            </h4>
-
-            <div class="input-group cmy-2">
-              <span class="input-group-text border-0"
-                >Representante legal:
-              </span>
-              <span
-                class="input-group-text border-0"
-                id="representanteLegal"
-              ></span>
-            </div>
-
-            <table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
-              <thead class="table-primary align-top">
-                <tr class="px-5">
-                  <th scope="col">DNI</th>
-                  <th scope="col">Apellido y nombre</th>
-                  <th scope="col">Porcentaje de acciones</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-          <div class="modal-footer">
-            <!-- <button type="button" id="btnModalAprobar" class="btn btn-color-success">Aprobar</button>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" id="btnModalAprobar" class="btn btn-color-success">Aprobar</button>
                <button type="button" id="btnModalCorregir" class="btn btn-color-warning">Corregir</button> -->
-            <button type="button" class="btn btn-light" data-mdb-dismiss="modal">
-              Volver
-            </button>
-          </div>
+          <button type="button" class="btn btn-light" data-mdb-dismiss="modal">
+            Volver
+          </button>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
 
-    <!-- MODAL ENVIO DE MAIL - CORREGIR SOCIEDAD -->
-    <section class="modal fade" id="modalEnvioMail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Envío de mail</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-mdb-dismiss="modal"
-              aria-label="Close"
-            ></button>
+  <!-- MODAL ENVIO DE MAIL - CORREGIR SOCIEDAD -->
+  <section class="modal fade" id="modalEnvioMail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Envío de mail</h5>
+          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h4><span class="badge rounded-pill bg-primary">Correciones</span></h4>
+          <div class="input-group cmy-2">
+            <span class="input-group-text border-0"> Mail:</span>
+            <span class="input-group-text border-0" id="mailApoderadoModalCorregir"></span>
           </div>
-          <div class="modal-body">
-            <h4><span class="badge rounded-pill bg-primary">Correciones</span></h4>
-            <div class="input-group cmy-2">
-              <span class="input-group-text border-0"> Mail:</span>
-              <span class="input-group-text border-0" id="mailApoderadoModalCorregir"></span>
-            </div>
-              <div class="form-group shadow-textarea cmy-2" >
-                <label for="comentariosMail">Comentarios:</label>
-                <textarea class="form-control z-depth-1" rows="5" col="20" id="comentariosMail" name="comentariosMail" placeholder="Escriba aquí los comentarios..."></textarea>
-              </div>
-          </div>
-          <div class="modal-footer">
-           <button type="button" id="btnModalEnviarCorreciones" class="btn btn-color-success">Enviar</button>
-            <!--  <button type="button" id="btnModalCorregir" class="btn btn-color-warning">Corregir</button> -->
-            <button type="button" class="btn btn-light" data-mdb-dismiss="modal">
-              Volver
-            </button>
+          <div class="form-group shadow-textarea cmy-2">
+            <label for="comentariosMail">Comentarios:</label>
+            <textarea class="form-control z-depth-1" rows="5" col="20" id="comentariosMail" name="comentariosMail"
+              placeholder="Escriba aquí los comentarios..."></textarea>
           </div>
         </div>
+        <div class="modal-footer">
+          <button type="button" id="btnModalEnviarCorreciones" class="btn btn-color-success">Enviar</button>
+          <!--  <button type="button" id="btnModalCorregir" class="btn btn-color-warning">Corregir</button> -->
+          <button type="button" class="btn btn-light" data-mdb-dismiss="modal">
+            Volver
+          </button>
+        </div>
       </div>
-    </section>
-    
-  </body>
+    </div>
+  </section>
+
+</body>
+
 </html>

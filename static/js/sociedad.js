@@ -228,10 +228,11 @@ async function existeSociedadConNombre(nombre) {
 	return response_parseada.length === 0 ? false : true;
 }
 
-async function getSociedadesPendientesAprobacion() {
+async function getSociedadesPorTask(estadoTarea) {
 	// hacer lo mismo con el try en todas las peticiones
 	try {
-		const sociedadesAnonimas = await fetch(localHost + '/sociedad_anonima/').then(response => response.json());
+		const sociedadesAnonimas = await fetch(localHost + '/sociedades_bonita/obtener_por_task/' + estadoTarea).then(response => response.json());
+		// const sociedadesAnonimas = await fetch(localHost + '/sociedad_anonima/').then(response => response.json());
 		// mostramos las sociedades en la  tabla
 		if (sociedadesAnonimas.length > 0) {
 			sociedadesAnonimas.forEach(sociedad => {
@@ -275,7 +276,7 @@ async function getSociedadesPendientesAprobacion() {
 		}
 	} catch (error) {
 		mostrarModalMensaje('Ocurrió un error al obtener las sociedades. Por favor, refresque la página');
-		console.log(error.response.status);
+		console.log(error);
 	}
 }
 

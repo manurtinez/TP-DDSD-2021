@@ -24,7 +24,7 @@
 	<title>Listado de sociedades a estampillar</title>
 </head>
 
-<body class="bg-light" onload="getSociedadesPendientesAprobacion()">
+<body class="bg-light" onload="getSociedadesPorTask('Solicitud de estampillado')">
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
@@ -40,6 +40,7 @@
 				</button>
 				<ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuButton">
 					<!-- Sociedades a evaluar el estatuto luego de ser aprobadas por ME-->
+					<li><a class="dropdown-item" href="{% url 'listado_sociedades_estampillar' %}">Mis tareas</a></li>
 					<li><a class="dropdown-item" href="{% url 'listado_sociedades_a_evaluar' %}">Sociedades a evaluar</a></li>
 					<li><hr class="dropdown-divider" /></li>
 					<li> <a class="dropdown-item" href="">Cerrar sesión</a></li>
@@ -139,7 +140,6 @@
 			</div>
 	
 			<div class="modal-footer">
-			<!-- <button type="button" id="btnModalEstampillar" class="btn btn-color-success">Estampillar</button> -->
 			  <button type="button" class="btn btn-light" data-mdb-dismiss="modal">Volver</button>
 			</div>
 		  </div>

@@ -1,5 +1,12 @@
 function obtenerBotones(idSociedad,newCell) {
-    let newLink = document.createElement("a");
+	let newLink = document.createElement("a");
+    newLink.text = "Tomar";
+    newLink.href = urlEstampillar + idSociedad;
+    newLink.classList.add("btn", "btn-color-success", "ms-2", "px-2");
+    newCell.appendChild(newLink);
+
+	/* MOVER LUEGO A VISTA DE 'MIS TAREAS' */
+    /* newLink = document.createElement("a");
     newLink.text = "Corregir";
     newLink.addEventListener('click', mostrarComentario.bind(this, idSociedad));
     // newLink.href = "#modalEnviarMail";
@@ -9,8 +16,7 @@ function obtenerBotones(idSociedad,newCell) {
     newLink.text = "Aprobar";
     newLink.href = urlAprobar + idSociedad;
     newLink.classList.add("btn", "btn-color-success", "ms-2", "px-2");
-    newCell.appendChild(newLink);
-
+    newCell.appendChild(newLink); */
 }
 
 

@@ -1,5 +1,13 @@
+/* sociedad_anonima/a_evaluar */
 function obtenerBotones(idSociedad, newCell) {
 	let newLink = document.createElement("a");
+    newLink.text = "Tomar";
+    newLink.href = urlEstampillar + idSociedad;
+    newLink.classList.add("btn", "btn-color-success", "ms-2", "px-2");
+    newCell.appendChild(newLink);
+
+	/* MOVER LUEGO A VISTA DE 'MIS TAREAS' */
+	/* newLink = document.createElement("a");
 	newLink.text = "Descargar estatuto";
 	newLink.addEventListener('click', descargarEstatuto.bind(this, idSociedad));
 	newLink.classList.add("btn", "btn-color-success", "ms-2", "px-2");
@@ -8,7 +16,7 @@ function obtenerBotones(idSociedad, newCell) {
 	newLink.text = "Aprobar";
   newLink.addEventListener('click', aprobarEstatuto.bind(this, idSociedad));
 	newLink.classList.add("btn", "btn-color-action", "ms-2", "px-2");
-	newCell.appendChild(newLink);
+	newCell.appendChild(newLink); */
 }
 
 async function descargarEstatuto(idSociedad) {
