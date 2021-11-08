@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 
 from rest_framework.routers import DefaultRouter
 
-from .views import SociedadAnonimaBonitaViewSet, SocioViewSet, SociedadAnonimaViewSet
+from .views import BonitaViewSet, SocioViewSet, SociedadAnonimaViewSet
 
 
 # Create default router and add viewsets
@@ -11,6 +11,7 @@ router = DefaultRouter()
 router.register(r'sociedad_anonima', SociedadAnonimaViewSet,
                 basename='sociedad_anonima')
 router.register(r'socio', SocioViewSet, basename='socio')
+# router.register(r'bonita', BonitaViewSet, basename='bonita')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -29,6 +30,10 @@ urlpatterns = [
         template_name='listadoDeSociedadesEvaluacionEstatuto.html'), name="listado_sociedades_a_evaluar"),
     path('sociedad_anonima/verDetalle', TemplateView.as_view(
         template_name='verDetalleSociedad.html'), name="detalle_sociedad_anonima"),
-    path('sociedades_bonita/obtener_por_task/<str:task_name>',
-         SociedadAnonimaBonitaViewSet.as_view({"get": "obtener_por_task"}))
+    path('bonita/sociedades/obtener_por_task/<str:task_name>',
+         BonitaViewSet.as_view({"get": "obtener_por_task"})),
+    path('bonita/login',
+         BonitaViewSet.as_view({"post": "bonita_login"})),
+    path('bonita/logout',
+         BonitaViewSet.as_view({"get": "bonita_logout"})),
 ]

@@ -8,7 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
-from services.bonita_service import assign_task, bonita_login, execute_task, get_cases_for_task, start_bonita_process
+from services.bonita_service import assign_task, bonita_login, execute_task, get_cases_for_task, start_bonita_process, bonita_logout
 from services.estampillado_service import api_call_with_retry
 
 # # el objeto env se usa para traer las variables de entorno
@@ -78,7 +78,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
             # Se inicia el proceso en bonita si se esta local
             if env('DJANGO_DEVELOPMENT') == 'True':
-                new_case = start_bonita_process(new_sa)
+                new_case = start_bonita_process(request.session, new_sa)
                 if (not new_case):
                     print(
                         '---> Hubo algun problema al iniciar el caso de bonita. Sin embargo, la SA fue creada correctamente')
@@ -87,8 +87,8 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                     new_sa.case_id = int(new_case['id'])
                     new_sa.save()
                     # Se asigna la tarea y se ejecuta
-                    task_id = assign_task(new_case['id'])
-                    execute_task(task_id)
+                    task_id = assign_task(request.session, new_case['id'])
+                    execute_task(request.session, task_id)
 
             # Tengo que agregar el ID de la nueva instancia y del caso al serializer por si se necesitan
             response_data = serializer.data
@@ -130,12 +130,10 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         return Response(data=response, status=status.HTTP_200_OK) if response else Response(status=status.HTTP_502_BAD_GATEWAY)
 
 
-class SociedadAnonimaBonitaViewSet(viewsets.ModelViewSet):
+class BonitaViewSet(viewsets.ViewSet):
     """
-    Este viewset define todos los endpoints y actions necesarios para hacer operaciones con sociedades relacionadas con Bonita
+    Este viewset define todos los endpoints y actions necesarios para hacer operaciones con Bonita
     """
-    serializer_class = SociedadAnonimaRetrieveSerializer
-    queryset = SociedadAnonima.objects.all()
     # IMPORTANTE cambiar esto cuando haya autenticacion
     permission_classes = [permissions.AllowAny]
 
@@ -152,6 +150,26 @@ class SociedadAnonimaBonitaViewSet(viewsets.ModelViewSet):
             * list[int] | None
         """
         case_ids = get_cases_for_task(kwargs['task_name'])
-        queryset = self.get_queryset().filter(case_id__in=case_ids)
+        queryset = SociedadAnonima.objects.filter(case_id__in=case_ids)
         serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['post'], url_pattern='login')
+    def bonita_login(self, request):
+        data = request.data
+        response_code = bonita_login(request.session,
+                                     data['user'], data['password'])
+        if response_code == 204:
+            return Response(status=status.HTTP_200_OK)
+        elif response_code == 401:
+            return Response(data="Las credenciales fueron incorrectas", status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(data="Hubo algun problema interno realizando el login", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=False, methods=['get'], url_pattern='logout')
+    def bonita_logout(self, request):
+        if bonita_logout():
+            request.session.flush()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(data='Hubo algun problema al hacer el logout.', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
