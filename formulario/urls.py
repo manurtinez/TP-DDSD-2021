@@ -2,6 +2,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 
 from rest_framework.routers import DefaultRouter
+from formulario.views import login
 
 from .views import BonitaViewSet, SocioViewSet, SociedadAnonimaViewSet
 
@@ -32,8 +33,7 @@ urlpatterns = [
         template_name='verDetalleSociedad.html'), name="detalle_sociedad_anonima"),
     path('bonita/sociedades/obtener_por_task/<str:task_name>',
          BonitaViewSet.as_view({"get": "obtener_por_task"})),
-    path('bonita/login',
-         BonitaViewSet.as_view({"post": "bonita_login"})),
+    path('bonita/login', login, name='bonita_login'),
     path('bonita/logout',
          BonitaViewSet.as_view({"get": "bonita_logout"})),
 ]

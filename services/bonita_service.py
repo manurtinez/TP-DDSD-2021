@@ -38,10 +38,10 @@ def bonita_api_call(session, resource,  method, url_params='', data={}):
     try:
         response = requests.request(method, url=bonita_api_url+resource+url_params,
                                     cookies={
-                                        'JSESSIONID': session[logged_user+'_jsessionid']
+                                        'JSESSIONID': session['jsessionid']
                                     },
                                     headers={
-                                        'X-Bonita-API-Token': session[logged_user+'_bonita_api_token']
+                                        'X-Bonita-API-Token': session['bonita_api_token']
                                     },
                                     data=json.dumps(data)
                                     )
@@ -72,16 +72,16 @@ def bonita_login(session, user, password):
         if response.cookies:
             # Guardar en la sesion actual el nombre de usuario logeado, y sus cookies
             session['logged_user'] = user
-            session[user+'_jsessionid'] = response.cookies['JSESSIONID']
-            session[user +
-                    '_bonita_api_token'] = response.cookies['X-Bonita-API-Token']
+            session['jsessionid'] = response.cookies['JSESSIONID']
+            session['bonita_api_token'] = response.cookies['X-Bonita-API-Token']
             # Como necesitamos el id del usuario, y no es devuelto en el login, hacer otro request para obtenerlo,
             # y guardarlo en sesion
             user_response = bonita_api_call(session,
                                             '/identity/user', 'get', '?f=enabled=true')
             user_data = [
                 us for us in user_response if us['userName'] == user][0]
-            session[user+'_bonita_id'] = user_data['id']
+            session['bonita_id'] = user_data['id']
+            session['bonita_job'] = user_data['job_title']
     except (requests.exceptions.RequestException, ) as e:
         print(e)
         return 500
@@ -145,7 +145,7 @@ def assign_task(session, case_id):
 
         # Asignar task al usuario logeado
         bonita_api_call(session, '/bpm/humanTask/{}'.format(current_task['id']), 'put', '',
-                        {'assigned_id': session[logged_user+'_bonita_id']})
+                        {'assigned_id': session['bonita_id']})
         return current_task['id']
     except requests.exceptions.RequestException as e:
         print(e)

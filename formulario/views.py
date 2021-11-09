@@ -1,6 +1,8 @@
 import environ
+from formulario.BonitaAuthentication import BonitaAuthentication
+from formulario.BonitaPermission import BonitaPermission
 from rest_framework import status, permissions, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -135,7 +137,8 @@ class BonitaViewSet(viewsets.ViewSet):
     Este viewset define todos los endpoints y actions necesarios para hacer operaciones con Bonita
     """
     # IMPORTANTE cambiar esto cuando haya autenticacion
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [BonitaPermission]
+    authentication_classes = [BonitaAuthentication]
 
     # @action(detail=False, url_path=r'obtener_por_task/(?P<task_name>\d+)')
     @action(detail=False)
@@ -154,18 +157,6 @@ class BonitaViewSet(viewsets.ViewSet):
         serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['post'], url_pattern='login')
-    def bonita_login(self, request):
-        data = request.data
-        response_code = bonita_login(request.session,
-                                     data['user'], data['password'])
-        if response_code == 204:
-            return Response(status=status.HTTP_200_OK)
-        elif response_code == 401:
-            return Response(data="Las credenciales fueron incorrectas", status=status.HTTP_401_UNAUTHORIZED)
-        else:
-            return Response(data="Hubo algun problema interno realizando el login", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
     @action(detail=False, methods=['get'], url_pattern='logout')
     def bonita_logout(self, request):
         if bonita_logout():
@@ -173,3 +164,17 @@ class BonitaViewSet(viewsets.ViewSet):
             return Response(status=status.HTTP_200_OK)
         else:
             return Response(data='Hubo algun problema al hacer el logout.', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['post'])
+@permission_classes([permissions.AllowAny])
+def login(request):
+    data = request.data
+    response_code = bonita_login(request.session,
+                                 data['user'], data['password'])
+    if response_code == 204:
+        return Response(status=status.HTTP_200_OK)
+    elif response_code == 401:
+        return Response(data="Las credenciales fueron incorrectas", status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        return Response(data="Hubo algun problema interno realizando el login", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
