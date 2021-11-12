@@ -59,6 +59,20 @@ def bonita_api_call(session, resource,  method, url_params='', data={}):
         return False
 
 
+def set_bonita_variable(session, case_id, var, var_value):
+    """
+    Este metodo setea una variable en un caso de bonita
+
+    Params:
+        * session: la sesion de django
+        * case_id: el id del caso
+        * var: NOMBRE de la variable (string)
+        * var_value: VALOR de la variable
+    """
+    bonita_api_call(session, '/bpm/caseVariable', 'put', f'/{case_id}/{var}', {
+        'type': java_types[type(var_value).__name__], 'value': var_value})
+
+
 def bonita_login_call(session, user, password):
     """
     Este metodo realiza el login del usuario en la api de bonita
@@ -81,7 +95,7 @@ def bonita_login_call(session, user, password):
             user_data = [
                 us for us in user_response if us['userName'] == user][0]
             session['bonita_id'] = user_data['id']
-            session['bonita_job'] = user_data['job_title']
+            session['bonita_role'] = user_data['job_title']
     except (requests.exceptions.RequestException, ) as e:
         print(e)
         return 500
@@ -110,11 +124,14 @@ def start_bonita_process(session, new_sa):
             "processDefinitionId": bonita_process['id']})
 
         # Se setean las variables id y name al caso
-        bonita_api_call(session, '/bpm/caseVariable', 'put', f'/{bonita_case["id"]}/id', {
-            'type': java_types[type(new_sa.id).__name__], 'value': new_sa.id})
+        set_bonita_variable(session, bonita_case['id'], 'id', new_sa.id)
+        set_bonita_variable(session, bonita_case['id'], 'name', new_sa.name)
 
-        bonita_api_call(session, '/bpm/caseVariable', 'put', f'/{bonita_case["id"]}/name', {
-            'type': java_types[type(new_sa.name).__name__], 'value': new_sa.name})
+        # bonita_api_call(session, '/bpm/caseVariable', 'put', f'/{bonita_case["id"]}/id', {
+        #     'type': java_types[type(new_sa.id).__name__], 'value': new_sa.id})
+
+        # bonita_api_call(session, '/bpm/caseVariable', 'put', f'/{bonita_case["id"]}/name', {
+        #     'type': java_types[type(new_sa.name).__name__], 'value': new_sa.name})
 
         # Esta parte no fue necesaria por ahora pero la dejo por si sirve para despues
 
