@@ -59,7 +59,7 @@ def bonita_api_call(session, resource,  method, url_params='', data={}):
         return False
 
 
-def bonita_login(session, user, password):
+def bonita_login_call(session, user, password):
     """
     Este metodo realiza el login del usuario en la api de bonita
 
@@ -99,7 +99,7 @@ def start_bonita_process(session, new_sa):
     """
     try:
         # Por ahora, el login hardcodeado cada vez que se crea una SA
-        bonita_login(session, 'Apoderado1', 'bpm')
+        bonita_login_call(session, 'Apoderado1', 'bpm')
 
         # Esto devuelve un array de procesos, en nuestro caso, uno solo, como Dict
         bonita_process = bonita_api_call(session,
@@ -138,7 +138,6 @@ def current_task_for_case(session, case_id):
 
 
 def assign_task(session, case_id):
-    logged_user = session['logged_user']
     try:
         # Traigo task actual para el caso recibido
         current_task = current_task_for_case(session, case_id)
@@ -163,7 +162,7 @@ def execute_task(session, task_id):
         return False
 
 
-def get_cases_for_task(task_name):
+def get_cases_for_task(session, task_name):
     """
     Este metodo devuelve un arreglo de case_id que esten "parados" en la tarea task_name (de tipo humanTask).
     Estos luego pueden ser usados para traer las SA correspondientes de la DB.
@@ -176,8 +175,8 @@ def get_cases_for_task(task_name):
     """
     try:
         case_ids = []
-        task_list = bonita_api_call(
-            '/bpm/humanTask', 'get', f'?c=50&d=rootContainerId&o=displayName+ASC&p=0&f=displayName={task_name}')
+        task_list = bonita_api_call(session,
+                                    '/bpm/humanTask', 'get', f'?c=50&d=rootContainerId&o=displayName+ASC&p=0&f=displayName={task_name}')
         for task in task_list:
             case_ids.append(int(task['caseId']))
         return case_ids

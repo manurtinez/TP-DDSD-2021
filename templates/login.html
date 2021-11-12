@@ -23,9 +23,9 @@
 </head>
 
 <body class="">
-  <form action={% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data"
-    class="" id="formularioLogin" name="formularioLogin"
-    onsubmit="return validarLogin(event);">
+  <form action={% url 'bonita_login' %} method="POST" enctype="multipart/form-data"
+    class="" id="formularioLogin" name="formularioLogin">
+    <!-- onsubmit="return validarLogin(event);" -->
     <section class="vh-100" style="background-color: #508bfc;">
       <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -39,9 +39,16 @@
             <div class="card shadow-2-strong mt-3" style="border-radius: 1rem;">
               <div class="card-body p-5 text-center">
                 <h3 class="mb-4">Iniciar sesión</h3>
+                {% if messages %}
+                  <ul class="messages">
+                  {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                  {% endfor %}
+                  </ul>
+                {% endif %}
                 <hr class="my-4">
                 <div class="form-outline mb-5">
-                  <input type="text" name="email" id="email" class="form-control form-control-lg" />
+                  <input type="text" name="user" id="email" class="form-control form-control-lg" />
                   <label class="form-label" for="email">Email</label>
                 </div>
 

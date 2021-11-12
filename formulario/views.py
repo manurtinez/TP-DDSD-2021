@@ -1,8 +1,11 @@
 import environ
 from formulario.BonitaAuthentication import BonitaAuthentication
 from formulario.BonitaPermission import BonitaPermission
+
+from formulario.permissions import check_bonita_permission
+
 from rest_framework import status, permissions, viewsets
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import action, api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -10,7 +13,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
-from services.bonita_service import assign_task, bonita_login, execute_task, get_cases_for_task, start_bonita_process, bonita_logout
+from services.bonita_service import assign_task, bonita_login_call, execute_task, get_cases_for_task, start_bonita_process, bonita_logout
 from services.estampillado_service import api_call_with_retry
 
 # # el objeto env se usa para traer las variables de entorno
@@ -152,7 +155,7 @@ class BonitaViewSet(viewsets.ViewSet):
         Returns:
             * list[int] | None
         """
-        case_ids = get_cases_for_task(kwargs['task_name'])
+        case_ids = get_cases_for_task(request.session, kwargs['task_name'])
         queryset = SociedadAnonima.objects.filter(case_id__in=case_ids)
         serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -168,13 +171,17 @@ class BonitaViewSet(viewsets.ViewSet):
 
 @api_view(['post'])
 @permission_classes([permissions.AllowAny])
-def login(request):
+def bonita_login(request):
     data = request.data
-    response_code = bonita_login(request.session,
-                                 data['user'], data['password'])
+    response_code = bonita_login_call(request.session,
+                                      data['user'], data['password'])
     if response_code == 204:
         return Response(status=status.HTTP_200_OK)
     elif response_code == 401:
         return Response(data="Las credenciales fueron incorrectas", status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response(data="Hubo algun problema interno realizando el login", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def pendientes(request):
+    return check_bonita_permission(request, 'listadoDeSociedadesPendientes.html', 'Empleado mesa')

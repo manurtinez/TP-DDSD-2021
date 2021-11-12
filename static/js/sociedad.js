@@ -231,7 +231,7 @@ async function existeSociedadConNombre(nombre) {
 async function getSociedadesPorTask(estadoTarea) {
 	// hacer lo mismo con el try en todas las peticiones
 	try {
-		const sociedadesAnonimas = await fetch(localHost + '/sociedades_bonita/obtener_por_task/' + estadoTarea).then(response => response.json());
+		const sociedadesAnonimas = await fetch(localHost + '/bonita/sociedades/obtener_por_task/' + estadoTarea).then(response => response.json());
 		// const sociedadesAnonimas = await fetch(localHost + '/sociedad_anonima/').then(response => response.json());
 		// mostramos las sociedades en la  tabla
 		if (sociedadesAnonimas.length > 0) {
