@@ -86,5 +86,5 @@ class VerdictSerializer(serializers.Serializer):
     """
     Este serializer sirve para el veredicto dado por empleado de mesa de entradas para la info de la sociedad
     """
-    verdict = serializers.BooleanField(required=True)
+    veredicto = serializers.BooleanField(required=True)
     # case_id = serializers.IntegerField(required=True)

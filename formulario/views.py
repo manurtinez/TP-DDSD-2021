@@ -141,7 +141,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         serializer = VerdictSerializer(data=request.data)
         if serializer.is_valid():
             sa = self.get_object()
-            verdict = serializer.validated_data.get('verdict')
+            verdict = serializer.validated_data.get('veredicto')
             if verdict:
                 # Aca llamar a api de estampillado
                 pass
