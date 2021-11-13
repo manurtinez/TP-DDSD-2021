@@ -80,3 +80,11 @@ class FileSerializer(serializers.Serializer):
     Este serializer corresponde al archivo de estatuto subido para una sociedad anonima
     """
     file = serializers.FileField(required=True)
+
+
+class VerdictSerializer(serializers.Serializer):
+    """
+    Este serializer sirve para el veredicto dado por empleado de mesa de entradas para la info de la sociedad
+    """
+    verdict = serializers.BooleanField(required=True)
+    # case_id = serializers.IntegerField(required=True)

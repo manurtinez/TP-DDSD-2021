@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 
-def check_bonita_permission(request, url, permission):
+def template_guard(request, url, role):
     """
     Esta funcion chequea el rol del usuario autenticado en el sistema (o si acaso existe).
     En el caso que sea el correcto, deja pasar a la url dada.
@@ -14,7 +14,7 @@ def check_bonita_permission(request, url, permission):
         * permission: el rol que se debe tener para accederla, por ejemplo, "Empleado mesa" o "Escribano".
             Este se corresponde con el rol del usuario de bonita
     """
-    if 'bonita_job' not in request.session or request.session['bonita_job'] != permission:
+    if 'bonita_role' not in request.session or request.session['bonita_role'] != role:
         # TODO esto de aca abajo iria en el authenticate, NO en el permissions
         # messages.error(request,
         #                'Debe autenticarse de nuevo.')
@@ -24,3 +24,7 @@ def check_bonita_permission(request, url, permission):
         return redirect('index')
     else:
         return render(request, url)
+
+
+def bonita_permission(request, role):
+    return 'bonita_role' in request.session and request.session['bonita_role'] == role

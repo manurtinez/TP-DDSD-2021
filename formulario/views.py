@@ -2,18 +2,18 @@ import environ
 from formulario.BonitaAuthentication import BonitaAuthentication
 from formulario.BonitaPermission import BonitaPermission
 
-from formulario.permissions import check_bonita_permission
+from formulario.permissions import template_guard, bonita_permission
 
 from rest_framework import status, permissions, viewsets
-from rest_framework.decorators import action, api_view, permission_classes, authentication_classes
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 
 from django_filters.rest_framework import DjangoFilterBackend
 
 from formulario.models import Socio, SociedadAnonima
-from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
+from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer, VerdictSerializer
 
-from services.bonita_service import assign_task, bonita_login_call, execute_task, get_cases_for_task, start_bonita_process, bonita_logout
+from services.bonita_service import assign_task, bonita_login_call, execute_task, get_cases_for_task, set_bonita_variable, start_bonita_process, bonita_logout
 from services.estampillado_service import api_call_with_retry
 
 # # el objeto env se usa para traer las variables de entorno
@@ -134,6 +134,28 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             method='get', endpoint='/api/estampillado/', url_params=hash)
         return Response(data=response, status=status.HTTP_200_OK) if response else Response(status=status.HTTP_502_BAD_GATEWAY)
 
+    @action(detail=True, methods=['post'])
+    def veredicto_mesa_entrada(self, request, pk=None):
+        if not bonita_permission(request, 'Empleado mesa'):
+            return Response(data='No esta autorizado a usar este endpoint', status=status.HTTP_403_FORBIDDEN)
+        serializer = VerdictSerializer(data=request.data)
+        if serializer.is_valid():
+            sa = self.get_object()
+            verdict = serializer.validated_data.get('verdict')
+            if verdict:
+                # Aca llamar a api de estampillado
+                pass
+            else:
+                # Aca enviar mail con correcciones
+                pass
+            set_bonita_variable(request.session, sa.case_id,
+                                'aprobado_por_mesa', verdict)
+            task_id = assign_task(request.session, sa.case_id)
+            execute_task(request.session, task_id)
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class BonitaViewSet(viewsets.ViewSet):
     """
@@ -184,4 +206,4 @@ def bonita_login(request):
 
 
 def pendientes(request):
-    return check_bonita_permission(request, 'listadoDeSociedadesPendientes.html', 'Empleado mesa')
+    return template_guard(request, 'listadoDeSociedadesPendientes.html', 'Empleado mesa')

@@ -69,8 +69,11 @@ def set_bonita_variable(session, case_id, var, var_value):
         * var: NOMBRE de la variable (string)
         * var_value: VALOR de la variable
     """
+    var_type = java_types[type(var_value).__name__]
+    if var_value == True:
+        var_value = 'true'
     bonita_api_call(session, '/bpm/caseVariable', 'put', f'/{case_id}/{var}', {
-        'type': java_types[type(var_value).__name__], 'value': var_value})
+        'type': var_type, 'value': var_value})
 
 
 def bonita_login_call(session, user, password):
@@ -125,7 +128,7 @@ def start_bonita_process(session, new_sa):
 
         # Se setean las variables id y name al caso
         set_bonita_variable(session, bonita_case['id'], 'id', new_sa.id)
-        set_bonita_variable(session, bonita_case['id'], 'name', new_sa.name)
+        set_bonita_variable(session, bonita_case['id'], 'nombre', new_sa.name)
 
         # bonita_api_call(session, '/bpm/caseVariable', 'put', f'/{bonita_case["id"]}/id', {
         #     'type': java_types[type(new_sa.id).__name__], 'value': new_sa.id})
