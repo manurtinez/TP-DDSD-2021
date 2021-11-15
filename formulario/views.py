@@ -140,7 +140,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def veredicto_mesa_entrada(self, request, pk=None):
         if not bonita_permission(request, 'Empleado mesa'):
-            return Response(data='No esta autorizado a usar este endpoint', status=status.HTTP_403_FORBIDDEN)
+            return Response(data='Debe ser rol Empleado mesa para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
         # serializer = VerdictSerializer(data=request.data)
         if 'veredicto' in request.data:
             sa = self.get_object()
@@ -153,6 +153,46 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                 pass
             set_bonita_variable(request.session, sa.case_id,
                                 'aprobado_por_mesa', verdict)
+            task_id = assign_task(request.session, sa.case_id)
+            execute_task(request.session, task_id)
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response('No se ha enviado el parametro veredicto', status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True)
+    def obtener_estatuto(self, request, pk=None):
+        """
+        Este metodo devuelve el PDF del estatuto de una sociedad dada por ID, para ser descargado
+        """
+        if not bonita_permission(request, 'Escribano'):
+            # Se necesita ser Escribano para acceder
+            return Response(data='Debe ser rol Escribano para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
+        sa = self.get_object()
+        file = sa.comformation_statute.open()
+
+        response = FileResponse(file, filename='estatuto',
+                                content_type='application/pdf')
+        return response
+
+    @action(detail=True, methods=['post'])
+    def evaluar_estatuto(self, request, pk=None):
+        """
+        Este metodo sirve para determinar si el estatuto se evaluo correctamente o no.
+        """
+        if not bonita_permission(request, 'Escribano'):
+            # Se necesita ser Escribano para acceder
+            return Response(data='Debe ser rol Escribano para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
+        if 'veredicto' in request.data:
+            sa = self.get_object()
+            verdict = request.data['veredicto']
+            if verdict:
+                # TODO Aca llamar a api de estampillado
+                pass
+            else:
+                # TODO Aca enviar mail con correcciones
+                pass
+            set_bonita_variable(request.session, sa.case_id,
+                                'estatuto_aprobado', verdict)
             task_id = assign_task(request.session, sa.case_id)
             execute_task(request.session, task_id)
             return Response(status=status.HTTP_200_OK)

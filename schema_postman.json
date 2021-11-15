@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ccf28d03-2516-44df-bd34-eab2a1ceef49",
+		"_postman_id": "ccc3984d-03e4-4935-8c8d-81cf7081336b",
 		"name": "proyecto DSSD",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -18,7 +18,7 @@
 							"urlencoded": [
 								{
 									"key": "username",
-									"value": "walter.bates",
+									"value": "JuancitoMesa",
 									"type": "text"
 								},
 								{
@@ -49,7 +49,13 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{bonita_token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "urlencoded",
 							"urlencoded": [
@@ -66,7 +72,7 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/bonita/API/bpm/userTask/1/execution",
+							"raw": "localhost:8080/bonita/API/portal/profile/1",
 							"host": [
 								"localhost"
 							],
@@ -74,10 +80,9 @@
 							"path": [
 								"bonita",
 								"API",
-								"bpm",
-								"userTask",
-								"1",
-								"execution"
+								"portal",
+								"profile",
+								"1"
 							]
 						}
 					},
@@ -142,7 +147,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"processDefinitionId\": \"5133440462881207664\"\n}",
+							"raw": "{\n    \"processDefinitionId\": \"7452736984428159376\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -179,7 +184,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"type\": \"java.lang.String\",\n    \"value\": \"name\"\n}",
+							"raw": "{\n    \"type\": \"java.lang.Boolean\",\n    \"value\": \"true\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -187,7 +192,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/bonita/API/bpm/caseVariable/3005/nombre",
+							"raw": "http://localhost:8080/bonita/API/bpm/caseVariable/5006/aprobado_por_mesa",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -198,8 +203,8 @@
 								"API",
 								"bpm",
 								"caseVariable",
-								"3005",
-								"nombre"
+								"5006",
+								"aprobado_por_mesa"
 							]
 						}
 					},
@@ -307,7 +312,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/bonita/api/bpm/activity?p=0&c=10&f=caseId=6003",
+							"raw": "http://localhost:8080/bonita/api/bpm/activity?p=0&c=10&f=caseId=5001",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -330,7 +335,12 @@
 								},
 								{
 									"key": "f",
-									"value": "caseId=6003"
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "f",
+									"value": "caseId=5001"
 								}
 							]
 						}
@@ -444,10 +454,16 @@
 					"name": "asignar task to user",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{bonita_token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"assigned_id\": \"2\"\r\n}",
+							"raw": "{\r\n    \"assigned_id\": \"302\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -455,7 +471,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/bonita/api/bpm/humanTask/120006",
+							"raw": "http://localhost:8080/bonita/api/bpm/humanTask/100003",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -466,7 +482,7 @@
 								"api",
 								"bpm",
 								"humanTask",
-								"120006"
+								"100003"
 							]
 						}
 					},
@@ -478,7 +494,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/bonita/API/bpm/humanTask?d=rootContainerId&f=state=ready&f=user_id=2&o=displayName+ASC&p=0",
+							"raw": "http://localhost:8080/bonita/API/bpm/humanTask?c=50&d=rootContainerId&f=state=ready&f=user_id=101&o=displayName+ASC&p=0",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -493,8 +509,7 @@
 							"query": [
 								{
 									"key": "c",
-									"value": "50",
-									"disabled": true
+									"value": "50"
 								},
 								{
 									"key": "d",
@@ -506,7 +521,7 @@
 								},
 								{
 									"key": "f",
-									"value": "user_id=2"
+									"value": "user_id=101"
 								},
 								{
 									"key": "o",
@@ -515,6 +530,11 @@
 								{
 									"key": "p",
 									"value": "0"
+								},
+								{
+									"key": "f",
+									"value": "displayName=Revisión de información",
+									"disabled": true
 								}
 							]
 						}
@@ -573,7 +593,13 @@
 					"name": "execution task",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "X-Bonita-API-Token",
+								"value": "{{bonita_token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{}",
@@ -584,7 +610,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/bonita/API/bpm/userTask/120006/execution",
+							"raw": "http://localhost:8080/bonita/API/bpm/userTask/100015/execution",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -595,8 +621,110 @@
 								"API",
 								"bpm",
 								"userTask",
-								"120006",
+								"100015",
 								"execution"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "traer tasks por nombre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/humanTask?c=50&d=rootContainerId&o=displayName+ASC&p=0&f=displayName=Revisión de información",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"humanTask"
+							],
+							"query": [
+								{
+									"key": "c",
+									"value": "50"
+								},
+								{
+									"key": "d",
+									"value": "rootContainerId"
+								},
+								{
+									"key": "f",
+									"value": "state=ready",
+									"disabled": true
+								},
+								{
+									"key": "f",
+									"value": "user_id=101",
+									"disabled": true
+								},
+								{
+									"key": "o",
+									"value": "displayName+ASC"
+								},
+								{
+									"key": "p",
+									"value": "0"
+								},
+								{
+									"key": "f",
+									"value": "assigned_id=",
+									"disabled": true
+								},
+								{
+									"key": "f",
+									"value": "displayName=Revisión de información"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user role by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/bonita/API/identity/membership?p=0&c=10&f=user_id=325&d=role_id&o=ASSIGNED_DATE_ASC",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"identity",
+								"membership"
+							],
+							"query": [
+								{
+									"key": "p",
+									"value": "0"
+								},
+								{
+									"key": "c",
+									"value": "10"
+								},
+								{
+									"key": "f",
+									"value": "user_id=325"
+								},
+								{
+									"key": "d",
+									"value": "role_id"
+								},
+								{
+									"key": "o",
+									"value": "ASSIGNED_DATE_ASC"
+								}
 							]
 						}
 					},
@@ -680,13 +808,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:8000/sociedad-anonima/",
+									"raw": "localhost:8000/sociedad_anonima/",
 									"host": [
 										"localhost"
 									],
 									"port": "8000",
 									"path": [
-										"sociedad-anonima",
+										"sociedad_anonima",
 										""
 									]
 								}
@@ -700,7 +828,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"asd\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30\r\n        }\r\n    ],\r\n    \"export_countries\": [\r\n        \"argentina\",\r\n        \"brasil\"\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"asd\"\r\n}",
+									"raw": "{\r\n    \"name\": \"sociedad1\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30\r\n        }\r\n    ],\r\n    \"export_countries\": [\r\n        \"argentina\",\r\n        \"brasil\"\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"asd\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -732,21 +860,206 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "/C:/eula.2052.txt"
+											"src": "/home/manu/tp-agronomia-oo2/doc/Proyecto_TP_Final_POO2.pdf"
 										}
 									]
 								},
 								"url": {
-									"raw": "localhost:8000/sociedad-anonima/1/subir_archivo/",
+									"raw": "localhost:8000/sociedad_anonima/2/subir_archivo/",
 									"host": [
 										"localhost"
 									],
 									"port": "8000",
 									"path": [
-										"sociedad-anonima",
-										"1",
+										"sociedad_anonima",
+										"2",
 										"subir_archivo",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "obtener estampillado de sociedad",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8000/sociedad_anonima/1/obtener_estampillado",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"sociedad_anonima",
+										"1",
+										"obtener_estampillado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "traer sociedades en task",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8000/sociedad_anonima/obtener_por_task/?task_name=hola",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"sociedad_anonima",
+										"obtener_por_task",
+										""
+									],
+									"query": [
+										{
+											"key": "task_name",
+											"value": "hola"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "veredicto mesa entrada (rol Empleado mesa)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"veredicto\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8000/sociedad_anonima/2/veredicto_mesa_entrada/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"sociedad_anonima",
+										"2",
+										"veredicto_mesa_entrada",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "obtener estatuto (rol Escribano)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8000/sociedad_anonima/1/obtener_estatuto/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"sociedad_anonima",
+										"1",
+										"obtener_estatuto",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "evaluar estatuto (rol Escribano)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"veredicto\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8000/sociedad_anonima/2/evaluar_estatuto/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"sociedad_anonima",
+										"2",
+										"evaluar_estatuto",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "bonita (django)",
+					"item": [
+						{
+							"name": "login (django)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-CSRFToken",
+										"value": "wNuv8wzKKgxzJBIFUUM7NbzKdiVk5qX2rZK1TvaZckrYh9qgXTpWVsJNmu1rD3PQ",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user\": \"JuancitoEscribano\",\n    \"password\": \"bpm\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8000/bonita/login",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"bonita",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8000/bonita/logout",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"bonita",
+										"logout"
 									]
 								}
 							},
@@ -856,6 +1169,15 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"estatuto\": \"\",\n    \"num_expediente\": \"1\",\n    \"url_organismo_solicitante\": \"localhost\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "https://infinite-inlet-30043.herokuapp.com/api/estampillado",
 							"protocol": "https",
