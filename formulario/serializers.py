@@ -73,18 +73,3 @@ class SociedadAnonimaRetrieveSerializer(serializers.ModelSerializer):
     #     def get_partners(self, obj):
     #     return SocioSASerializer(instance=obj.sociosa_set.all(), many=True)
     # partners = serializers.SerializerMethodField()
-
-
-class FileSerializer(serializers.Serializer):
-    """
-    Este serializer corresponde al archivo de estatuto subido para una sociedad anonima
-    """
-    file = serializers.FileField(required=True)
-
-
-class VerdictSerializer(serializers.Serializer):
-    """
-    Este serializer sirve para el veredicto dado por empleado de mesa de entradas para la info de la sociedad
-    """
-    veredicto = serializers.BooleanField(required=True)
-    # case_id = serializers.IntegerField(required=True)

@@ -1,3 +1,4 @@
+from django.http.response import FileResponse
 import environ
 from formulario.BonitaAuthentication import BonitaAuthentication
 from formulario.BonitaPermission import BonitaPermission
@@ -11,7 +12,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
 from formulario.models import Socio, SociedadAnonima
-from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer, VerdictSerializer
+from formulario.serializers import SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
 from services.bonita_service import assign_task, bonita_login_call, execute_task, get_cases_for_task, set_bonita_variable, start_bonita_process, bonita_logout
 from services.estampillado_service import api_call_with_retry
@@ -110,13 +111,15 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         Este action maneja la accion de agregar un archivo manifesto a la sociedad anonima.
         """
         sa = self.get_object()
-        serializer = FileSerializer(data=request.data)
-        if serializer.is_valid():
+        if 'file' in request.data:
             file = request.data['file']
+            if file.content_type != 'application/pdf' or file.size > 2000000:
+                return Response(data='El archivo tiene que tener formato pdf y ser de 2MB o menos',
+                                status=status.HTTP_400_BAD_REQUEST)
             sa.comformation_statute.save(file.name, file, save=True)
             return Response({'status': 'Archivo guardado con exito'})
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data='El archivo pdf no fue enviado.', status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True)
     def solicitar_estampillado(self, request, pk=None):
@@ -138,15 +141,15 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     def veredicto_mesa_entrada(self, request, pk=None):
         if not bonita_permission(request, 'Empleado mesa'):
             return Response(data='No esta autorizado a usar este endpoint', status=status.HTTP_403_FORBIDDEN)
-        serializer = VerdictSerializer(data=request.data)
-        if serializer.is_valid():
+        # serializer = VerdictSerializer(data=request.data)
+        if 'veredicto' in request.data:
             sa = self.get_object()
-            verdict = serializer.validated_data.get('veredicto')
+            verdict = request.data['veredicto']
             if verdict:
-                # Aca llamar a api de estampillado
+                # TODO Generar numero de expediente, y enviar mail de confirmacion
                 pass
             else:
-                # Aca enviar mail con correcciones
+                # TODO Aca enviar mail con correcciones
                 pass
             set_bonita_variable(request.session, sa.case_id,
                                 'aprobado_por_mesa', verdict)
@@ -154,7 +157,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             execute_task(request.session, task_id)
             return Response(status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response('No se ha enviado el parametro veredicto', status=status.HTTP_400_BAD_REQUEST)
 
 
 class BonitaViewSet(viewsets.ViewSet):
@@ -182,8 +185,8 @@ class BonitaViewSet(viewsets.ViewSet):
         serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['get'], url_pattern='logout')
-    def bonita_logout(self, request):
+    @action(detail=False, methods=['get'])
+    def logout(self, request):
         if bonita_logout():
             request.session.flush()
             return Response(status=status.HTTP_200_OK)
