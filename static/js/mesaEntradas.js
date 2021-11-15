@@ -1,7 +1,12 @@
-function obtenerBotones(idSociedad,newCell) {
+function obtenerBotones(idSociedad,idCase,newCell) {
 	let newLink = document.createElement("a");
-    newLink.text = "Tomar";
-    newLink.href = urlEstampillar + idSociedad;
+	  newLink.text = "Rechazar";
+    newLink.href = urlEstampillar + idCase;
+    newLink.classList.add("btn", "btn-color-danger", "ms-2", "px-2");
+    newCell.appendChild(newLink);
+		newLink = document.createElement("a");
+    newLink.text = "Aprobar";
+    newLink.href = urlEstampillar + idCase;
     newLink.classList.add("btn", "btn-color-success", "ms-2", "px-2");
     newCell.appendChild(newLink);
 

@@ -158,7 +158,14 @@ caption {
 	background-color: #FFC400 !important;
 }
 
-.btn-color-action{
+.btn{
 	color:white !important;
+}
+
+.btn-color-action{
 	background-color: darkcyan !important;
+}
+
+.btn-color-danger{
+	background-color: indianred !important;
 }
