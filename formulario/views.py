@@ -1,14 +1,19 @@
 import environ
+from formulario.BonitaAuthentication import BonitaAuthentication
+from formulario.BonitaPermission import BonitaPermission
+
+from formulario.permissions import template_guard, bonita_permission
+
 from rest_framework import status, permissions, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 
 from django_filters.rest_framework import DjangoFilterBackend
 
 from formulario.models import Socio, SociedadAnonima
-from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
+from formulario.serializers import FileSerializer, SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer, VerdictSerializer
 
-from services.bonita_service import assign_task, bonita_login, execute_task, get_cases_for_task, start_bonita_process
+from services.bonita_service import assign_task, bonita_login_call, execute_task, get_cases_for_task, set_bonita_variable, start_bonita_process, bonita_logout
 from services.estampillado_service import api_call_with_retry
 
 # # el objeto env se usa para traer las variables de entorno
@@ -78,7 +83,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
             # Se inicia el proceso en bonita si se esta local
             if env('DJANGO_DEVELOPMENT') == 'True':
-                new_case = start_bonita_process(new_sa)
+                new_case = start_bonita_process(request.session, new_sa)
                 if (not new_case):
                     print(
                         '---> Hubo algun problema al iniciar el caso de bonita. Sin embargo, la SA fue creada correctamente')
@@ -87,8 +92,8 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                     new_sa.case_id = int(new_case['id'])
                     new_sa.save()
                     # Se asigna la tarea y se ejecuta
-                    task_id = assign_task(new_case['id'])
-                    execute_task(task_id)
+                    task_id = assign_task(request.session, new_case['id'])
+                    execute_task(request.session, task_id)
 
             # Tengo que agregar el ID de la nueva instancia y del caso al serializer por si se necesitan
             response_data = serializer.data
@@ -129,15 +134,36 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             method='get', endpoint='/api/estampillado/', url_params=hash)
         return Response(data=response, status=status.HTTP_200_OK) if response else Response(status=status.HTTP_502_BAD_GATEWAY)
 
+    @action(detail=True, methods=['post'])
+    def veredicto_mesa_entrada(self, request, pk=None):
+        if not bonita_permission(request, 'Empleado mesa'):
+            return Response(data='No esta autorizado a usar este endpoint', status=status.HTTP_403_FORBIDDEN)
+        serializer = VerdictSerializer(data=request.data)
+        if serializer.is_valid():
+            sa = self.get_object()
+            verdict = serializer.validated_data.get('veredicto')
+            if verdict:
+                # Aca llamar a api de estampillado
+                pass
+            else:
+                # Aca enviar mail con correcciones
+                pass
+            set_bonita_variable(request.session, sa.case_id,
+                                'aprobado_por_mesa', verdict)
+            task_id = assign_task(request.session, sa.case_id)
+            execute_task(request.session, task_id)
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class SociedadAnonimaBonitaViewSet(viewsets.ModelViewSet):
+
+class BonitaViewSet(viewsets.ViewSet):
     """
-    Este viewset define todos los endpoints y actions necesarios para hacer operaciones con sociedades relacionadas con Bonita
+    Este viewset define todos los endpoints y actions necesarios para hacer operaciones con Bonita
     """
-    serializer_class = SociedadAnonimaRetrieveSerializer
-    queryset = SociedadAnonima.objects.all()
     # IMPORTANTE cambiar esto cuando haya autenticacion
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [BonitaPermission]
+    authentication_classes = [BonitaAuthentication]
 
     # @action(detail=False, url_path=r'obtener_por_task/(?P<task_name>\d+)')
     @action(detail=False)
@@ -151,7 +177,33 @@ class SociedadAnonimaBonitaViewSet(viewsets.ModelViewSet):
         Returns:
             * list[int] | None
         """
-        case_ids = get_cases_for_task(kwargs['task_name'])
-        queryset = self.get_queryset().filter(case_id__in=case_ids)
+        case_ids = get_cases_for_task(request.session, kwargs['task_name'])
+        queryset = SociedadAnonima.objects.filter(case_id__in=case_ids)
         serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'], url_pattern='logout')
+    def bonita_logout(self, request):
+        if bonita_logout():
+            request.session.flush()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(data='Hubo algun problema al hacer el logout.', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['post'])
+@permission_classes([permissions.AllowAny])
+def bonita_login(request):
+    data = request.data
+    response_code = bonita_login_call(request.session,
+                                      data['user'], data['password'])
+    if response_code == 204:
+        return Response(status=status.HTTP_200_OK)
+    elif response_code == 401:
+        return Response(data="Las credenciales fueron incorrectas", status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        return Response(data="Hubo algun problema interno realizando el login", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def pendientes(request):
+    return template_guard(request, 'listadoDeSociedadesPendientes.html', 'Empleado mesa')
