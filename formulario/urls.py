@@ -30,6 +30,8 @@ urlpatterns = [
         template_name='listadoDeSociedadesEvaluacionEstatuto.html'), name="listado_sociedades_a_evaluar"),
     path('sociedad_anonima/verDetalle', TemplateView.as_view(
         template_name='verDetalleSociedad.html'), name="detalle_sociedad_anonima"),
+    path('dashboard', TemplateView.as_view(
+        template_name='dashboard.html'), name="dashboard"),
     path('bonita/sociedades/obtener_por_task/<str:task_name>',
          BonitaViewSet.as_view({"get": "obtener_por_task"})),
     path('bonita/login', bonita_login, name='bonita_login'),

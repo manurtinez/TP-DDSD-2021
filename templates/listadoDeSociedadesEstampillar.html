@@ -12,10 +12,10 @@
 	<!-- Sweet alert -->
 	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-	<!-- CSS -->
-	<link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
 	<!-- MDB Bootstrap -->
 	<link href="{% static 'css/mdb.min.css' %}" rel="stylesheet" type="text/css" />
+	<!-- CSS -->
+	<link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
 	<!-- JavaScript -->
 	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
@@ -42,7 +42,9 @@
 					<!-- Sociedades a evaluar el estatuto luego de ser aprobadas por ME-->
 					<li><a class="dropdown-item" href="{% url 'listado_sociedades_estampillar' %}">Mis tareas</a></li>
 					<li><a class="dropdown-item" href="{% url 'listado_sociedades_a_evaluar' %}">Sociedades a evaluar</a></li>
-					<li><hr class="dropdown-divider" /></li>
+					<li>
+						<hr class="dropdown-divider" />
+					</li>
 					<li> <a class="dropdown-item" href="">Cerrar sesión</a></li>
 				</ul>
 			</div>
@@ -85,67 +87,67 @@
 	<!-- MODAL DETALLE DE SOCIEDAD -->
 	<div class="modal fade" id="modalVerDetalle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-scrollable">
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <h5 class="modal-title"> Detalle de la sociedad</h5>
-			  <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title"> Detalle de la sociedad</h5>
+					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<h4><span class="badge rounded-pill bg-primary">Sociedad</span></h4>
+					<div class="input-group cmy-2">
+						<span class="input-group-text border-0"> Nombre:</span>
+						<span class="input-group-text border-0" id="nombreSociedad"></span>
+					</div>
+
+					<div class="input-group  cmy-2">
+						<span class="input-group-text border-0">Fecha de creación: </span>
+						<span class="input-group-text border-0" id="fechaCreacion"></span>
+					</div>
+
+					<div class="input-group cmy-2">
+						<span class="input-group-text border-0">Domicilio legal: </span>
+						<span class="input-group-text border-0" id="domicilioLegal"></span>
+					</div>
+
+					<div class="input-group cmy-2">
+						<span class="input-group-text border-0">Domicilio real: </span>
+						<span class="input-group-text border-0" id="domicilioReal"></span>
+					</div>
+
+					<div class="input-group cmy-2">
+						<span class="input-group-text border-0">Mail del apoderado: </span>
+						<span class="input-group-text border-0" id="mailApoderado"></span>
+					</div>
+
+					<h4><span class="badge rounded-pill  mt-3 bg-primary">Listado de socios</span></h4>
+
+					<div class="input-group cmy-2">
+						<span class="input-group-text border-0">Representante legal: </span>
+						<span class="input-group-text border-0" id="representanteLegal"></span>
+					</div>
+
+					<table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2 ">
+						<thead class="table-primary align-top">
+							<tr class="px-5">
+								<th scope="col">DNI</th>
+								<th scope="col">Apellido y nombre</th>
+								<th scope="col">Porcentaje de acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-light" data-mdb-dismiss="modal">Volver</button>
+				</div>
 			</div>
-			<div class="modal-body">
-			  <h4><span class="badge rounded-pill bg-primary">Sociedad</span></h4>
-			  <div class="input-group cmy-2">
-				<span class="input-group-text border-0"> Nombre:</span>         
-				<span class="input-group-text border-0" id="nombreSociedad"></span>
-			  </div>  
-	  
-			  <div class="input-group  cmy-2">
-				<span class="input-group-text border-0">Fecha de creación: </span>  
-				<span class="input-group-text border-0" id="fechaCreacion"></span>                    
-			  </div>
-	
-			  <div class="input-group cmy-2">
-				<span class="input-group-text border-0">Domicilio legal: </span>
-				<span class="input-group-text border-0" id="domicilioLegal"></span>            
-			  </div>
-		
-			  <div class="input-group cmy-2">
-				<span class="input-group-text border-0">Domicilio real: </span>
-				<span class="input-group-text border-0" id="domicilioReal"></span>            
-			  </div>
-	
-			  <div class="input-group cmy-2">
-				<span class="input-group-text border-0">Mail del apoderado: </span>
-				<span class="input-group-text border-0" id="mailApoderado"></span>            
-			  </div>
-			  
-			 <h4><span class="badge rounded-pill  mt-3 bg-primary">Listado de socios</span></h4>
-	
-			<div class="input-group cmy-2">
-			  <span class="input-group-text border-0">Representante legal: </span>
-			  <span class="input-group-text border-0" id="representanteLegal"></span>            
-			</div>
-	
-			 <table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2 ">
-			  <thead class="table-primary align-top">
-				<tr class="px-5">
-				  <th scope="col">DNI</th>
-				  <th scope="col">Apellido y nombre</th>
-				  <th scope="col">Porcentaje de acciones</th>
-				</tr>
-			  </thead>
-			  <tbody>
-	
-			  </tbody>
-			</table>
-	
-			</div>
-	
-			<div class="modal-footer">
-			  <button type="button" class="btn btn-light" data-mdb-dismiss="modal">Volver</button>
-			</div>
-		  </div>
 		</div>
-	  </div>
-	
+	</div>
+
 
 </body>
 
