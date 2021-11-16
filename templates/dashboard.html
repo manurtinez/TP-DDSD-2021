@@ -1,0 +1,413 @@
+<!-- {% load static %} -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tablero de control gerencial</title>
+	<link href="{% static 'css/all.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+	<link
+		href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+		rel="stylesheet">
+	<link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
+</head>
+
+<body id="page-top">
+	<div id="content">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
+					aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="dropdown">
+					<button class="btn btn-primary rounded-circle p-0 size-50 btn-border" type="button" id="dropdownMenuButton"
+						data-mdb-toggle="dropdown" aria-expanded="false">
+						LM
+					</button>
+					<ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuButton">
+						<li><a class="dropdown-item" href="{% url 'listado_sociedades_estampillar' %}">Mis tareas</a></li>
+						<li>
+							<hr class="dropdown-divider" />
+						</li>
+						<li><a class="dropdown-item" href="">Cerrar sesión</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="">
+
+	
+			<h1 class="my-4 text-gray-800 text-uppercase font-weight-bold text-center ">Tablero de control gerencial</h1>
+			<!-- Content Row -->
+			<div class="row justify-content-center">
+
+				<!-- Earnings (Monthly) Card Example -->
+				<div class="col-xl-3 col-md-6 mb-4 h-100">
+					<div class="card border-left-primary shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+										Tiempo de resolución de los procesos</div>
+									<div class="h5 mb-0 font-weight-bold text-gray-800 mt-4">2 días y 4 hs</div>
+								</div>
+								<div class="col-auto">
+									<i class="fas fa-calendar fa-2x text-gray-300"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-xl-3 col-md-6 mb-4 h-100">
+					<div class="card border-left-warning shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+										Usuarios con mayor cantidad de rechazos
+									</div>
+									<a href="#" class="btn btn-warning btn-icon-split mt-2">
+
+										<span class="text">Ver usuarios</span>
+									</a>
+								</div>
+								<div class="col-auto">
+									<span class="h1 text-gray-300"><i class="far fa-times-circle"></i></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-xl-3 col-md-6 mb-4 h-100">
+					<div class="card border-left-primary shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+										Usuarios con mayor cantidad de aprobaciones
+									</div>
+									<a href="#" class="btn btn-primary btn-icon-split mt-2">
+										<span class="text">Ver usuarios</span>
+								</a>
+								
+								</div>
+								<div class="col-auto">
+									<span class="h1 text-gray-300"><i class="far fa-check-circle"></i></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		
+				<div class="card border-left-dark shadow py-2 col-auto mx-5 ">
+					<div class="card-body">
+						<div class="mb-2"><span class="h5 card-title">Mesa de entradas</span></div>
+
+						<div class="row g-2 mt-3">
+							<div class="card border-left-success shadow h-100 py-1 col w-50 mr-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+											Sociedades anónimas confirmadas</div>
+											<div class="row no-gutters align-items-center mt-3 ">
+												<div class="col-auto">
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">80%</div>
+												</div>
+												<div class="col">
+													<div class="progress progress-sm mr-2">
+														<div class="progress-bar bg-success" role="progressbar" style="width: 80%"
+															aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-auto">
+											<span class="h2 text-gray-500">296/370</span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="card border-left-danger shadow py-1 col-auto w-50 ml-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+												Sociedades anónimas rechazadas</div>
+											<div class="row no-gutters align-items-center mt-3 ">
+												<div class="col-auto">
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">20%</div>
+												</div>
+												<div class="col">
+													<div class="progress progress-sm mr-2">
+														<div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
+															aria-valuenow="20" aria-valuemin="0" aria-valuemax="20"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-auto">
+											<span class="h2 text-gray-500">74/370</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="card border-left-dark shadow py-2 col-auto mx-5 mt-4">
+					<div class="card-body">
+						<h5 class="card-title">Legales</h5>
+
+						<div class="row g-2">
+							<div class="card border-left-success shadow h-100 py-1 col w-50 mr-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+												Estautos confirmados </div>
+											<div class="row no-gutters align-items-center mt-3 ">
+												<div class="col-auto">
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">90%</div>
+												</div>
+												<div class="col">
+													<div class="progress progress-sm mr-2">
+														<div class="progress-bar bg-success" role="progressbar" style="width: 90%"
+															aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-auto">
+											<span class="h2 text-gray-500">180/200</span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="card border-left-danger shadow py-1 col-auto w-50 ml-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+												Estatutos rechazados </div>
+											<div class="row no-gutters align-items-center mt-3 ">
+												<div class="col-auto">
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">10%</div>
+												</div>
+												<div class="col">
+													<div class="progress progress-sm mr-2">
+														<div class="progress-bar bg-danger" role="progressbar" style="width: 10%"
+															aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-auto">
+											<span class="h2 text-gray-500">20/200</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+		
+
+			<!-- <div class="row">
+			
+						<div class="col-xl-8 col-lg-7">
+							<div class="card shadow mb-4">
+			
+								<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+									<h6 class="m-0 font-weight-bold text-primary">Procesos iniciados por mes</h6>
+									<div class="dropdown no-arrow">
+										<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+											aria-haspopup="true" aria-expanded="false">
+											<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+										</a>
+										<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+											aria-labelledby="dropdownMenuLink">
+											<div class="dropdown-header">Dropdown Header:</div>
+											<a class="dropdown-item" href="#">Action</a>
+											<a class="dropdown-item" href="#">Another action</a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#">Something else here</a>
+										</div>
+									</div>
+								</div>
+			
+								<div class="card-body">
+									<div class="chart-area">
+										<canvas id="myAreaChart"></canvas>
+									</div>
+								</div>
+							</div>
+						</div>
+
+		
+						<div class="col-xl-4 col-lg-5">
+							<div class="card shadow mb-4">
+			
+								<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+									<h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+									<div class="dropdown no-arrow">
+										<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+											aria-haspopup="true" aria-expanded="false">
+											<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+										</a>
+										<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+											aria-labelledby="dropdownMenuLink">
+											<div class="dropdown-header">Dropdown Header:</div>
+											<a class="dropdown-item" href="#">Action</a>
+											<a class="dropdown-item" href="#">Another action</a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#">Something else here</a>
+										</div>
+									</div>
+								</div>
+				
+								<div class="card-body">
+									<div class="chart-pie pt-4 pb-2">
+										<canvas id="myPieChart"></canvas>
+									</div>
+									<div class="mt-4 text-center small">
+										<span class="mr-2">
+											<i class="fas fa-circle text-primary"></i> Direct
+										</span>
+										<span class="mr-2">
+											<i class="fas fa-circle text-success"></i> Social
+										</span>
+										<span class="mr-2">
+											<i class="fas fa-circle text-info"></i> Referral
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> 
+
+	
+					<div class="row d-block">
+			
+							<div class="card shadow mb-4">
+								<div class="card-header py-3">
+									<h6 class="m-0 font-weight-bold text-primary">Tiempo utilizado en la resolución de tareas</h6>
+								</div>
+								<div class="card-body">
+									<h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
+									<div class="progress mb-4">
+										<div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20"
+											aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
+									<div class="progress mb-4">
+										<div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40"
+											aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
+									<div class="progress mb-4">
+										<div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0"
+											aria-valuemax="100"></div>
+									</div>
+									<h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
+									<div class="progress mb-4">
+										<div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80"
+											aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
+									<div class="progress">
+										<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100"
+											aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+
+					</div>
+                     -->
+
+			<footer class="sticky-footer bg-white">
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Copyright &copy; | Dirección Nacional de Personas Jurídicas | 2021</span>
+					</div>
+				</div>
+			</footer>
+
+
+		</div>
+
+
+	</div>
+
+	<a class="scroll-to-top rounded" href="#page-top">
+		<i class="fas fa-angle-up"></i>
+	</a>
+
+
+	<div class="modal fade" id="modalUsuariosRechazos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Usuarios con mayor cantidad de rechazos</h5>
+					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- <h4><span class="badge rounded-pill bg-primary">Sociedad</span></h4> -->		
+					<table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2 ">
+						<thead class="table-primary align-top">
+							<tr class="px-5">
+								<th scope="col">Usuario</th>			
+							</tr>
+						</thead>
+						<tbody>
+							<td>Luis Mariano</td>
+							<td>Matias Mosquera</td>
+							<td>Debo muchos finales</td>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-light" data-mdb-dismiss="modal">Volver</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript" src="{% static 'js/dashboard/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dashboard/bootstrap.bundle.min.js' %}"></script>
+
+
+	<script type="text/javascript" src="{% static 'js/dashboard/jquery.easing.min.js' %}"></script>
+
+
+	<script type="text/javascript" src="{% static 'js/dashboard/sb-admin-2.min.js' %}"></script>
+
+
+	<script type="text/javascript" src="{% static 'js/dashboard/Chart.min.js' %}"></script>
+
+	<script type="text/javascript" src="{% static 'js/dashboard/chart-area-demo.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dashboard/chart-pie-demo.js' %}"></script>
+
+</body>
+
+</html>

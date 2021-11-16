@@ -1,26 +1,18 @@
 function validarLogin() {
 
 	// MAIL - VACIO
-	if (document.formularioLogin.email.value.length == 0) {
-		let mensaje = "Por favor, ingresa el mail."
-		document.formularioLogin.email.focus();
+	if (document.formularioLogin.user.value.length == 0) {
+		let mensaje = "Por favor, ingresa el nombre de usuario."
+		document.formularioLogin.user.focus();
 		mostrarModalMensaje(mensaje)
 		return false;
 	}
 
 	// MAIL - ENTRE 5 Y 80 CARACTERES
-	if (document.formularioLogin.email.value.length > 80 || document.formularioLogin.email.value.length <= 4) {
-		let $mensaje = 'Por favor, el mail debe tener entre 5 y 80 caracteres.';
-		document.formularioLogin.email.focus();
+	if (document.formularioLogin.user.value.length > 80 || document.formularioLogin.user.value.length <= 4) {
+		let $mensaje = 'Por favor, el nombre de usuario debe tener entre 5 y 80 caracteres.';
+		document.formularioLogin.user.focus();
 		mostrarModalMensaje($mensaje)
-		return false;
-	}
-
-	// MAIL - FORMATO
-	if (!(/\S+@\S+\.\S+/.test(document.formularioLogin.email.value))) {
-		document.formularioLogin.email.focus();
-		let $mensaje = 'Por favor, ingresá el email con el formato sancheznicolas@gmail.com';
-		mostrarModalMensaje($mensaje);
 		return false;
 	}
 
