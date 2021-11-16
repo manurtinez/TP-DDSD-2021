@@ -91,6 +91,7 @@ def bonita_login_call(session, user, password):
             session['logged_user'] = user
             session['jsessionid'] = response.cookies['JSESSIONID']
             session['bonita_api_token'] = response.cookies['X-Bonita-API-Token']
+
             # Como necesitamos el id del usuario, y no es devuelto en el login, hacer otro request para obtenerlo,
             # y guardarlo en sesion
             user_response = bonita_api_call(session,
@@ -98,7 +99,13 @@ def bonita_login_call(session, user, password):
             user_data = [
                 us for us in user_response if us['userName'] == user][0]
             session['bonita_id'] = user_data['id']
-            session['bonita_role'] = user_data['job_title']
+
+            # Con el id obtenido, traer el rol del usuario para realizar permisos luego
+            url_params = '?p=0&c=10&f=user_id={}&d=role_id&o=ASSIGNED_DATE_ASC'.format(
+                user_data['id'])
+            session['bonita_role'] = bonita_api_call(
+                session, '/identity/membership', 'get', url_params)[0]['role_id']['name']
+            print(session['bonita_role'])
     except (requests.exceptions.RequestException, ) as e:
         print(e)
         return 500
