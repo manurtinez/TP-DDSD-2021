@@ -205,9 +205,10 @@ class BonitaViewSet(viewsets.ViewSet):
     """
     Este viewset define todos los endpoints y actions necesarios para hacer operaciones con Bonita
     """
-    # IMPORTANTE cambiar esto cuando haya autenticacion
-    permission_classes = [BonitaPermission]
-    authentication_classes = [BonitaAuthentication]
+    # IMPORTANTE permito cualquiera y despues me fijo en cada view
+    permission_classes = [permissions.AllowAny]
+    # permission_classes = [BonitaPermission]
+    # authentication_classes = [BonitaAuthentication]
 
     # @action(detail=False, url_path=r'obtener_por_task/(?P<task_name>\d+)')
     @action(detail=False)
