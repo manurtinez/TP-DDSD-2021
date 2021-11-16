@@ -1,4 +1,5 @@
 from django.http.response import FileResponse
+from django.shortcuts import redirect
 import environ
 from formulario.BonitaAuthentication import BonitaAuthentication
 from formulario.BonitaPermission import BonitaPermission
@@ -225,14 +226,6 @@ class BonitaViewSet(viewsets.ViewSet):
         serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['get'])
-    def logout(self, request):
-        if bonita_logout():
-            request.session.flush()
-            return Response(status=status.HTTP_200_OK)
-        else:
-            return Response(data='Hubo algun problema al hacer el logout.', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 @api_view(['post'])
 @permission_classes([permissions.AllowAny])
@@ -246,6 +239,17 @@ def bonita_login(request):
         return Response(data="Las credenciales fueron incorrectas", status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response(data="Hubo algun problema interno realizando el login", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view()
+@permission_classes([permissions.AllowAny])
+@action(detail=False)
+def logout(request):
+    if bonita_logout():
+        request.session.flush()
+        return redirect('login')
+    else:
+        return Response(data='Hubo algun problema al hacer el logout.', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 def pendientes(request):
