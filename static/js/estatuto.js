@@ -1,9 +1,10 @@
 /* sociedad_anonima/a_evaluar */
 function obtenerBotones(idSociedad, newCell) {
 	let newLink = document.createElement("a");
-    newLink.text = "Tomar";
-    newLink.href = urlEstampillar + idSociedad;
+    newLink.text = "Descargar estatuto";
+    newLink.href = `http://localhost:8000/sociedad_anonima/${idSociedad}/obtener_estatuto/`;
     newLink.classList.add("btn", "btn-color-success", "ms-2", "px-2");
+		newLink.target = "_blank";
     newCell.appendChild(newLink);
 
 	/* MOVER LUEGO A VISTA DE 'MIS TAREAS' */

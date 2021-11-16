@@ -264,7 +264,7 @@ async function getSociedadesPorTask(estadoTarea) {
 				newLink.classList.add('btn', 'btn-info', 'px-2'); 
 				newLink.addEventListener('click', mostrarSociedad.bind(this, sociedad.id));				
 				newCell.appendChild(newLink);
-				obtenerBotones(sociedad.id,sociedad.idCase,newCell);				
+				obtenerBotones(sociedad.id,newCell);				
 			});
 		}
 		else{
