@@ -12,10 +12,10 @@
   <!-- Sweet alert -->
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <!-- CSS -->
-  <link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
   <!-- MDB Bootstrap -->
   <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet" type="text/css" />
+  <!-- CSS -->
+  <link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
   <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
   <!-- JavaScript -->
   <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
@@ -75,7 +75,7 @@
     </div>
     <div class="text-center">
       <h5 class="mt-3">
-        <a href="{% url 'index' %}" class="btn btn-info mb-4 mt-3"><i class="fas fa-arrow-circle-left"></i> Volver al
+        <a href="{% url 'index' %}" class="btn btn-info mb-4 mt-3 btnVolver"><i class="fas fa-arrow-circle-left"></i> Volver al
           inicio
         </a>
       </h5>
@@ -142,7 +142,7 @@
         <div class="modal-footer">
           <!-- <button type="button" id="btnModalAprobar" class="btn btn-color-success">Aprobar</button>
                <button type="button" id="btnModalCorregir" class="btn btn-color-warning">Corregir</button> -->
-          <button type="button" class="btn btn-light" data-mdb-dismiss="modal">
+          <button type="button" class="btn btnVolver" data-mdb-dismiss="modal">
             Volver
           </button>
         </div>
@@ -174,7 +174,7 @@
         <div class="modal-footer">
           <button type="button" id="btnModalEnviarCorreciones" class="btn btn-color-success">Enviar</button>
           <!--  <button type="button" id="btnModalCorregir" class="btn btn-color-warning">Corregir</button> -->
-          <button type="button" class="btn btn-light" data-mdb-dismiss="modal">
+          <button type="button" class="btn btnVolver" data-mdb-dismiss="modal">
             Volver
           </button>
         </div>

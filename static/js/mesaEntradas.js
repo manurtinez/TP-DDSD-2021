@@ -1,14 +1,22 @@
 function obtenerBotones(idSociedad,newCell) {
 	let newLink = document.createElement("a");
-	  newLink.text = "Rechazar";
+	//newLink.text = "Rechazar";
     newLink.addEventListener('click', veredicto.bind(this, idSociedad, false));
-    newLink.classList.add("btn", "btn-color-danger", "ms-2", "px-2");
-    newCell.appendChild(newLink);
-		newLink = document.createElement("a");
-    newLink.text = "Aprobar";
+    newLink.classList.add("btn", "btn-color-danger", 'px-2', 'mx-1', 'anchoBoton');
+	newIcon = document.createElement("i");
+	newIcon.classList.add("fas", "fa-1-5x", "fa-times");
+	newLink.appendChild(newIcon);
+	newCell.appendChild(newLink);
+	newLink = document.createElement("a");
+
+    //newLink.text = "Aprobar";
     newLink.addEventListener('click', veredicto.bind(this, idSociedad, true));
-    newLink.classList.add("btn", "btn-color-success", "ms-2", "px-2");
-    newCell.appendChild(newLink);
+    newLink.classList.add("btn", "btn-color-success", 'px-2','anchoBoton');
+	newIcon = document.createElement("i");
+	newIcon.classList.add("fas","fa-1-5x","fa-check");
+	newLink.appendChild(newIcon);
+	newCell.appendChild(newLink);
+	newLink = document.createElement("a");
 
 	/* MOVER LUEGO A VISTA DE 'MIS TAREAS' */
     /* newLink = document.createElement("a");
@@ -80,7 +88,7 @@ if (response.status === 200) {
 		icon,
 		title: 'La sociedad ha sido '+mensaje+' correctamente!',
 		showConfirmButton: true,
-		confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
+		confirmButtonText: '<a onclick=location.reload();>Continuar</a>'
 	})
 	
 } else {

@@ -169,3 +169,15 @@ caption {
 .btn-color-danger{
 	background-color: indianred !important;
 }
+
+.fa-1-5x {
+	font-size: 1.5em;
+}
+
+.anchoBoton {
+	min-width: 37px;
+}
+
+.btnVolver {
+	background-color: darkgray;
+}

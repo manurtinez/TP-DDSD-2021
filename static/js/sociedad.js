@@ -260,9 +260,12 @@ async function getSociedadesPorTask(estadoTarea) {
 				newCell = newRow.insertCell(-1);
 				newCell.classList.add('px-1','align-middle','text-nowrap'); 
 				newLink = document.createElement("a");
-				newLink.text = "Ver";
-				newLink.classList.add('btn', 'btn-info', 'px-2'); 
-				newLink.addEventListener('click', mostrarSociedad.bind(this, sociedad.id));				
+				//newLink.text = "Ver";
+				newLink.classList.add('btn', 'btn-info', 'px-2', 'anchoBoton');
+				newLink.addEventListener('click', mostrarSociedad.bind(this, sociedad.id));	
+				newIcon = document.createElement("i");
+				newIcon.classList.add("fas", "fa-1-5x", "fa-eye");
+				newLink.appendChild(newIcon);
 				newCell.appendChild(newLink);
 				obtenerBotones(sociedad.id,newCell);				
 			});
