@@ -49,24 +49,28 @@ async function mostrarSociedad() {
 // http://raw.githack.com/MrRio/jsPDF/master/
 function generarPDF(){
 	const doc = new jsPDF();
+
 	doc.setFontSize(20);
 	doc.setFont("arial", "bold");
 	doc.text("INFORMACIÓN PÚBLICA DE SOCIEDAD ANÓNIMA", 105, 20, null, null, "center");
 	doc.setFontSize(16);
-	doc.setFont("times", "normal");
+	doc.setFont("arial", "normal");
 	// const iBox = document.createTextNode("\⏹");
 	doc.text(20, 40,`Nombre: ${nombreSociedad.value}`);
 	doc.text(20, 60, "Fecha de creación: " + fechaCreacion.value);
 	doc.setFontSize(14);
-	doc.setFont("times", "bold");    
-	doc.text(20, 80, "LISTADO DE SOCIOS: ");
+
+	doc.text(20, 80, "Código QR : ");
+	doc.addImage(qrSociedad, 'png', 50, 68, 50, 50);	
+
+	
+	doc.text(20, 125, "Listado de socios: ");
 	let headers = createHeaders([
 		"Apellido y nombre",
-		"% Acciones"
-	  ]);
-	doc.table(20, 82, generateData(), headers, { autoSize: false });
-	doc.text(20, 170, "Código QR : ");
-	doc.addImage(qrSociedad, 'png', 20, 172, 50, 50);
+		"Porcentaje de acciones"
+	]);
+	
+	doc.table(20, 130, generateData(), headers, { autoSize: false });
 
 	doc.save('sociedadAnonima.pdf');
 }
@@ -78,7 +82,7 @@ function createHeaders(keys) {
 		id: keys[i],
 		name: keys[i],
 		prompt: keys[i],
-		width: 65,
+		width: 120,
 		align: "center",
 		padding: 0
 	  });
@@ -89,7 +93,7 @@ function createHeaders(keys) {
   function generateData(){
 	var result = [];
 	tablaSocios.tBodies[0].rows.forEach(row => {
-		result.push({ "Apellido y nombre" : row.cells[0].textContent, "% Acciones" : row.cells[1].textContent});	
+		result.push({ "Apellido y nombre" : row.cells[0].textContent, "Porcentaje de acciones" : row.cells[1].textContent});	
 	});
 	return result
   }
