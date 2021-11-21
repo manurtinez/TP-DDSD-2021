@@ -9,4 +9,3 @@ uploads
 staticfiles/*
 !staticfiles/hola.txt
 static_shared
-.env
