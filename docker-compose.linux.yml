@@ -17,13 +17,13 @@ services:
       timeout: 5s
       retries: 5
   web-dev:
-    build: ./django
+    build: ./proyecto_django
     container_name: django_DSSD
     command: python manage.py runserver 0.0.0.0:8000
     environment:
       - DATABASE_URL
     volumes:
-      - ./django:/code
+      - ./proyecto_django:/code
     network_mode: "host"
     extra_hosts:
       - "db:127.0.0.1"
