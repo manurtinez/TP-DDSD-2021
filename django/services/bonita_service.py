@@ -105,7 +105,6 @@ def bonita_login_call(session, user, password):
                 user_data['id'])
             session['bonita_role'] = bonita_api_call(
                 session, '/identity/membership', 'get', url_params)[0]['role_id']['name']
-            print(session['bonita_role'])
     except (requests.exceptions.RequestException, ) as e:
         print(e)
         return 500
@@ -203,7 +202,7 @@ def get_cases_for_task(session, task_name):
     try:
         case_ids = []
         task_list = bonita_api_call(session,
-                                    '/bpm/humanTask', 'get', f'?c=50&d=rootContainerId&o=displayName+ASC&p=0&f=displayName={task_name}')
+                                    '/bpm/humanTask', 'get', f'?f=displayName={task_name}')
         for task in task_list:
             case_ids.append(int(task['caseId']))
         return case_ids
