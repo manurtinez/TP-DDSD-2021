@@ -12,6 +12,8 @@ from rest_framework.response import Response
 
 from django_filters.rest_framework import DjangoFilterBackend
 
+from services.bonita_statistics import area_statistics
+
 from formulario.models import Socio, SociedadAnonima
 from formulario.serializers import SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
 
@@ -235,7 +237,7 @@ def bonita_login(request):
     response_code = bonita_login_call(request.session,
                                       data['user'], data['password'])
     if response_code == 204:
-        #return Response(status=status.HTTP_200_OK)
+        # return Response(status=status.HTTP_200_OK)
         return redirect('listado_sociedades_pendientes_aprobacion')
         # Lógica del rol del usuario
         #  switch (rol) {
@@ -252,7 +254,6 @@ def bonita_login(request):
 
 @api_view()
 @permission_classes([permissions.AllowAny])
-@action(detail=False)
 def logout(request):
     if bonita_logout():
         request.session.flush()
@@ -263,3 +264,17 @@ def logout(request):
 
 def pendientes(request):
     return template_guard(request, 'listadoDeSociedadesPendientes.html', 'Empleado mesa')
+
+
+@api_view()
+@permission_classes([permissions.AllowAny])
+def estadisticas_por_area(request, *args, **kwargs):
+    """
+    Este endpoint devuelve las estadisticas (aprobados / rechazados) de parte de mesa de entradas.
+    """
+    if not bonita_permission(request, 'any'):
+        # Se necesita estar logeado (con cualquier usuario) para acceder
+        return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
+    area = kwargs['area']
+    results = area_statistics(request.session, area)
+    return Response(data=results, status=status.HTTP_200_OK)

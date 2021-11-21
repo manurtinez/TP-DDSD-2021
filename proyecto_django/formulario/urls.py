@@ -1,10 +1,9 @@
-from django.urls import path, include
+from django.urls import include, path
 from django.views.generic import TemplateView
-
 from rest_framework.routers import DefaultRouter
 
-from .views import BonitaViewSet, SocioViewSet, SociedadAnonimaViewSet, bonita_login, logout, pendientes
-
+from .views import (BonitaViewSet, SociedadAnonimaViewSet, SocioViewSet,
+                    bonita_login, estadisticas_por_area, logout, pendientes)
 
 # Create default router and add viewsets
 router = DefaultRouter()
@@ -37,5 +36,6 @@ urlpatterns = [
     path('bonita/login', bonita_login, name='bonita_login'),
     path('bonita/logout',
          logout, name='logout'),
-    path('login', TemplateView.as_view(template_name='login.html'), name='login')
+    path('login', TemplateView.as_view(template_name='login.html'), name='login'),
+    path('estadisticas/por_area/<str:area>', estadisticas_por_area),
 ]

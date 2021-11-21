@@ -27,4 +27,7 @@ def template_guard(request, url, role):
 
 
 def bonita_permission(request, role):
-    return 'bonita_role' in request.session and request.session['bonita_role'] == role
+    if role == 'any':
+        return 'bonita_role' in request.session
+    else:
+        return 'bonita_role' in request.session and request.session['bonita_role'] == role
