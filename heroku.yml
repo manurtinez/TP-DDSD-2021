@@ -1,5 +1,7 @@
 build:
   docker:
-    web: Dockerfile
+    web: proyecto_django/Dockerfile
+    symfony: api_complemento/Dockerfile
+
 run:
   web: python manage.py collectstatic --noinput ; gunicorn DSSD.wsgi:application --bind 0.0.0.0:$PORT

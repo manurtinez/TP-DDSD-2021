@@ -16,7 +16,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-  web-dev:
+  web:
     build: ./proyecto_django
     container_name: django_DSSD
     command: python manage.py runserver 0.0.0.0:8000
@@ -27,6 +27,7 @@ services:
     network_mode: "host"
     extra_hosts:
       - "db:127.0.0.1"
+      - "symfony:127.0.0.1"
     depends_on:
       - db
   symfony:
@@ -41,5 +42,6 @@ services:
       - ./api_complemento:/var/www
     depends_on:
       - db
+    network_mode: "host"
 volumes: 
   db-data:
