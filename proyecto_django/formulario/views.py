@@ -1,24 +1,27 @@
+import base64
+from uuid import uuid4
+
+import environ
+from django.db.utils import IntegrityError
 from django.http.response import FileResponse
 from django.shortcuts import redirect
-import environ
-from formulario.BonitaAuthentication import BonitaAuthentication
-from formulario.BonitaPermission import BonitaPermission
-
-from formulario.permissions import template_guard, bonita_permission
-
-from rest_framework import status, permissions, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
-
-from django_filters.rest_framework import DjangoFilterBackend
-
+from services.bonita_service import (assign_task, bonita_login_call,
+                                     bonita_logout, execute_task,
+                                     get_cases_for_task, set_bonita_variable,
+                                     start_bonita_process)
 from services.bonita_statistics import area_statistics
-
-from formulario.models import Socio, SociedadAnonima
-from formulario.serializers import SociedadAnonimaRetrieveSerializer, SociedadAnonimaSerializer, SocioSerializer
-
-from services.bonita_service import assign_task, bonita_login_call, execute_task, get_cases_for_task, set_bonita_variable, start_bonita_process, bonita_logout
 from services.estampillado_service import api_call_with_retry
+
+from formulario.BonitaAuthentication import BonitaAuthentication
+from formulario.BonitaPermission import BonitaPermission
+from formulario.models import SociedadAnonima, Socio
+from formulario.permissions import bonita_permission, template_guard
+from formulario.serializers import (SociedadAnonimaRetrieveSerializer,
+                                    SociedadAnonimaSerializer, SocioSerializer)
 
 # # el objeto env se usa para traer las variables de entorno
 env = environ.Env()
@@ -128,15 +131,26 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     @action(detail=True)
     def solicitar_estampillado(self, request, pk=None):
         sa = self.get_object()
-        # TODO implementar
-        pass
+        if not sa.comformation_statute.name:
+            return Response(data='Esta sociedad aun no tiene un estatuto de conformacion subido', status=status.HTTP_400_BAD_REQUEST)
+        if not sa.numero_expediente:
+            return Response(data='Esta sociedad aun no ha sido aprobada por mesa de entrada', status=status.HTTP_400_BAD_REQUEST)
+        numero_expediente = sa.numero_expediente
+        base64_file = base64.b64encode(
+            sa.comformation_statute.read()).decode('ascii')
+        response = api_call_with_retry(
+            method='post', endpoint='/api/estampillado', data={"estatuto": base64_file, "num_expediente": numero_expediente, "url_organismo_solicitante": "localhost"})
+        if not 'status' in response:
+            sa.stamp_hash = response['hash']
+            sa.save()
+            return Response(data='Estampillado solicitado con exito', status=status.HTTP_200_OK)
+        else:
+            return Response(data='La sociedad ya ha tenido un estampillado exitoso anteriormente', status=status.HTTP_502_BAD_GATEWAY)
 
     @action(detail=True)
     def obtener_estampillado(self, request, pk=None):
         sa = self.get_object()
-        # hash = sa.stamp_hash
-        hash = '89ff31470d00b95eaf0895fd95f5d321'
-        # Por ahora el hash hardcodeado
+        hash = sa.stamp_hash
         response = api_call_with_retry(
             method='get', endpoint='/api/estampillado/', url_params=hash)
         return Response(data=response, status=status.HTTP_200_OK) if response else Response(status=status.HTTP_502_BAD_GATEWAY)
@@ -150,8 +164,16 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             sa = self.get_object()
             verdict = request.data['veredicto']
             if verdict:
-                # TODO Generar numero de expediente, y enviar mail de confirmacion
-                pass
+                # Seteo el numero aleatorio de expediente
+                try:
+                    sa.numero_expediente = uuid4().hex
+                    sa.save()
+                except IntegrityError:
+                    # En el caso astronomico que se repita un uuid, generar uno nuevo
+                    print(
+                        'El numero generado resulto estar repetido. Intentando de nuevo...')
+                    sa.numero_expediente = uuid4().hex
+                    sa.save()
             else:
                 # TODO Aca enviar mail con correcciones
                 pass

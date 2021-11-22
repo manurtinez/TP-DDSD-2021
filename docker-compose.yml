@@ -43,5 +43,7 @@ services:
     depends_on:
       - db
     network_mode: "host"
+    extra_hosts:
+      - "db:127.0.0.1"
 volumes: 
   db-data:

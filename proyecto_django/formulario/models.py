@@ -27,6 +27,9 @@ class SociedadAnonima(models.Model):
 
     case_id = models.IntegerField(unique=True, null=True)
 
+    # "numero" (en realidad UUID) de expediente, unico para cada SA
+    numero_expediente = models.CharField(max_length=32, unique=True, null=True)
+
     class Meta:
         ordering = ['-name']
 
