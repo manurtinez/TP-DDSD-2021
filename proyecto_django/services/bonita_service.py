@@ -125,13 +125,14 @@ def start_bonita_process(session, new_sa):
         bonita_login_call(session, 'Apoderado1', 'bpm')
 
         # Esto devuelve un array de procesos, en nuestro caso, uno solo, como Dict
-        bonita_process = bonita_api_call(session,
-                                         '/bpm/process', 'get', '?s=Proceso')[0]
+        bonita_process = bonita_api_call(session, '/bpm/process', 'get', '?s=Proceso')[0]
+        print(bonita_process)
 
         # Se arranca la instancia (caso) del proceso
         bonita_case = bonita_api_call(session, '/bpm/case', 'post', data={
             "processDefinitionId": bonita_process['id']})
-
+        print(bonita_case)
+        
         # Se setean las variables id y name al caso
         set_bonita_variable(session, bonita_case['id'], 'id', new_sa.id)
         set_bonita_variable(session, bonita_case['id'], 'nombre', new_sa.name)

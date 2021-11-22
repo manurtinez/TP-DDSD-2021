@@ -14,9 +14,11 @@
 		rel="stylesheet">
 	<link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet" type="text/css">
 	<link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dashboard/dashboard.js' %}"></script>
 </head>
 
-<body id="page-top">
+<body id="page-top" onload="calcularEstadisticasME()">
 	<div id="content">
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 			<div class="container-fluid">
@@ -56,7 +58,7 @@
 								<div class="col mr-2">
 									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
 										Tiempo de resolución de los procesos</div>
-									<div class="h5 mb-0 font-weight-bold text-gray-800 mt-4">2 días y 4 hs</div>
+									<div class="h5 mb-0 font-weight-bold text-gray-800 mt-4" id="tiempoResolucionProcesos"></div>
 								</div>
 								<div class="col-auto">
 									<i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -75,7 +77,6 @@
 										Usuarios con mayor cantidad de rechazos
 									</div>
 									<a href="#" class="btn btn-warning btn-icon-split mt-2">
-
 										<span class="text">Ver usuarios</span>
 									</a>
 								</div>
@@ -98,8 +99,7 @@
 									</div>
 									<a href="#" class="btn btn-primary btn-icon-split mt-2">
 										<span class="text">Ver usuarios</span>
-								</a>
-								
+								</a>								
 								</div>
 								<div class="col-auto">
 									<span class="h1 text-gray-300"><i class="far fa-check-circle"></i></span>
@@ -110,8 +110,44 @@
 				</div>
 			</div>
 
+			<div class="card border-left-dark shadow py-2 col-auto mx-5 mt-4 mb-4">
+				<div class="card-body">
+					<h5 class="card-title">General</h5>
+
+					<div class="row g-2">
+						<div class="card border-left-warning shadow h-100 py-1 col w-50 mr-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+											Sociedades anónimas en proceso de aprobación </div>
+										<div class="row no-gutters align-items-center mt-3 ">
+											<div class="col-auto">
+												<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">90%</div>
+											</div>
+											<div class="col">
+												<div class="progress progress-sm mr-2">
+													<div class="progress-bar bg-warning" role="progressbar" style="width: 90%"
+														aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-auto">
+										<span class="h2 text-gray-500">180/200</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+
+
 		
-				<div class="card border-left-dark shadow py-2 col-auto mx-5 ">
+				<div class="card border-left-dark shadow py-2 col-auto mx-5 mb-4">
 					<div class="card-body">
 						<div class="mb-2"><span class="h5 card-title">Mesa de entradas</span></div>
 
@@ -124,18 +160,18 @@
 											Sociedades anónimas confirmadas</div>
 											<div class="row no-gutters align-items-center mt-3 ">
 												<div class="col-auto">
-													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">80%</div>
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><span>80%</span></div>
 												</div>
 												<div class="col">
 													<div class="progress progress-sm mr-2">
 														<div class="progress-bar bg-success" role="progressbar" style="width: 80%"
-															aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+															aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
 													</div>
 												</div>
 											</div>
 										</div>
 										<div class="col-auto">
-											<span class="h2 text-gray-500">296/370</span>
+											<div class="h2 text-gray-500"><span id="spanCantConfirmaciones"></span>/<span class="totalSociedadesRegistradas"></span></div>
 										</div>
 									</div>
 								</div>
@@ -161,7 +197,7 @@
 											</div>
 										</div>
 										<div class="col-auto">
-											<span class="h2 text-gray-500">74/370</span>
+											<div class="h2 text-gray-500"><span id="spanCantRechazos"></span>/<span class="totalSociedadesRegistradas"></span></div>
 										</div>
 									</div>
 								</div>
@@ -231,117 +267,7 @@
 				
 		
 
-			<!-- <div class="row">
-			
-						<div class="col-xl-8 col-lg-7">
-							<div class="card shadow mb-4">
-			
-								<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-									<h6 class="m-0 font-weight-bold text-primary">Procesos iniciados por mes</h6>
-									<div class="dropdown no-arrow">
-										<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-											aria-haspopup="true" aria-expanded="false">
-											<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-										</a>
-										<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-											aria-labelledby="dropdownMenuLink">
-											<div class="dropdown-header">Dropdown Header:</div>
-											<a class="dropdown-item" href="#">Action</a>
-											<a class="dropdown-item" href="#">Another action</a>
-											<div class="dropdown-divider"></div>
-											<a class="dropdown-item" href="#">Something else here</a>
-										</div>
-									</div>
-								</div>
-			
-								<div class="card-body">
-									<div class="chart-area">
-										<canvas id="myAreaChart"></canvas>
-									</div>
-								</div>
-							</div>
-						</div>
-
 		
-						<div class="col-xl-4 col-lg-5">
-							<div class="card shadow mb-4">
-			
-								<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-									<h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-									<div class="dropdown no-arrow">
-										<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-											aria-haspopup="true" aria-expanded="false">
-											<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-										</a>
-										<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-											aria-labelledby="dropdownMenuLink">
-											<div class="dropdown-header">Dropdown Header:</div>
-											<a class="dropdown-item" href="#">Action</a>
-											<a class="dropdown-item" href="#">Another action</a>
-											<div class="dropdown-divider"></div>
-											<a class="dropdown-item" href="#">Something else here</a>
-										</div>
-									</div>
-								</div>
-				
-								<div class="card-body">
-									<div class="chart-pie pt-4 pb-2">
-										<canvas id="myPieChart"></canvas>
-									</div>
-									<div class="mt-4 text-center small">
-										<span class="mr-2">
-											<i class="fas fa-circle text-primary"></i> Direct
-										</span>
-										<span class="mr-2">
-											<i class="fas fa-circle text-success"></i> Social
-										</span>
-										<span class="mr-2">
-											<i class="fas fa-circle text-info"></i> Referral
-										</span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> 
-
-	
-					<div class="row d-block">
-			
-							<div class="card shadow mb-4">
-								<div class="card-header py-3">
-									<h6 class="m-0 font-weight-bold text-primary">Tiempo utilizado en la resolución de tareas</h6>
-								</div>
-								<div class="card-body">
-									<h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
-									<div class="progress mb-4">
-										<div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20"
-											aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-									<h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
-									<div class="progress mb-4">
-										<div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40"
-											aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-									<h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
-									<div class="progress mb-4">
-										<div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0"
-											aria-valuemax="100"></div>
-									</div>
-									<h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
-									<div class="progress mb-4">
-										<div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80"
-											aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-									<h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
-									<div class="progress">
-										<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100"
-											aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
-
-					</div>
-                     -->
 
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
