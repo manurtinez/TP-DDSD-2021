@@ -116,7 +116,8 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         sa = self.get_object()
         if 'file' in request.data:
             file = request.data['file']
-            if file.content_type != 'application/pdf' or file.size > 2000000:
+            file_name = file.name.split(".")[-1]
+            if file_name not in ('pdf', 'docx', 'odt') or file.size > 2000000:
                 return Response(data='El archivo tiene que tener formato pdf y ser de 2MB o menos',
                                 status=status.HTTP_400_BAD_REQUEST)
             sa.comformation_statute.save(file.name, file, save=True)
