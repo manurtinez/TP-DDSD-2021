@@ -41,6 +41,8 @@ async function obtenerEstadisticasLegales() {
 	}
 }
 
+
+
 /*
 VER CUAL SERÁ EL ENDPOINT DE USUARIOS
 
