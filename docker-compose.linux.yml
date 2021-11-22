@@ -27,5 +27,19 @@ services:
     network_mode: "host"
     extra_hosts:
       - "db:127.0.0.1"
+    depends_on:
+      - db
+  symfony:
+    build: 
+      context: ./api_complemento
+      args:
+          user: symfony
+    container_name: api_complemento
+    ports: 
+      - 80:80
+    volumes:
+      - ./api_complemento:/var/www
+    depends_on:
+      - db
 volumes: 
   db-data:

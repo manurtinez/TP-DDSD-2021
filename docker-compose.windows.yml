@@ -26,5 +26,19 @@ services:
       - ./proyecto_django:/code
     ports:
       - 8000:8000
+    depends_on:
+      - db
+  symfony:
+    build: 
+      context: ./api_complemento
+      args:
+          user: symfony
+    container_name: api_complemento
+    ports: 
+      - 80:80
+    volumes:
+      - ./api_complemento:/var/www
+    depends_on:
+      - db
 volumes: 
   db-data:
