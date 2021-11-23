@@ -2,8 +2,7 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 
-from .views import (BonitaViewSet, SociedadAnonimaViewSet, SocioViewSet,
-                    bonita_login, estadisticas_por_area, logout, pendientes)
+from formulario.views import *
 
 # Create default router and add viewsets
 router = DefaultRouter()
