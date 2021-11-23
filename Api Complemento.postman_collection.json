@@ -1,0 +1,224 @@
+{
+	"info": {
+		"_postman_id": "57300dde-6301-45f5-ba3b-753b60e2fc70",
+		"name": "Api Complemento",
+		"description": "Esta API va a contener todos los endpoint extras para complementar a Django.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Geo GraphQL",
+			"item": [
+				{
+					"name": "Obtener Continentes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/api/geo/continente",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"geo",
+								"continente"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Paises",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/api/geo/continente/SA/pais",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"geo",
+								"continente",
+								"SA",
+								"pais"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Estados / Provincias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/api/geo/pais/AR/estado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"geo",
+								"pais",
+								"AR",
+								"estado"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Colegio de Escribanos",
+			"item": [
+				{
+					"name": "Login (JWT)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"escribano\",\r\n    \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://infinite-inlet-30043.herokuapp.com/api/login_check",
+							"protocol": "https",
+							"host": [
+								"infinite-inlet-30043",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"login_check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Usuario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2MzQ1OTY0ODEsImV4cCI6MTYzNDYwMDA4MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZXNjcmliYW5vIn0.V17Y2Llz1ehR0gyNsNez6uEGYmTNBYm4zbyCO82jxJ_6rXP7CgmPxvRDpC8qI4_2kZwpiiPUchZmusoRH55-4oF0Y5x4J09r2q_N5e5YekYqsN0lMEQQ8IwbD7T_SnT-nIq0xDD__geETcPcXjkWTkT41SqRCz7LkI_ilILo9ldmfiLmr0FrCfDQPHgAUf7IzqiKBeI613noGNdYPJTFtALvVGEaUEIjM1Zy0CHFnkiA_4ZbTx8hja9JD-uPYHV9bQ2cgOXOONhu4FuZtiJw_QYRil-Px6Vc9CnmRslpJe3EFbkj-dqvWo_M_4rMF7MX-WjFsZFM23vKDr3YhXby-UXO9wzGJaJDCBNGZWJkVVWFbmuJj8OBF6tCs7KdHyvyq6HdMEcLFBocvht76D-fLlTr5wtGCgtnynpDPgJdBqV_WORQH0VPvNGMjB0__sChnYOY2kfaOQYops-XBofITESC6s0c6-edrB7sOzYqk8aS_1Ek_YEutGLazCfHX-CUpDlNpuBhr8Mq6GOY3wsw73RrQNXqf7F2LnuYQI85sZuL4xnMoX2JiSX5FScqBiPrQxY0QOr-W_30qpKHTVmNNJ6HnaKqK_pR8-a0HsAZB9VtThkD-P81pc7T_fGanf2B5Cj32cZGjB9BSvtXv2ZXgjbXksbcowV3nNo0xc0mgoU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"escribano3\",\r\n    \"password\": \"1234\",\r\n    \"email\": \"escribano@escribano.com.ar\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://infinite-inlet-30043.herokuapp.com/register",
+							"protocol": "https",
+							"host": [
+								"infinite-inlet-30043",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Estampillados",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2MzU0MjU3ODksImV4cCI6MTYzNTQyNTgyOSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZXNjcmliYW5vIn0.Eg_hUCrf_U6sZvg0gCVyRK_4PSvlCilrNYN7E506Fcu88nAthwFWHXCirxywuu-pBzZugtcsilWHrU9gdcrDi76wh0-FXUa3vF6Hnzhi2kM9tzQREk_Uz8-auXGYgeGKNnwVFVb-j751-I-5gSuoOmZ6pf7NR0C2bp2SqnRrADmmde8QEU8ySq2DOSGAkpMphm8Hw12mw7UdqrhLnQ-vLjdjJI9kT-DhU5-9AYHVaex6U61OiMi4mWliqhZsNd8jpVi26pSj1bSEmf9fSiklZ3Em6AVUtCKFApfPRPLFSZtE-PmyPleN84NEREW8xjHPpd4EeGra93f1bV1170jxJhyrEULwecN1STK-U6G-H2mB69tb6NtTxG49cYExyLc5GTWTP3G7vHrTrKENJcNBsqY-N9HQtqQUXHSmQpzCfH5UVW5oN3fTb7xbE6rOuwtCNwPyvWCJBM0DHQeexZ8IsrM4-YMvQzw7yxgunqTqvoLnxBorqpiJ3qS4Ru9fYa4kmvwlBPVCjI_o1n4pHZbZuBsTEg2iUhz3buQRzCOrACwTfDvw5tfez3DvgrWYUcv9-rX-QXEAfnGvRROrH-_DTy3KgiczAw73sx2RMvDd4yELA56LZJNjK5_6zGOjHmI8xsS-rS_oJxVcqFlnxwATSYrozC0uHY9T-eUwfUm6GYc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://infinite-inlet-30043.herokuapp.com/api/estampillado",
+							"protocol": "https",
+							"host": [
+								"infinite-inlet-30043",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"estampillado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generar Estampillado",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2MzU0NTYwMDUsImV4cCI6MTYzNTQ1OTYwNSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZXNjcmliYW5vIn0.B6pq_wLK-PJeMHY8hHEgzVw-rfdDKaT2V3L_gLjTRozrUuVU5rKc2N80Nv1o2-YRDvAO3-4h2V9dIYl_O3pWu7RSxA0SugK30gk2T31fCwd1E0ytqHxd--ofSbDcBdO87QgfUkyIlV4eoHvTRC9Lz99u7S8QSsBbDnZX5x3ZhheVcTq_R7IlWLn7T91Dg96v-UTuhV_ZAxcOvuIxW_T98nVRsSUGMhFF8NMzf6NxaTN0KOMbuKXs6y3-dphx4IFYL5eC8yC9AiU4lwNfXGkrSAz8vwUitRYi7pEb7RirFL-f4qs8xBJjSm6m3PNnCBuwyLtxabf6slUW4yLcKU3QNqUJd5WPXLUlupAcK1Q57yBMXxhJJ8N8Xt0OdRVEe9-55f0bBaBiCJlH032DBFJAJQ9wPxB_E4t8KAtTQz9BOL8BQZHjJdGkJk4xvlfJz1uoZvCC34SECr9ctcmkHkVztCkfTpg81nuIghM2gTR6S1aLlm1uUuzPGbWdiKaSMqiKul0crUXWnPBPgIF8jfrZVBrtMV6KsjfI2kmjUFy4aKOpWkZO9FUkvqgmv-bkPW5t57-YF6l9MJI2vlkERj0zCh9AG7xWxcrYBYYftdlCLvnTdp3us6b_Ku3JdiGr7ti8n9hJgUJQr65cE2PlGg1gdKOYv6TAaUmXJTREF9ZAWm0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"estatuto\": \"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\",\r\n    \"num_expediente\": \"RO-589-851s5\",\r\n    \"url_organismo_solicitante\": \"localhost\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://infinite-inlet-30043.herokuapp.com/api/estampillado",
+							"protocol": "https",
+							"host": [
+								"infinite-inlet-30043",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"estampillado"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
