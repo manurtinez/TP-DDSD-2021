@@ -159,11 +159,11 @@
 											Sociedades anónimas confirmadas</div>
 											<div class="row no-gutters align-items-center mt-3 ">
 												<div class="col-auto">
-													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><span id="porcentajeSociedadesConfirmadas">80%</span></div>
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><span id="porcentajeSociedadesConfirmadas"></span><span>%</span></div>
 												</div>
 												<div class="col">
 													<div class="progress progress-sm mr-2">
-														<div class="progress-bar bg-success" role="progressbar" style="width: 80%" id="barraPorcentajeSociedadesConfirmadas"
+														<div class="progress-bar bg-success" role="progressbar"  id="barraPorcentajeSociedadesConfirmadas"
 															aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
 													</div>
 												</div>
@@ -185,11 +185,11 @@
 												Sociedades anónimas rechazadas</div>
 											<div class="row no-gutters align-items-center mt-3 ">
 												<div class="col-auto">
-													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><span id="porcentajeSociedadesRechazadas">20%</span></div>
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><span id="porcentajeSociedadesRechazadas"></span><span>%</span></div>
 												</div>
 												<div class="col">
 													<div class="progress progress-sm mr-2">
-														<div class="progress-bar bg-danger" role="progressbar" style="width: 20%" id="barraPorcentajeSociedadesRechazadas"
+														<div class="progress-bar bg-danger" role="progressbar" id="barraPorcentajeSociedadesRechazadas"
 															aria-valuenow="20" aria-valuemin="0" aria-valuemax="20"></div>
 													</div>
 												</div>
@@ -218,18 +218,18 @@
 												Estautos confirmados </div>
 											<div class="row no-gutters align-items-center mt-3 ">
 												<div class="col-auto">
-													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">90%</div>
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
 												</div>
 												<div class="col">
 													<div class="progress progress-sm mr-2">
-														<div class="progress-bar bg-success" role="progressbar" style="width: 90%"
-															aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+														<div class="progress-bar bg-success" role="progressbar" id="barraPorcentajeEstatutosConfirmados" style="width:0%"
+															aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"><span id="porcentajeEstatutosConfirmados"></span><span>%</span></div>
 													</div>
 												</div>
 											</div>
 										</div>
 										<div class="col-auto">
-											<div class="h2 text-gray-500"><span id="spanCantConfirmacionesLegales"></span>/<span class="totalSociedadesRegistradas"></span></div>
+											<div class="h2 text-gray-500"><span id="spanCantConfirmacionesLegales"></span>/<span class="totalEstatutosEvaluados"></span></div>
 										</div>
 									</div>
 								</div>
@@ -244,18 +244,18 @@
 												Estatutos rechazados </div>
 											<div class="row no-gutters align-items-center mt-3 ">
 												<div class="col-auto">
-													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">10%</div>
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
 												</div>
 												<div class="col">
 													<div class="progress progress-sm mr-2">
-														<div class="progress-bar bg-danger" role="progressbar" style="width: 10%"
-															aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+														<div class="progress-bar bg-danger" role="progressbar" id="barraPorcentajeEstatutosRechazados" style="width:0%"
+															aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span id="porcentajeEstatutosRechazados"></span><span>%</span></div>
 													</div>
 												</div>
 											</div>
 										</div>
 										<div class="col-auto">
-											<div class="h2 text-gray-500"><span id="spanCantRechazosLegales"></span>/<span class="totalSociedadesRegistradas"></span></div>
+											<div class="h2 text-gray-500"><span id="spanCantRechazosLegales"></span>/<span class="totalEstatutosEvaluados"></span></div>
 										</div>
 									</div>
 								</div>
@@ -298,7 +298,7 @@
 			</button>
 			</div>
 			<div class="modal-body">
-				<!-- <span class="input-group-text border-0" id="comentarioPrueba"></span> -->
+				 <span class="input-group-text border-0" id="comentarioPrueba"></span> 
 				<table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
 					<thead class="table-warning align-top">
 					  <tr class="px-5">
@@ -401,10 +401,9 @@
 	<script type="text/javascript" src="{% static 'js/dashboard/sb-admin-2.min.js' %}"></script>
 
 
-	<script type="text/javascript" src="{% static 'js/dashboard/Chart.min.js' %}"></script>
-
+	<!-- <script type="text/javascript" src="{% static 'js/dashboard/Chart.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/dashboard/chart-area-demo.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/dashboard/chart-pie-demo.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dashboard/chart-pie-demo.js' %}"></script> -->
 
 </body>
 
