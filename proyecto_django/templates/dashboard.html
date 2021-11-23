@@ -18,7 +18,7 @@
 	<script type="text/javascript" src="{% static 'js/dashboard/dashboard.js' %}"></script>
 </head>
 
-<body id="page-top" onload="calcularEstadisticasME()">
+<body id="page-top" onload="obtenerDatosIniciales()">
 	<div id="content">
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 			<div class="container-fluid">
@@ -44,7 +44,6 @@
 		</nav>
 
 		<div class="">
-
 	
 			<h1 class="my-4 text-gray-800 text-uppercase font-weight-bold text-center ">Tablero de control gerencial</h1>
 			<!-- Content Row -->
@@ -76,7 +75,7 @@
 									<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
 										Usuarios con mayor cantidad de rechazos
 									</div>
-									<a href="#" class="btn btn-warning btn-icon-split mt-2">
+									<a href="#modalUsuariosRechazados"  data-target="#modalUsuariosRechazados" data-toggle="modal" class="btn btn-warning btn-icon-split mt-2">
 										<span class="text">Ver usuarios</span>
 									</a>
 								</div>
@@ -97,7 +96,7 @@
 									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
 										Usuarios con mayor cantidad de aprobaciones
 									</div>
-									<a href="#" class="btn btn-primary btn-icon-split mt-2">
+									<a href="#modalUsuariosAprobados"  data-target="#modalUsuariosAprobados" data-toggle="modal" class="btn btn-primary btn-icon-split mt-2">
 										<span class="text">Ver usuarios</span>
 								</a>								
 								</div>
@@ -230,7 +229,7 @@
 											</div>
 										</div>
 										<div class="col-auto">
-											<span class="h2 text-gray-500">180/200</span>
+											<div class="h2 text-gray-500"><span id="spanCantConfirmacionesLegales"></span>/<span class="totalSociedadesRegistradas"></span></div>
 										</div>
 									</div>
 								</div>
@@ -256,7 +255,7 @@
 											</div>
 										</div>
 										<div class="col-auto">
-											<span class="h2 text-gray-500">20/200</span>
+											<div class="h2 text-gray-500"><span id="spanCantRechazosLegales"></span>/<span class="totalSociedadesRegistradas"></span></div>
 										</div>
 									</div>
 								</div>
@@ -288,35 +287,108 @@
 	</a>
 
 
-	<div class="modal fade" id="modalUsuariosRechazos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <!-- MODAL USUARIOS CON MAYOR CANTIDAD DE RECHAZOS -->
+	  <section class="modal fade" id="modalUsuariosRechazados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Usuarios con mayor cantidad de rechazos</h5>
-					<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<!-- <h4><span class="badge rounded-pill bg-primary">Sociedad</span></h4> -->		
-					<table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2 ">
-						<thead class="table-primary align-top">
-							<tr class="px-5">
-								<th scope="col">Usuario</th>			
-							</tr>
-						</thead>
-						<tbody>
-							<td>Luis Mariano</td>
-							<td>Matias Mosquera</td>
-							<td>Debo muchos finales</td>
-						</tbody>
-					</table>
-				</div>
-
-				<div class="modal-footer">
-					<button type="button" class="btn btnVolver" data-mdb-dismiss="modal">Volver</button>
-				</div>
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title">Usuarios con mayor cantidad de rechazos</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">×</span>
+			</button>
 			</div>
+			<div class="modal-body">
+				<!-- <span class="input-group-text border-0" id="comentarioPrueba"></span> -->
+				<table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
+					<thead class="table-warning align-top">
+					  <tr class="px-5">
+						<th scope="col">Puesto</th>
+						<th scope="col">Usuario</th>				
+					  </tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>1°</th>
+							<td>Luis Marianete</td>
+						</tr>
+						<tr>
+							<th >2°</th>
+							<td>Matias Mosquera</td>
+						</tr>
+						<tr>
+							<th>3°</th>
+							<td>Juan Marcos Marascutti</td>
+						</tr>
+						<tr>
+							<th >4°</th>
+							<td>Miguelucho</td>
+						</tr>
+						<tr>
+							<th >5°</th>
+							<td>Roberto Juarez</td>
+						</tr>
+					</tbody>
+				  </table>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btnVolver" data-dismiss="modal"  aria-label="Close">
+				<span aria-hidden="true">Volver</span>
+			  </button>
+			</div>
+		  </div>
 		</div>
-	</div>
+	  </section>
+
+  <!-- MODAL USUARIOS CON MAYOR CANTIDAD DE APROBACIONES -->
+	  <section class="modal fade" id="modalUsuariosAprobados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title">Usuarios con mayor cantidad de aprobaciones</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">×</span>
+			</button>
+			</div>
+			<div class="modal-body">			
+				<table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
+					<thead class="table-primary align-top">
+					  <tr class="px-5">
+						<th scope="col">Puesto</th>
+						<th scope="col">Usuario</th>				
+					  </tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>1°</th>
+							<td>Luis Marianete</td>
+						</tr>
+						<tr>
+							<th >2°</th>
+							<td>Matias Mosquera</td>
+						</tr>
+						<tr>
+							<th>3°</th>
+							<td>Juan Marcos Marascutti</td>
+						</tr>
+						<tr>
+							<th >4°</th>
+							<td>Miguelucho</td>
+						</tr>
+						<tr>
+							<th >5°</th>
+							<td>Roberto Juarez</td>
+						</tr>
+					</tbody>
+				  </table>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btnVolver" data-dismiss="modal"  aria-label="Close">
+				<span aria-hidden="true">Volver</span>
+			  </button>
+			</div>
+		  </div>
+		</div>
+	  </section>
 
 
 	<script type="text/javascript" src="{% static 'js/dashboard/jquery.min.js' %}"></script>

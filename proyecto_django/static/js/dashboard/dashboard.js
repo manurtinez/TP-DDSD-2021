@@ -1,9 +1,14 @@
 
 function obtenerDatosIniciales() {
+	this.mostrarTiempoResolucionProcesos();
+	this.mostrarUsuariosMayorCantRechazos();
+	this.mostrarUsuariosMayorCantAprobaciones();
+	this.mostrarSociedadesEnProcesoAprobacion();
     this.calcularEstadisticasME();
+	this.calcularEstadisticasLegales();
 }
 
-
+// ESTADISTICAS MESA DE ENTRADAS
 async function obtenerEstadisticasME() {
 	let response = await fetch(localHost + '/estadisticas/por_area/mesa').then(response => response.json());
 	let datos = response;
@@ -22,51 +27,75 @@ async function calcularEstadisticasME() {
     let totalRechazados = parseInt(datos["rechazados"]);
 	spanCantConfirmaciones.textContent = totalAprobados;
 	spanCantRechazos.textContent = totalRechazados;
-	total	= totalAprobados + totalRechazados;
+	total = totalAprobados + totalRechazados;
 	
 	spansTotal.forEach(span => {
 		span.textContent = total;
 	});
-   
+	// completarPorcentajes()
 }
 
+// ESTADISTICAS LEGALES
 async function obtenerEstadisticasLegales() {
 	let response = await fetch(localHost + '/estadisticas/por_area/legales').then(response => response.json());
-	let estadisticasLegales = response[0];
-	if (estadisticasLegales) {
-        console.log(estadisticasLegales);
-		return estadisticasLegales;
+	let datos = response;
+	if (datos) {
+		return datos;
 	} else {
 		return false;
 	}
 }
 
-
-
-/*
-VER CUAL SERÁ EL ENDPOINT DE USUARIOS
-
-async function obtenerEstadisticasUsuarios() {
-	let response = await fetch(localHost + '/estadisticas/usuarios').then(response => response.json());
-	let estadisticasUsuarios = response[0];
-	if (estadisticasUsuarios) {
-        console.log(estadisticasUsuarios);
-		return estadisticasUsuarios;
-	} else {
-		return false;
-	}
+async function calcularEstadisticasLegales() {
+	let datos = await obtenerEstadisticasLegales();
+	spansTotal = document.querySelectorAll('.totalSociedadesRegistradas');
+	let totalAprobados = datos["aprobados"];
+    console.log("totalAprobados: " +totalAprobados)
+    let totalRechazados = parseInt(datos["rechazados"]);
+	spanCantConfirmacionesLegales.textContent = totalAprobados;
+	spanCantRechazosLegales.textContent = totalRechazados;
+	total = totalAprobados + totalRechazados;
+	
+	spansTotal.forEach(span => {
+		span.textContent = total;
+	
+	});
 }
 
 
-async function obtenerEstadisticasTiempoDeResolucion() {
-	let response = await fetch(localHost + '/estadisticas/tiempo').then(response => response.json());
-	let estadisticasTiempo = response[0];
-	if (estadisticasTiempo) {
-        console.log(estadisticasTiempo);
-		return estadisticasTiempo;
-	} else {
-		return false;
-	}
+
+function completarPorcentajes(unPorcentaje,spanTextoPorcentaje,barraPorcentaje){
+	spanTextoPorcentaje.textContent = unPorcentaje;
+	// barraPorcentajeSociedadesConfirmadas.width?
 }
 
-*/
+
+// ESTADISTICAS SOCIEADES ANONIMAS EN PROCESO DE APROBACION
+function mostrarSociedadesEnProcesoAprobacion() {
+
+}
+
+
+// ESTADISTICAS TIEMPO DE RESOLUCION DE LOS PROCESOS
+function mostrarTiempoResolucionProcesos() {
+	tiempoResolucionProcesos.textContent= "2hs 45 minutos (desde JS)";
+
+}
+
+
+// ESTADISTICAS USUARIOS CON MAYOR CANTIDAD DE RECHAZOS
+ function mostrarUsuariosMayorCantRechazos() {
+	// Esta funcion va a llamar al endpoint de django y renderiza en la tabla, los usuarios con mayor cantidad de rechazos
+	comentarioPrueba.textContent = "hola Luisman, estoy imprimiendo desde el js";
+}
+
+
+// ESTADISTICAS USUARIOS CON MAYOR CANTIDAD DE APROBACIONES
+function mostrarUsuariosMayorCantAprobaciones() {
+	// Esta funcion va a llamar al endpoint de django y renderiza en la tabla, los usuarios con mayor cantidad de aprobaciones
+	comentarioPrueba.textContent = "hola";
+}
+
+
+
+
