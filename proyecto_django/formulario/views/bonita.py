@@ -51,7 +51,6 @@ def bonita_login(request):
     response_code = bonita_login_call(request.session,
                                       data['user'], data['password'])
     if response_code == 204:
-        print(request.session['bonita_role'])
         role = request.session['bonita_role']
         if role == 'Empleado mesa':
             return redirect('listado_sociedades_pendientes_aprobacion')
