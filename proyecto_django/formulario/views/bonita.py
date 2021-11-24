@@ -1,11 +1,11 @@
 from django.shortcuts import redirect
 from rest_framework import permissions, status, viewsets
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from formulario.models import SociedadAnonima
 from services.bonita_service import (bonita_login_call,
                                      bonita_logout,
-                                     get_cases_for_task)
+                                     get_cases_for_task, get_open_cases)
 from services.bonita_statistics import area_statistics
 from formulario.permissions import bonita_permission
 from formulario.serializers import SociedadAnonimaRetrieveSerializer
@@ -39,7 +39,6 @@ class BonitaViewSet(viewsets.ViewSet):
 
 
 @api_view(['post'])
-@permission_classes([permissions.AllowAny])
 def bonita_login(request):
     data = request.data
     response_code = bonita_login_call(request.session,
@@ -61,7 +60,6 @@ def bonita_login(request):
 
 
 @api_view()
-@permission_classes([permissions.AllowAny])
 def logout(request):
     if bonita_logout():
         request.session.flush()
@@ -71,10 +69,9 @@ def logout(request):
 
 
 @api_view()
-@permission_classes([permissions.AllowAny])
 def estadisticas_por_area(request, *args, **kwargs):
     """
-    Este endpoint devuelve las estadisticas (aprobados / rechazados) de parte de mesa de entradas.
+    Este endpoint devuelve las estadisticas (aprobados / rechazados) de parte de mesa de entradas o area legales.
     """
     if not bonita_permission(request, 'any'):
         # Se necesita estar logeado (con cualquier usuario) para acceder
@@ -82,3 +79,19 @@ def estadisticas_por_area(request, *args, **kwargs):
     area = kwargs['area']
     results = area_statistics(request.session, area)
     return Response(data=results, status=status.HTTP_200_OK)
+
+
+@api_view()
+def estadisticas_casos_abiertos(request):
+    """
+    Este endpoint devuelve cuantos casos se encuentran abiertos, es decir, sociedades que estan en proceso de aprobacion
+    (que no llegaron al final del proceso), y cuantos se encuentran finalizados.
+
+    Returns:
+        * { "activos": int, "finalizados": int }
+    """
+    if not bonita_permission(request, 'any'):
+        # Se necesita estar logeado (con cualquier usuario) para acceder
+        return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
+    count = get_open_cases(request.session)
+    return Response(data=count, status=status.HTTP_200_OK)
