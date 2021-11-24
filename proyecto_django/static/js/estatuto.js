@@ -2,7 +2,7 @@
 function obtenerBotones(idSociedad, newCell) {
 	let newLink = document.createElement("a");
 	newLink.href = `http://localhost:8000/sociedad_anonima/${idSociedad}/obtener_estatuto/`;
-	newLink.classList.add("btn", "btn-color-success", "px-2", "mx-2", "anchoBoton");
+	newLink.classList.add("btn", "btn-color-warning", "px-2", "mx-2", "anchoBoton");
 	newIcon = document.createElement("i");
 	newIcon.classList.add("fa-1-5x", "fas", "fa-file-download");
 	newLink.appendChild(newIcon);
@@ -10,7 +10,7 @@ function obtenerBotones(idSociedad, newCell) {
 	newCell.appendChild(newLink);
 
 	newLink = document.createElement("a");
-	newLink.addEventListener('click', enviarMail.bind(this, idSociedad));
+	newLink.addEventListener('click', evaluacionEstatuto.bind(this, idSociedad, false));
 	newLink.classList.add("btn", "btn-color-danger", 'px-2',  "mx-1", 'anchoBoton');
 	newIcon = document.createElement("i");
 	newIcon.classList.add("fas", "fa-1-5x", "fa-times");
@@ -18,14 +18,13 @@ function obtenerBotones(idSociedad, newCell) {
 	newCell.appendChild(newLink);
 	
 	newLink = document.createElement("a");
-	newLink.addEventListener('click', aprobarEstatuto.bind(this, idSociedad));
+	newLink.addEventListener('click', evaluacionEstatuto.bind(this, idSociedad, true));
 	newLink.classList.add("btn", "btn-color-success", 'px-2', 'mx-1', 'anchoBoton');
 	newIcon = document.createElement("i");
 	newIcon.classList.add("fas", "fa-1-5x", "fa-check");
 	newLink.appendChild(newIcon);
 	newCell.appendChild(newLink);
 	newLink = document.createElement("a");
-
 }
 
 async function descargarEstatuto(idSociedad) {
@@ -53,60 +52,41 @@ async function descargarEstatuto(idSociedad) {
 	}
 }
 
-
-async function aprobarEstatuto(idSociedad) {
-	// VER MAS ADELANTE CUAL ES EL ENDPOINT QUE SE DEFINA EN DJANGO PARA APROBAR ESTATUTO
-	const response = await fetch(localHost + urlAprobarEstauto + idSociedad, {
+async function evaluacionEstatuto(idSociedad, veredicto) {
+	const response = await fetch("http://localhost:8000/sociedad_anonima/" + idSociedad + "/evaluar_estatuto/", {
 		method: 'POST',
 		headers: {
 			'X-CSRFToken': csrftoken,
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
-			id: idSociedad
+			idSociedad,
+			veredicto
 		})
 	});
-	if (response.status === 201) {
+	let icon = veredicto ? "success" : "error";
+	let mensaje = veredicto ? "aprobado" : "rechazado";
+	let accion = veredicto ? "onclick=location.reload();":"";
+	if (response.status === 200) {
 		Swal.fire({
 			position: 'top',
-			icon: 'success',
-			title: 'El estatuto ha sido aprobado correctamente!',
+			icon,
+			title: 'El estatuto ha sido ' + mensaje + ' correctamente!',
 			showConfirmButton: true,
-			confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
+			confirmButtonText: `<a ${accion}>Continuar</a>`
+		}).then((result) => {
+
+
 		})
+
+
 	} else {
-		// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+		mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
 	}
 }
 
 
-async function enviarMail(idSociedad) {
-	// VER MAS ADELANTE CUAL ES EL ENDPOINT QUE SE DEFINA EN DJANGO PARA ENVIAR MAILS
-	const response = await fetch(localHost + urlCorregir + idSociedad, {
-		method: 'POST',
-		headers: {
-			'X-CSRFToken': csrftoken,
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({
-			id: idSociedad,
-			contenido: comentariosMail.value,
-		})
-	});
-	if (response.status === 201) {
-				
-		Swal.fire({
-			position: 'top',
-			icon: 'success',
-			title: 'El mail ha sido enviado correctamente!',
-			showConfirmButton: true,
-			confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
-		})
 
-	} else {
-		// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
-	}
-}
 
 async function enviarMailTesting(idSociedad){
 	Swal.fire({
@@ -169,26 +149,28 @@ async function enviarMailTesting(idSociedad){
 }
 
 
-async function aprobarEstatuto(idSociedad) {
-	const response = await fetch("http://localhost:8000/sociedad_anonima/" + idSociedad + "/evaluar_estatuto/", {
+async function rechazarEstatuto(idSociedad) {
+	
+	// VER MAS ADELANTE CUAL ES EL ENDPOINT QUE SE DEFINA EN SYMFONY PARA ENVIAR MAILS
+	const response = await fetch(localHost + urlCorregir + idSociedad, {
 		method: 'POST',
 		headers: {
 			'X-CSRFToken': csrftoken,
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
-			idSociedad
+			id: idSociedad,
+			contenido: comentariosMail.value,
 		})
 	});
-	let icon = idSociedad ? "success" : "error";
-	let mensaje = idSociedad ? "aprobada" : "rechazada";
-	if (response.status === 200) {
+	if (response.status === 201) {
+				
 		Swal.fire({
 			position: 'top',
-			icon,
-			title: 'El estatuto ha sido ' + mensaje + ' correctamente!',
+			icon: 'success',
+			title: 'El mail ha sido enviado correctamente!',
 			showConfirmButton: true,
-			confirmButtonText: '<a onclick=location.reload();>Continuar</a>'
+			confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
 		})
 
 	} else {
