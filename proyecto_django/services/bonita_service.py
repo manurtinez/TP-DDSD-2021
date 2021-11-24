@@ -54,8 +54,7 @@ def bonita_api_call(session, resource,  method, url_params='', data={}):
         print('La respuesta del servidor estaba vacia')
         return True
     except requests.exceptions.RequestException as req_e:
-        print(
-            'Error al llamar API de bonita para recurso {resource} -->', req_e)
+        print(req_e)
         return False
 
 

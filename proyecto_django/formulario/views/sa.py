@@ -4,54 +4,21 @@ from uuid import uuid4
 import environ
 from django.db.utils import IntegrityError
 from django.http.response import FileResponse
-from django.shortcuts import redirect
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, status, viewsets
-from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework.response import Response
-from services.bonita_service import (assign_task, bonita_login_call,
-                                     bonita_logout, execute_task,
-                                     get_cases_for_task, set_bonita_variable,
-                                     start_bonita_process)
-from services.bonita_statistics import area_statistics
-from services.estampillado_service import api_call_with_retry
-
-from formulario.BonitaAuthentication import BonitaAuthentication
-from formulario.BonitaPermission import BonitaPermission
 from formulario.models import SociedadAnonima, Socio
-from formulario.permissions import bonita_permission, template_guard
+from formulario.permissions import bonita_permission
 from formulario.serializers import (SociedadAnonimaRetrieveSerializer,
-                                    SociedadAnonimaSerializer, SocioSerializer)
+                                    SociedadAnonimaSerializer)
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from services.bonita_service import (assign_task, execute_task,
+                                     set_bonita_variable, start_bonita_process)
+from services.estampillado_service import api_call_with_retry
 
 # # el objeto env se usa para traer las variables de entorno
 env = environ.Env()
 environ.Env.read_env()
-
-# IMPORTANTE por ahora esta API esta abierta, sin embargo cuando llegue el momento va a tener que autenticarse para
-# accederla
-
-# Create your views here.
-
-
-class SocioViewSet(viewsets.ModelViewSet):
-    """
-    Este ViewSet provee acciones `list`, `create`, `retrieve`,
-    `update` and `destroy` para el modelo Socio.
-    """
-    serializer_class = SocioSerializer
-    # IMPORTANTE cambiar esto cuando haya autenticacion
-    permission_classes = [permissions.AllowAny]
-
-    def get_queryset(self):
-        """
-        Se puede pasar un URL param "dni" para obtener el socio con ese dni (si existe).
-        Si no se pasa nada, retorna todos los socios.
-        """
-        queryset = Socio.objects.all()
-        dni = self.request.query_params.get('dni')
-        if dni is not None:
-            queryset = queryset.filter(dni=dni)
-        return queryset
 
 
 class SociedadAnonimaViewSet(viewsets.ModelViewSet):
@@ -115,6 +82,9 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     def subir_archivo(self, request, pk=None):
         """
         Este action maneja la accion de agregar un archivo manifesto a la sociedad anonima.
+
+        Body (form-data):
+            * file: Archivo de estatuto. Debe ser pdf / docx / odt y pesar 2MB o menos.
         """
         sa = self.get_object()
         if 'file' in request.data:
@@ -130,6 +100,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
     @action(detail=True)
     def solicitar_estampillado(self, request, pk=None):
+        """
+        Este endpoint dispara una solicitud de estampillado a la api de estampillado externa, dado un id de sociedad.
+        """
+        if not bonita_permission(request, 'Escribano'):
+            return Response(data='Debe ser rol Escribano para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
         sa = self.get_object()
         if not sa.comformation_statute.name:
             return Response(data='Esta sociedad aun no tiene un estatuto de conformacion subido', status=status.HTTP_400_BAD_REQUEST)
@@ -157,6 +132,12 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def veredicto_mesa_entrada(self, request, pk=None):
+        """
+        Este endpoint maneja la aprobacion / rechazo de una sociedad por parte de un empleado de mesa de entrada.
+
+        Body:
+            * veredicto (boolean): true si se quiere aprobar, de lo contrario false.
+        """
         if not bonita_permission(request, 'Empleado mesa'):
             return Response(data='Debe ser rol Empleado mesa para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
         # serializer = VerdictSerializer(data=request.data)
@@ -204,6 +185,9 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     def evaluar_estatuto(self, request, pk=None):
         """
         Este metodo sirve para determinar si el estatuto se evaluo correctamente o no.
+
+        Body:
+            * veredicto (boolean): true si se quiere aprobar, de lo contrario false.
         """
         if not bonita_permission(request, 'Escribano'):
             # Se necesita ser Escribano para acceder
@@ -224,80 +208,3 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_200_OK)
         else:
             return Response('No se ha enviado el parametro veredicto', status=status.HTTP_400_BAD_REQUEST)
-
-
-class BonitaViewSet(viewsets.ViewSet):
-    """
-    Este viewset define todos los endpoints y actions necesarios para hacer operaciones con Bonita
-    """
-    # IMPORTANTE permito cualquiera y despues me fijo en cada view
-    permission_classes = [permissions.AllowAny]
-    # permission_classes = [BonitaPermission]
-    # authentication_classes = [BonitaAuthentication]
-
-    # @action(detail=False, url_path=r'obtener_por_task/(?P<task_name>\d+)')
-    @action(detail=False)
-    def obtener_por_task(self, request, *args, **kwargs):
-        """
-        Este endpoint devuelve una lista de sociedades que estan parados en task_name
-
-        Params:
-            * task_name(str): nombre literal de tarea del modelo bonita. Por ejemplo: "Revisión de información"
-
-        Returns:
-            * list[int] | None
-        """
-        case_ids = get_cases_for_task(request.session, kwargs['task_name'])
-        queryset = SociedadAnonima.objects.filter(case_id__in=case_ids)
-        serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['post'])
-@permission_classes([permissions.AllowAny])
-def bonita_login(request):
-    data = request.data
-    response_code = bonita_login_call(request.session,
-                                      data['user'], data['password'])
-    if response_code == 204:
-        print(request.session['bonita_role'])
-        role = request.session['bonita_role']
-        if role == 'Empleado mesa':
-            return redirect('listado_sociedades_pendientes_aprobacion')
-        elif role == 'Escribano':
-            return redirect('listado_sociedades_a_evaluar')
-        else:
-            return redirect('index')
-        # Agregar caso para el dashboard cuanto este el usuario admin
-    elif response_code == 401:
-        return Response(data="Las credenciales fueron incorrectas", status=status.HTTP_401_UNAUTHORIZED)
-    else:
-        return Response(data="Hubo algun problema interno realizando el login", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view()
-@permission_classes([permissions.AllowAny])
-def logout(request):
-    if bonita_logout():
-        request.session.flush()
-        return redirect('login')
-    else:
-        return Response(data='Hubo algun problema al hacer el logout.', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-def pendientes(request):
-    return template_guard(request, 'listadoDeSociedadesPendientes.html', 'Empleado mesa')
-
-
-@api_view()
-@permission_classes([permissions.AllowAny])
-def estadisticas_por_area(request, *args, **kwargs):
-    """
-    Este endpoint devuelve las estadisticas (aprobados / rechazados) de parte de mesa de entradas.
-    """
-    if not bonita_permission(request, 'any'):
-        # Se necesita estar logeado (con cualquier usuario) para acceder
-        return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
-    area = kwargs['area']
-    results = area_statistics(request.session, area)
-    return Response(data=results, status=status.HTTP_200_OK)
