@@ -6,7 +6,7 @@ from formulario.models import SociedadAnonima
 from services.bonita_service import (bonita_login_call,
                                      bonita_logout,
                                      get_cases_for_task)
-from services.bonita_statistics import area_statistics, get_open_cases
+from services.bonita_statistics import area_statistics, get_open_cases, max_stats_user
 from formulario.permissions import bonita_permission
 from formulario.serializers import SociedadAnonimaRetrieveSerializer
 
@@ -108,3 +108,13 @@ def estadisticas_casos_abiertos(request):
     count = get_open_cases(request.session)
     return Response(data=count, status=status.HTTP_200_OK) if count else Response(
         data='Hubo algun problema al calcular la estadistica', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view()
+def estadisticas_usuario(request, *args, **kwargs):
+    if not bonita_permission(request, 'any'):
+        # Se necesita estar logeado (con cualquier usuario) para acceder
+        return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
+    condition = kwargs['condicion']
+    results = max_stats_user(request.session, condition)
+    return Response(data=results, status=status.HTTP_200_OK)

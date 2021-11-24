@@ -50,3 +50,56 @@ def get_open_cases(session):
         return {"activos": len(open_case_list), "finalizados": len(archived_case_list)}
     else:
         return None
+
+
+def max_stats_user(session, condition):
+    """
+    Este metodo devuelve el usuario con mas cantidad de aprobados / rechazos segun lo que se reciba en "condition".
+
+    Params:
+        * condition (str): "aprobaciones" | "rechazos"
+    """
+    # Traer tareas completadas tanto de mesa como legales
+    mesa_tasks = bonita_api_call(
+        session, '/bpm/archivedTask', 'get', '?f=state=completed&f=name=Revisión de información')
+    legales_tasks = bonita_api_call(
+        session, '/bpm/archivedTask', 'get', '?f=state=completed&f=name=Evaluación del estatuto')
+
+    # Juntar las 2 listas en una sola
+    merged_list = mesa_tasks + legales_tasks
+
+    count_dict = {}
+    for task in merged_list:
+        if task['name'].startswith('Rev'):
+            # Es de mesa
+            var_name = 'aprobado_por_mesa'
+        else:
+            var_name = 'estatuto_aprobado'
+
+        # Traigo variable de caso
+        case_var = bonita_api_call(session, '/bpm/caseVariable', 'get',
+                                   '/{case_id}/{var}'.format(case_id=task['caseId'], var=var_name))['value']
+
+        if (condition == 'aprobaciones' and case_var == 'true') or (condition == 'rechazos' and case_var == 'false'):
+            user_id = task['executedBy']
+            # Sumo contador del id de usuario que ejecuto dicha tarea
+            if user_id not in count_dict:
+                count_dict[user_id] = 1
+            else:
+                count_dict[user_id] += 1
+
+    # Extraer el id cuyo contador fue el maximo
+    max_id = max(count_dict, key=count_dict.get)
+
+    # Hacer un request para buscar informacion referente a este ID
+    user_response = bonita_api_call(session,
+                                    '/identity/user', 'get', '?f=enabled=true')
+    user_data = [
+        us for us in user_response if us['id'] == max_id][0]
+
+    # Adicionalmente, traer el rol del miembro
+    role = bonita_api_call(
+        session, '/identity/membership', 'get', f'?f=user_id={max_id}&d=role_id')[0]['role_id']['name']
+
+    # Armar dict de respuesta y devolverlo
+    return {'id': max_id, 'nombre': user_data['firstname'], 'apellido': user_data['lastname'], 'rol': role}
