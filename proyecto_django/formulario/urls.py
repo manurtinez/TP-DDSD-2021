@@ -38,5 +38,5 @@ urlpatterns = [
     path('login', TemplateView.as_view(template_name='login.html'), name='login'),
     path('estadisticas/por_area/<str:area>', estadisticas_por_area),
     path('estadisticas/sociedades_en_proceso/', estadisticas_casos_abiertos),
-    path('estadisticas/usuario/<str:condicion>', estadisticas_usuario),
+    path('estadisticas/usuarios/<str:condicion>', estadisticas_usuario),
 ]
