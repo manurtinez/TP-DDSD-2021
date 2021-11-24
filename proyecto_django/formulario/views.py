@@ -260,15 +260,15 @@ def bonita_login(request):
     response_code = bonita_login_call(request.session,
                                       data['user'], data['password'])
     if response_code == 204:
-        # return Response(status=status.HTTP_200_OK)
-        return redirect('listado_sociedades_pendientes_aprobacion')
-        # Lógica del rol del usuario
-        #  switch (rol) {
-        #     case 'mesaEntradas': return redirect('listado_sociedades_pendientes_aprobacion');
-        #             break;
-        #     case 'legales': return redirect('a_evaluar') ;
-        #             break;
-        #     case 'admin': return redirect('dashboard');
+        print(request.session['bonita_role'])
+        role = request.session['bonita_role']
+        if role == 'Empleado mesa':
+            return redirect('listado_sociedades_pendientes_aprobacion')
+        elif role == 'Escribano':
+            return redirect('listado_sociedades_a_evaluar')
+        else:
+            return redirect('index')
+        # Agregar caso para el dashboard cuanto este el usuario admin
     elif response_code == 401:
         return Response(data="Las credenciales fueron incorrectas", status=status.HTTP_401_UNAUTHORIZED)
     else:
