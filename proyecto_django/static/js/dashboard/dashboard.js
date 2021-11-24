@@ -56,6 +56,7 @@ async function calcularEstadisticasLegales() {
   console.log("totalAprobados: " + totalAprobados)
   let totalRechazados = parseInt(datos["rechazados"]);
 	spanCantConfirmacionesLegales.textContent = totalAprobados;
+
 	spanCantRechazosLegales.textContent = totalRechazados;
 	total = totalAprobados + totalRechazados;
 	
@@ -64,9 +65,9 @@ async function calcularEstadisticasLegales() {
 	
 	});
 	let porcentajeAprobados = (totalAprobados * 100) / total;
-	completarPorcentajes(porcentajeAprobados.toFixed(2),porcentajeEstatutosConfirmados,barraPorcentajeEstatutosConfirmados);
+	completarPorcentajes(porcentajeAprobados.toFixed(2),porcentajeSociedadesEstatutoAprobadas,barraPorcentajeEstatutosConfirmados);
 	let porcentajeRechazados = (totalAprobados * 100) / total;
-	completarPorcentajes(porcentajeRechazados.toFixed(2),porcentajeEstatutosRechazados,barraPorcentajeEstatutosRechazados);
+	completarPorcentajes(porcentajeRechazados.toFixed(2),porcentajeSociedadesEstatutoRechazadas,barraPorcentajeEstatutosRechazados);
 
 }
 
@@ -76,9 +77,18 @@ function completarPorcentajes(unPorcentaje,spanTextoPorcentaje,barraPorcentaje) 
 	barraPorcentaje.style.width = unPorcentaje+"%";
 }
 
-
+// SEGUIR DESDE ACA
 // ESTADISTICAS SOCIEADES ANONIMAS EN PROCESO DE APROBACION
+/* /estadisticas/sociedades_en_proceso/ */
 function mostrarSociedadesEnProcesoAprobacion() {
+	let response = await fetch(localHost + '/estadisticas/sociedades_en_proceso').then(response => response.json());
+	let datos = response;
+	console.log("estadisticas legales: "+response);
+	if (datos) {
+		return datos;
+	} else {
+		return false;
+	}
 
 }
 
@@ -91,17 +101,57 @@ function mostrarTiempoResolucionProcesos() {
 
 
 // ESTADISTICAS USUARIOS CON MAYOR CANTIDAD DE RECHAZOS
- function mostrarUsuariosMayorCantRechazos() {
-	// Esta funcion va a llamar al endpoint de django y renderiza en la tabla, los usuarios con mayor cantidad de rechazos
-	comentarioPrueba.textContent = "hola Luisman, estoy imprimiendo desde el js";
+async function mostrarUsuariosMayorCantRechazos() {
+	let response = await fetch(localHost + '/estadisticas/usuarios/rechazos').then(response => response.json());
+
+	if (response) {
+		response.forEach(dato => {  
+			//comentarioPrueba.textContent = dato.nombre;
+			let newRow = tablaUsuariosRechazos.tBodies[0].insertRow(-1);
+			let newCell = newRow.insertCell(-1);
+			let newText = document.createTextNode(dato.cantidad);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.rol);
+			newCell.appendChild(newText);			
+			return newRow.rowIndex; 
+		});
+		
+	} else {
+		return false;
+	}
 }
 
 
-// ESTADISTICAS USUARIOS CON MAYOR CANTIDAD DE APROBACIONES
-function mostrarUsuariosMayorCantAprobaciones() {
-	// Esta funcion va a llamar al endpoint de django y renderiza en la tabla, los usuarios con mayor cantidad de aprobaciones
-	comentarioPrueba.textContent = "hola";
+// ESTADISTICAS USUARIOS CON MAYOR CANTIDAD DE RECHAZOS
+async function mostrarUsuariosMayorCantAprobaciones() {
+	let response = await fetch(localHost + '/estadisticas/usuarios/aprobaciones').then(response => response.json());
+
+	if (response) {
+		response.forEach(dato => {  
+			//comentarioPrueba.textContent = dato.nombre;
+			let newRow = tablaUsuariosAprobados.tBodies[0].insertRow(-1);
+			let newCell = newRow.insertCell(-1);
+			let newText = document.createTextNode(dato.cantidad);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.rol);
+			newCell.appendChild(newText);			
+			return newRow.rowIndex; 
+		});
+		
+	} else {
+		return false;
+	}
 }
+
+
 
 
 
