@@ -54,7 +54,8 @@ def get_open_cases(session):
 
 def max_stats_user(session, condition):
     """
-    Este metodo devuelve el usuario con mas cantidad de aprobados / rechazos segun lo que se reciba en "condition".
+    Este metodo devuelve los 5 (puede cambiar) usuarios con mas cantidad de aprobados / rechazos,
+    segun lo que se reciba en "condition".
 
     Params:
         * condition (str): "aprobaciones" | "rechazos"
@@ -89,17 +90,27 @@ def max_stats_user(session, condition):
                 count_dict[user_id] += 1
 
     # Extraer el id cuyo contador fue el maximo
-    max_id = max(count_dict, key=count_dict.get)
+    # max_id = max(count_dict, key=count_dict.get)
 
-    # Hacer un request para buscar informacion referente a este ID
-    user_response = bonita_api_call(session,
-                                    '/identity/user', 'get', '?f=enabled=true')
-    user_data = [
-        us for us in user_response if us['id'] == max_id][0]
+    # Top n (5) ocurrencias
+    sorted_list = sorted(count_dict.items(),
+                         key=lambda x: x[1], reverse=True)[:5]
 
-    # Adicionalmente, traer el rol del miembro
-    role = bonita_api_call(
-        session, '/identity/membership', 'get', f'?f=user_id={max_id}&d=role_id')[0]['role_id']['name']
+    # sorted_list = list(map(lambda x: x[0], sorted_list))
 
-    # Armar dict de respuesta y devolverlo
-    return {'id': max_id, 'nombre': user_data['firstname'], 'apellido': user_data['lastname'], 'rol': role}
+    results = []
+    for id, count in sorted_list:
+        # Hacer un request para buscar informacion referente a cada uno de los IDS del top
+        user_response = bonita_api_call(session,
+                                        '/identity/user', 'get', '?f=enabled=true')
+        user_data = [
+            us for us in user_response if us['id'] == id][0]
+
+        # Adicionalmente, traer el rol del miembro
+        role = bonita_api_call(
+            session, '/identity/membership', 'get', f'?f=user_id={id}&d=role_id')[0]['role_id']['name']
+
+        # Armar dict de respuesta
+        results.append(
+            {'id': id, 'nombre': user_data['firstname'], 'apellido': user_data['lastname'], 'rol': role, 'cantidad': count})
+    return results
