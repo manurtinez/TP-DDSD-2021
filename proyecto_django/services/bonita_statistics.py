@@ -46,10 +46,8 @@ def get_open_cases(session):
     # Traer casos activos
     archived_case_list = bonita_api_call(
         session, '/bpm/archivedCase', 'get', '?f=processDefinitionId={}'.format(bonita_process['id']))
-    if bonita_process and open_case_list and archived_case_list:
-        return {"activos": len(open_case_list), "finalizados": len(archived_case_list)}
-    else:
-        return None
+
+    return {"activos": len(open_case_list), "finalizados": len(archived_case_list)}
 
 
 def max_stats_user(session, condition):
