@@ -79,8 +79,8 @@ function completarPorcentajes(unPorcentaje,spanTextoPorcentaje,barraPorcentaje) 
 
 // SEGUIR DESDE ACA
 // ESTADISTICAS SOCIEADES ANONIMAS EN PROCESO DE APROBACION
-/* /estadisticas/sociedades_en_proceso/ */
-function mostrarSociedadesEnProcesoAprobacion() {
+
+async function mostrarSociedadesEnProcesoAprobacion() {
 	let response = await fetch(localHost + '/estadisticas/sociedades_en_proceso').then(response => response.json());
 	let datos = response;
 	console.log("estadisticas legales: "+response);
@@ -91,6 +91,7 @@ function mostrarSociedadesEnProcesoAprobacion() {
 	}
 
 }
+
 
 
 // ESTADISTICAS TIEMPO DE RESOLUCION DE LOS PROCESOS
