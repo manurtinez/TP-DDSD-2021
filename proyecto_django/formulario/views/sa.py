@@ -82,6 +82,9 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     def subir_archivo(self, request, pk=None):
         """
         Este action maneja la accion de agregar un archivo manifesto a la sociedad anonima.
+
+        Body (form-data):
+            * file: Archivo de estatuto. Debe ser pdf / docx / odt y pesar 2MB o menos.
         """
         sa = self.get_object()
         if 'file' in request.data:
@@ -97,6 +100,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
     @action(detail=True)
     def solicitar_estampillado(self, request, pk=None):
+        """
+        Este endpoint dispara una solicitud de estampillado a la api de estampillado externa, dado un id de sociedad.
+        """
+        if not bonita_permission(request, 'Escribano'):
+            return Response(data='Debe ser rol Escribano para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
         sa = self.get_object()
         if not sa.comformation_statute.name:
             return Response(data='Esta sociedad aun no tiene un estatuto de conformacion subido', status=status.HTTP_400_BAD_REQUEST)
@@ -124,6 +132,12 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def veredicto_mesa_entrada(self, request, pk=None):
+        """
+        Este endpoint maneja la aprobacion / rechazo de una sociedad por parte de un empleado de mesa de entrada.
+
+        Body:
+            * veredicto (boolean): true si se quiere aprobar, de lo contrario false.
+        """
         if not bonita_permission(request, 'Empleado mesa'):
             return Response(data='Debe ser rol Empleado mesa para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
         # serializer = VerdictSerializer(data=request.data)
@@ -171,6 +185,9 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     def evaluar_estatuto(self, request, pk=None):
         """
         Este metodo sirve para determinar si el estatuto se evaluo correctamente o no.
+
+        Body:
+            * veredicto (boolean): true si se quiere aprobar, de lo contrario false.
         """
         if not bonita_permission(request, 'Escribano'):
             # Se necesita ser Escribano para acceder

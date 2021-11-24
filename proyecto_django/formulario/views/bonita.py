@@ -26,8 +26,8 @@ class BonitaViewSet(viewsets.ViewSet):
         """
         Este endpoint devuelve una lista de sociedades que estan parados en task_name
 
-        Params:
-            * task_name(str): nombre literal de tarea del modelo bonita. Por ejemplo: "Revisión de información"
+        url params:
+            * /<str:task_name>: nombre literal de tarea del modelo bonita. Por ejemplo: "Revisión de información"
 
         Returns:
             * list[int] | None
@@ -40,6 +40,13 @@ class BonitaViewSet(viewsets.ViewSet):
 
 @api_view(['post'])
 def bonita_login(request):
+    """
+    Este endpoint maneja el login del sistema (es decir, el de bonita).
+
+    Body:
+        * user (str): nombre de usuario de bonita
+        * password (str): contraseña de bonita del usuario
+    """
     data = request.data
     response_code = bonita_login_call(request.session,
                                       data['user'], data['password'])
@@ -61,6 +68,9 @@ def bonita_login(request):
 
 @api_view()
 def logout(request):
+    """
+    Este endpoint hace logout al usuario que este logeado actualmente en el sistema (y bonita)
+    """
     if bonita_logout():
         request.session.flush()
         return redirect('login')
@@ -72,6 +82,9 @@ def logout(request):
 def estadisticas_por_area(request, *args, **kwargs):
     """
     Este endpoint devuelve las estadisticas (aprobados / rechazados) de parte de mesa de entradas o area legales.
+
+    Url params:
+        * /<str:area> (mesa | legales), por ejemplo, /estadisticas/por_area/mesa
     """
     if not bonita_permission(request, 'any'):
         # Se necesita estar logeado (con cualquier usuario) para acceder
