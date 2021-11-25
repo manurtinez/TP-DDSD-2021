@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime, timedelta
 from uuid import uuid4
 
 import environ
@@ -12,11 +13,12 @@ from formulario.serializers import (SociedadAnonimaRetrieveSerializer,
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from services.mail_service import mail_num_expediente
-from services.bonita_service import bonita_login_call
-from services.bonita_service import (assign_task, execute_task,
-                                     set_bonita_variable, start_bonita_process)
+from services.bonita_service import (assign_task, bonita_login_call,
+                                     execute_task, set_bonita_variable,
+                                     start_bonita_process)
 from services.estampillado_service import api_call_with_retry
+from services.mail_service import (mail_num_expediente,
+                                   mail_solicitud_incorrecta)
 
 # # el objeto env se usa para traer las variables de entorno
 env = environ.Env()
@@ -145,6 +147,13 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         # serializer = VerdictSerializer(data=request.data)
         if 'veredicto' in request.data:
             sa = self.get_object()
+            # Si la sociedad ya fue aprobada anteriormente, NO SEGUIR
+            if sa.numero_expediente:
+                return Response('Esta sociedad ya fue aprobada anteriormente. Abortando...', status=status.HTTP_400_BAD_REQUEST)
+
+            # Traer info de apoderado (para envio de mails)
+            apoderado = sa.sociosa_set.get(is_representative=True).partner
+
             verdict = request.data['veredicto']
             if verdict:
                 # Seteo el numero aleatorio de expediente
@@ -158,15 +167,19 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                     sa.numero_expediente = uuid4().hex
                     sa.save()
                 # Envio email de confirmacion
-                # Traer info de apoderado
-                apoderado = sa.sociosa_set.get(is_representative=True).partner
                 if not mail_num_expediente(
                         sa.name, apoderado.first_name, sa.representative_email, sa.numero_expediente):
                     # !! tal vez aca, revertir transacciones
                     print('El mail de num expediente NO pudo enviarse...')
             else:
-                # TODO Aca enviar mail con correcciones
-                pass
+                # Definir la fecha limite de correcciones (A RECIBIR POR PARAMETRO)
+                # !! Por ahora, 7 dias desde dia actual
+                limit_date = (datetime.now() + timedelta(days=7)
+                              ).strftime('%d-%m-%Y')
+                if not mail_solicitud_incorrecta(
+                        sa.name, apoderado.first_name, sa.representative_email, limit_date):
+                    # !! tal vez aca, revertir transacciones
+                    print('El mail de correcciones NO pudo enviarse...')
             set_bonita_variable(request.session, sa.case_id,
                                 'aprobado_por_mesa', verdict)
             task_id = assign_task(request.session, sa.case_id)
