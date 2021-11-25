@@ -31,8 +31,7 @@ def bonita_api_call(session, resource,  method, url_params='', data={}):
         * url_params? (str): Parametros adicionales de URL, o extension. Por ejemplo, "?id=1" o "/id/variable".
         * data? (dict): El body del request. Por ejemplo, { id: 1, name: "asd" }
     """
-    logged_user = session['logged_user']
-    if not logged_user:
+    if 'logged_user' not in session:
         print('Para hacer llamadas a api, debe autenticarse')
         return False
     try:

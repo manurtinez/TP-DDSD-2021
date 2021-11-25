@@ -12,6 +12,7 @@ from formulario.serializers import (SociedadAnonimaRetrieveSerializer,
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from services.bonita_service import bonita_login_call
 from services.bonita_service import (assign_task, execute_task,
                                      set_bonita_variable, start_bonita_process)
 from services.estampillado_service import api_call_with_retry
@@ -189,6 +190,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         Body:
             * veredicto (boolean): true si se quiere aprobar, de lo contrario false.
         """
+        user_agent = request.headers['User-Agent']
+        if user_agent.startswith('Java'):
+            # SOLO si el request viene del script de bonita, hardcodeo el login
+            bonita_login_call(request.session, 'JuancitoEscribano', 'bpm')
+
         if not bonita_permission(request, 'Escribano'):
             # Se necesita ser Escribano para acceder
             return Response(data='Debe ser rol Escribano para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
@@ -203,8 +209,10 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                 pass
             set_bonita_variable(request.session, sa.case_id,
                                 'estatuto_aprobado', verdict)
-            task_id = assign_task(request.session, sa.case_id)
-            execute_task(request.session, task_id)
+            if not user_agent.startswith('Java'):
+                # Si vino del script de bonita, NO hay que avanzar la tarea a mano, ya lo hizo el motor de bonita
+                task_id = assign_task(request.session, sa.case_id)
+                execute_task(request.session, task_id)
             return Response(status=status.HTTP_200_OK)
         else:
             return Response('No se ha enviado el parametro veredicto', status=status.HTTP_400_BAD_REQUEST)
