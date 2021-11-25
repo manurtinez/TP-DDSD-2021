@@ -47,12 +47,8 @@ def mail_estatuto_invalido(nombre_sa, nombre_apoderado, destinatario, observacio
         payload = {'nombre_sociedad': nombre_sa,
                    'nombre_apoderado': nombre_apoderado,
                    'destinatario': destinatario}
-        obs_array = []
-        for i, obs in enumerate(observaciones.split(';')):
-            # print(i)
+        for i, obs in enumerate(observaciones.split('\n')):
             payload[f'observacion[{i}]'] = obs
-            # obs_array.append(obs)
-        # payload['observacion'] = obs_array
         response = requests.post(
             BASE_URL + '/estatuto-invalido', data=payload)
         if response.status_code == 200:
