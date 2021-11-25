@@ -56,6 +56,8 @@ def bonita_login(request):
             return redirect('listado_sociedades_pendientes_aprobacion')
         elif role == 'Escribano':
             return redirect('listado_sociedades_a_evaluar')
+        elif role == 'Direccion':
+            return redirect('dashboard')
         else:
             return redirect('index')
         # Agregar caso para el dashboard cuanto este el usuario admin
