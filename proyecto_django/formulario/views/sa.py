@@ -12,6 +12,7 @@ from formulario.serializers import (SociedadAnonimaRetrieveSerializer,
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from services.mail_service import mail_num_expediente
 from services.bonita_service import bonita_login_call
 from services.bonita_service import (assign_task, execute_task,
                                      set_bonita_variable, start_bonita_process)
@@ -156,6 +157,13 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                         'El numero generado resulto estar repetido. Intentando de nuevo...')
                     sa.numero_expediente = uuid4().hex
                     sa.save()
+                # Envio email de confirmacion
+                # Traer info de apoderado
+                apoderado = sa.sociosa_set.get(is_representative=True).partner
+                if not mail_num_expediente(
+                        sa.name, apoderado.first_name, sa.representative_email, sa.numero_expediente):
+                    # !! tal vez aca, revertir transacciones
+                    print('El mail de num expediente NO pudo enviarse...')
             else:
                 # TODO Aca enviar mail con correcciones
                 pass
@@ -189,6 +197,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
         Body:
             * veredicto (boolean): true si se quiere aprobar, de lo contrario false.
+            * correcciones (string separado por ;) : serie de correcciones SEPARADO POR PUNTO Y COMA.
         """
         user_agent = request.headers['User-Agent']
         if user_agent.startswith('Java'):
@@ -205,7 +214,6 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                 # TODO Aca llamar a api de estampillado
                 pass
             else:
-                # TODO Aca enviar mail con correcciones
                 pass
             set_bonita_variable(request.session, sa.case_id,
                                 'estatuto_aprobado', verdict)
