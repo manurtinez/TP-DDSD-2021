@@ -23,7 +23,6 @@ async function calcularEstadisticasME() {
 	let datos = await obtenerEstadisticasME();
 	spansTotal = document.querySelectorAll('.totalSociedadesRegistradas');
 	let totalAprobados = datos["aprobados"];
-  console.log("totalAprobados: " +totalAprobados)
   let totalRechazados = parseInt(datos["rechazados"]);
 	spanCantConfirmaciones.textContent = totalAprobados;
 	spanCantRechazos.textContent = totalRechazados;
@@ -41,7 +40,6 @@ async function calcularEstadisticasME() {
 async function obtenerEstadisticasLegales() {
 	let response = await fetch(localHost + '/estadisticas/por_area/legales').then(response => response.json());
 	let datos = response;
-	console.log("estadisticas legales: "+response);
 	if (datos) {
 		return datos;
 	} else {
@@ -53,7 +51,6 @@ async function calcularEstadisticasLegales() {
 	let datos = await obtenerEstadisticasLegales();
 	spansTotal = document.querySelectorAll('.totalEstatutosEvaluados');
 	let totalAprobados = datos["aprobados"];
-  console.log("totalAprobados: " + totalAprobados)
   let totalRechazados = parseInt(datos["rechazados"]);
 	spanCantConfirmacionesLegales.textContent = totalAprobados;
 
@@ -68,7 +65,6 @@ async function calcularEstadisticasLegales() {
 	completarPorcentajes(porcentajeAprobados.toFixed(2),porcentajeSociedadesEstatutoAprobadas,barraPorcentajeEstatutosConfirmados);
 	let porcentajeRechazados = (totalAprobados * 100) / total;
 	completarPorcentajes(porcentajeRechazados.toFixed(2),porcentajeSociedadesEstatutoRechazadas,barraPorcentajeEstatutosRechazados);
-
 }
 
 
@@ -77,21 +73,24 @@ function completarPorcentajes(unPorcentaje,spanTextoPorcentaje,barraPorcentaje) 
 	barraPorcentaje.style.width = unPorcentaje+"%";
 }
 
-// SEGUIR DESDE ACA
-// ESTADISTICAS SOCIEADES ANONIMAS EN PROCESO DE APROBACION
-
+// ESTADISTICAS SOCIEDADES EN PROCESO
 async function mostrarSociedadesEnProcesoAprobacion() {
 	let response = await fetch(localHost + '/estadisticas/sociedades_en_proceso').then(response => response.json());
-	let datos = response;
-	console.log("estadisticas legales: "+response);
-	if (datos) {
-		return datos;
+
+	if (response) {	
+		spansTotal = document.querySelectorAll('.totalEstatutosEvaluados');
+		let totalActivos = response["activos"];
+		let totalFinalizados = response["finalizados"];
+		let total = totalActivos + totalFinalizados;
+		spanCantSociedadesActivas.textContent = totalActivos;		
+		spanTotalSociedades.textContent = total;
+
+		let porcentajeProcesoAprobacion = (totalActivos * 100) / total;
+		completarPorcentajes(porcentajeProcesoAprobacion.toFixed(2),porcentajeSociedadesProcesoAprobacion,barraPorcentajeSociedadesProcesoAprobacion);		
 	} else {
 		return false;
 	}
-
 }
-
 
 
 // ESTADISTICAS TIEMPO DE RESOLUCION DE LOS PROCESOS
