@@ -26,12 +26,16 @@ class EstampilladoController extends ApiController
     public function getEstampillado($hash){
         $entityManager = $this->getDoctrine()->getManager();
         $estampillado = $entityManager->getRepository(Estampillado::class)->findOneBy(['hash' => $hash]);
+        
+        if($estampillado != null){
+            return $this->response([
+                "num_expediente" => $estampillado->getNumExpediente(),
+                "hash" => $estampillado->getHash(),
+                "qr" => $estampillado->getQr(),
+            ]);
+        }
 
-        return $this->response([
-            "num_expediente" => $estampillado->getNumExpediente(),
-            "hash" => $estampillado->getHash(),
-            "qr" => $estampillado->getQr(),
-        ]);
+        return $this->respondValidationError("El hash indicado no corresponde a un expediente válido");
     }
 
 

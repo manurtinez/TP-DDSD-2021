@@ -64,6 +64,7 @@ namespace App\Controller;
    $data = [
     'status' => $this->getStatusCode(),
     'errors' => $errors,
+    'success' => []
    ];
 
    return new JsonResponse($data, $this->getStatusCode(), $headers);
@@ -81,6 +82,7 @@ namespace App\Controller;
   {
    $data = [
     'status' => $this->getStatusCode(),
+    'errors' => [],
     'success' => $success,
    ];
 

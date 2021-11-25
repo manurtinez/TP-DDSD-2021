@@ -155,7 +155,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2MzU0MjU3ODksImV4cCI6MTYzNTQyNTgyOSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZXNjcmliYW5vIn0.Eg_hUCrf_U6sZvg0gCVyRK_4PSvlCilrNYN7E506Fcu88nAthwFWHXCirxywuu-pBzZugtcsilWHrU9gdcrDi76wh0-FXUa3vF6Hnzhi2kM9tzQREk_Uz8-auXGYgeGKNnwVFVb-j751-I-5gSuoOmZ6pf7NR0C2bp2SqnRrADmmde8QEU8ySq2DOSGAkpMphm8Hw12mw7UdqrhLnQ-vLjdjJI9kT-DhU5-9AYHVaex6U61OiMi4mWliqhZsNd8jpVi26pSj1bSEmf9fSiklZ3Em6AVUtCKFApfPRPLFSZtE-PmyPleN84NEREW8xjHPpd4EeGra93f1bV1170jxJhyrEULwecN1STK-U6G-H2mB69tb6NtTxG49cYExyLc5GTWTP3G7vHrTrKENJcNBsqY-N9HQtqQUXHSmQpzCfH5UVW5oN3fTb7xbE6rOuwtCNwPyvWCJBM0DHQeexZ8IsrM4-YMvQzw7yxgunqTqvoLnxBorqpiJ3qS4Ru9fYa4kmvwlBPVCjI_o1n4pHZbZuBsTEg2iUhz3buQRzCOrACwTfDvw5tfez3DvgrWYUcv9-rX-QXEAfnGvRROrH-_DTy3KgiczAw73sx2RMvDd4yELA56LZJNjK5_6zGOjHmI8xsS-rS_oJxVcqFlnxwATSYrozC0uHY9T-eUwfUm6GYc",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2Mzc3Njk1OTYsImV4cCI6MTYzNzc3MzE5Niwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZXNjcmliYW5vIn0.dvOFrbjdnqHR1AL9a_eTeBXY1uNhqawnId1H-DaBwTYstgWN1QHw-UIYq6mnqrwbHpTNcceow69voSzGj4LWizpTjV-aRUMMPy5vzZKXQYMlRVSkDLTvmxwGDb4MxIJPJc10EI8QFYvOJY-_c9Bon9WrVhnt-2JSeVyzw59bu3ZEa5lyQrDler-akjnYEeKmZyR0sbtLVnAWt3THB0iXbYZysAIJ0EtZXKjn5kIW72JWj9G2kqZrxS_ucFMIzLDmmxy0sElifxNgqT5UQmWWlMIUgVR6z7XPMGpXtp2AUQ9YoyHxSWT9TwaM53skCkvQAgPu2p8tf2OxD3r09El-bIwQSD6x-PKwoHWEr1jWf1swlCOLaIZ12DJmfdrDh0eAMAv3C-lGobcuJJuRSscbNXUnNdnFu2pvX4s6mgUhMOD2CWzysYXO-sx_DhQyUlY-KGsiMDEq4Y_wo9BRqLAmH9eGrjR9LSDnxQbvMDlgvGQZVSIzIKg6U5Gqc-x9h2O1wWi18PCLWRyif1j7ACGLbGVrXseXt0qoQ0Qo_1gOy_JDT8-xN4gr5eY1B6_k8hxW86bhe0Kpv_kcbaq2pBL7Vb0nzEqoQffwdSjJ2O8UpVaOoMGt1oP0CpllCAg67U7Mr5FmNkzCAWUNLEvp2sDtiNzROfrE71JRstzSlJ2mwCY",
 									"type": "string"
 								}
 							]
@@ -173,6 +173,38 @@
 							"path": [
 								"api",
 								"estampillado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener un estampillado",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2Mzc3Njk1OTYsImV4cCI6MTYzNzc3MzE5Niwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZXNjcmliYW5vIn0.dvOFrbjdnqHR1AL9a_eTeBXY1uNhqawnId1H-DaBwTYstgWN1QHw-UIYq6mnqrwbHpTNcceow69voSzGj4LWizpTjV-aRUMMPy5vzZKXQYMlRVSkDLTvmxwGDb4MxIJPJc10EI8QFYvOJY-_c9Bon9WrVhnt-2JSeVyzw59bu3ZEa5lyQrDler-akjnYEeKmZyR0sbtLVnAWt3THB0iXbYZysAIJ0EtZXKjn5kIW72JWj9G2kqZrxS_ucFMIzLDmmxy0sElifxNgqT5UQmWWlMIUgVR6z7XPMGpXtp2AUQ9YoyHxSWT9TwaM53skCkvQAgPu2p8tf2OxD3r09El-bIwQSD6x-PKwoHWEr1jWf1swlCOLaIZ12DJmfdrDh0eAMAv3C-lGobcuJJuRSscbNXUnNdnFu2pvX4s6mgUhMOD2CWzysYXO-sx_DhQyUlY-KGsiMDEq4Y_wo9BRqLAmH9eGrjR9LSDnxQbvMDlgvGQZVSIzIKg6U5Gqc-x9h2O1wWi18PCLWRyif1j7ACGLbGVrXseXt0qoQ0Qo_1gOy_JDT8-xN4gr5eY1B6_k8hxW86bhe0Kpv_kcbaq2pBL7Vb0nzEqoQffwdSjJ2O8UpVaOoMGt1oP0CpllCAg67U7Mr5FmNkzCAWUNLEvp2sDtiNzROfrE71JRstzSlJ2mwCY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://infinite-inlet-30043.herokuapp.com/api/estampillado/89ff31470d00b95eaf0895fd95f5d320",
+							"protocol": "https",
+							"host": [
+								"infinite-inlet-30043",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"estampillado",
+								"89ff31470d00b95eaf0895fd95f5d320"
 							]
 						}
 					},
@@ -213,6 +245,196 @@
 							"path": [
 								"api",
 								"estampillado"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Envio de Emails",
+			"item": [
+				{
+					"name": "Enviar número de expediente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre_sociedad",
+									"value": "Fed Producciones",
+									"type": "text"
+								},
+								{
+									"key": "nombre_apoderado",
+									"value": "Federico",
+									"type": "text"
+								},
+								{
+									"key": "destinatario",
+									"value": "tubarofederico@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "num_expediente",
+									"value": "rghwerhnw54h544whwhgw",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost/api/email/send/expediente",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"email",
+								"send",
+								"expediente"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Información solicitud Incorrecta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre_sociedad",
+									"value": "Fed Producciones",
+									"type": "text"
+								},
+								{
+									"key": "nombre_apoderado",
+									"value": "Federico",
+									"type": "text"
+								},
+								{
+									"key": "destinatario",
+									"value": "tubarofederico@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "plazo_correccion",
+									"value": "25/12/2021",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost/api/email/send/informacion-sociedad-incorrecta",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"email",
+								"send",
+								"informacion-sociedad-incorrecta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Estatuto Inválido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre_sociedad",
+									"value": "Fed Producciones",
+									"type": "text"
+								},
+								{
+									"key": "nombre_apoderado",
+									"value": "Federico",
+									"type": "text"
+								},
+								{
+									"key": "destinatario",
+									"value": "tubarofederico@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "observacion[0]",
+									"value": "Una observacion",
+									"type": "text"
+								},
+								{
+									"key": "observacion[1]",
+									"value": "Otra observacion mas",
+									"type": "text"
+								},
+								{
+									"key": "observacion[2]",
+									"value": "Y una ultima",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost/api/email/send/estatuto-invalido",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"email",
+								"send",
+								"estatuto-invalido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fin Solicitud",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre_sociedad",
+									"value": "Fed Producciones",
+									"type": "text"
+								},
+								{
+									"key": "nombre_apoderado",
+									"value": "Federico",
+									"type": "text"
+								},
+								{
+									"key": "destinatario",
+									"value": "tubarofederico@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost/api/email/send/fin-solicitud",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"email",
+								"send",
+								"fin-solicitud"
 							]
 						}
 					},

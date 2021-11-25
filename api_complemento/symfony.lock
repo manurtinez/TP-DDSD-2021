@@ -82,6 +82,9 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "egulias/email-validator": {
+        "version": "3.1.2"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
@@ -188,6 +191,9 @@
             "./config/bootstrap.php"
         ]
     },
+    "symfony/css-selector": {
+        "version": "v4.4.27"
+    },
     "symfony/debug": {
         "version": "v4.4.31"
     },
@@ -262,6 +268,18 @@
     },
     "symfony/inflector": {
         "version": "v4.4.27"
+    },
+    "symfony/mailer": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "bbfc7e27257d3a3f12a6fb0a42540a42d9623a37"
+        },
+        "files": [
+            "config/packages/mailer.yaml"
+        ]
     },
     "symfony/maker-bundle": {
         "version": "1.34",
@@ -346,6 +364,15 @@
     "symfony/security-http": {
         "version": "v4.4.30"
     },
+    "symfony/sendgrid-mailer": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.4",
+            "ref": "b46e4f8f1adb2864f0aa9c0ff57aea3324a07199"
+        }
+    },
     "symfony/service-contracts": {
         "version": "v2.4.0"
     },
@@ -355,6 +382,26 @@
     "symfony/string": {
         "version": "v5.3.10"
     },
+    "symfony/translation-contracts": {
+        "version": "v2.5.0"
+    },
+    "symfony/twig-bridge": {
+        "version": "v4.4.34"
+    },
+    "symfony/twig-bundle": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.4",
+            "ref": "73baff3f7b3cea12a73812a7cfd2c0924a9e250f"
+        },
+        "files": [
+            "config/packages/test/twig.yaml",
+            "config/packages/twig.yaml",
+            "templates/base.html.twig"
+        ]
+    },
     "symfony/var-dumper": {
         "version": "v4.4.31"
     },
@@ -363,5 +410,17 @@
     },
     "symfony/yaml": {
         "version": "v4.4.29"
+    },
+    "tijsverkoyen/css-to-inline-styles": {
+        "version": "2.2.3"
+    },
+    "twig/cssinliner-extra": {
+        "version": "v3.3.3"
+    },
+    "twig/extra-bundle": {
+        "version": "v3.3.3"
+    },
+    "twig/twig": {
+        "version": "v3.3.3"
     }
 }

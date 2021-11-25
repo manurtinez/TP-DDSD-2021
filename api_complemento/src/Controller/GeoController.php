@@ -51,7 +51,7 @@ class GeoController extends AbstractController
     public function getPaisesAction($code, Request $request)
     {   
         if($code == null){
-            return new JsonResponse("Debe indicar el codigo del continente", 404 );
+            return new JsonResponse("Debe indicar el codigo del continente", 400 );
         }
 
         $response = $this->client->request('POST', '', [
@@ -69,7 +69,7 @@ class GeoController extends AbstractController
 
         $datos = json_decode((string) $response->getBody());
         if($datos->data->continent == null){
-            return new JsonResponse("No se encontraron paises para el continente indicado", 404 );
+            return new JsonResponse("No se encontraron paises para el continente indicado", 400 );
         }
 
         return new JsonResponse($datos->data->continent->countries, 200);
@@ -81,7 +81,7 @@ class GeoController extends AbstractController
     public function getEstadosAction($code,Request $request)
     {     
         if($code == null){
-            return new JsonResponse("Debe indicar el codigo del Pais", 404 );
+            return new JsonResponse("Debe indicar el codigo del Pais", 400 );
         }
 
         $response = $this->client->request('POST', '', [
@@ -99,7 +99,7 @@ class GeoController extends AbstractController
 
         $datos = json_decode((string) $response->getBody());
         if($datos->data->country == null){
-            return new JsonResponse("No se encontraron estados para el pais indicado", 404 );
+            return new JsonResponse("No se encontraron estados para el pais indicado", 400 );
         }
 
         return new JsonResponse($datos->data->country->states, 200);
