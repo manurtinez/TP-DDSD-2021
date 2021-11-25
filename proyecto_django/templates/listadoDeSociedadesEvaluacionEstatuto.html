@@ -39,10 +39,6 @@
 					LM
 				</button>
 				<ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuButton">
-					<!-- Sociedades a evaluar el estatuto luego de ser aprobadas por ME-->
-					<li><a class="dropdown-item" href="{% url 'listado_sociedades_estampillar' %}">Mis tareas</a></li>
-					<li><a class="dropdown-item" href="{% url 'listado_sociedades_estampillar' %}">Sociedades a estampillar</a></li>
-					<li><hr class="dropdown-divider" /></li>
 					<li> <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
 				</ul>
 			</div>
@@ -77,7 +73,7 @@
 			</section>
 		</div>
 		<div class="text-center">
-			<h5 class="mt-3"><a href="{% url 'index' %}" class="btn btnVolver mb-4 mt-3"><i
+			<h5 class="mt-3"><a onclick="mostrarModalMail()" class="btn btnVolver mb-4 mt-3"><i
 						class="fas fa-arrow-circle-left"></i> Volver al inicio </a></h5>
 		</div>
 	</main>
