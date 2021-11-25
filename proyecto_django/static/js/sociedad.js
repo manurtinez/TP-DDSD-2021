@@ -278,8 +278,9 @@ async function getSociedadesPorTask(estadoTarea) {
 			newCell.appendChild(newText);
 		}
 	} catch (error) {
-		mostrarModalMensaje('Ocurrió un error al obtener las sociedades. Por favor, refresque la página');
-		console.log(error);
+		window.location.replace(localHost+"/login");
+		// mostrarModalMensaje('Ocurrió un error al obtener las sociedades. Por favor, refresque la página');
+		// console.log(error);
 	}
 }
 

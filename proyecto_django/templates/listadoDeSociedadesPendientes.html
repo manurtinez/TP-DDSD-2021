@@ -12,11 +12,11 @@
   <!-- Sweet alert -->
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <!-- MDB Bootstrap -->
-  <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet" type="text/css" />
+	<!-- MDB Bootstrap -->
+	<link href="{% static 'css/mdb.min.css' %}" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
   <!-- CSS -->
   <link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
-  <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
   <!-- JavaScript -->
   <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/sociedad.js' %}"></script>
@@ -29,17 +29,12 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
       <div class="dropdown">
         <button class="btn btn-primary rounded-circle p-0 size-50 btn-border" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
           LM
         </button>
         <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuButton">
-          <li><a class="dropdown-item" href="{% url 'listado_sociedades_estampillar' %}">Mis tareas</a></li>
-					<li><hr class="dropdown-divider" /></li>
-          <li><a class="dropdown-item" href="">Cerrar sesión</a></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
         </ul>
       </div>
     </div>

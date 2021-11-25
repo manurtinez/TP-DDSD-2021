@@ -43,6 +43,7 @@ async function mostrarComentario(idSociedad) {
 
 async function enviarMail(idSociedad) {
     // VER MAS ADELANTE CUAL ES EL ENDPOINT QUE SE DEFINA EN DJANGO PARA ENVIAR MAILS
+		// ToDo
 	const response = await fetch(localHost+urlCorregir+idSociedad, {
 		method: 'POST',
 		headers: {

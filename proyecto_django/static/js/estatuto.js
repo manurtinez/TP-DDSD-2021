@@ -10,7 +10,7 @@ function obtenerBotones(idSociedad, newCell) {
 	newCell.appendChild(newLink);
 
 	newLink = document.createElement("a");
-	newLink.addEventListener('click', evaluacionEstatuto.bind(this, idSociedad, false));
+	newLink.addEventListener('click', mostrarModalMail.bind(this,idSociedad));
 	newLink.classList.add("btn", "btn-color-danger", 'px-2',  "mx-1", 'anchoBoton');
 	newIcon = document.createElement("i");
 	newIcon.classList.add("fas", "fa-1-5x", "fa-times");
@@ -64,60 +64,53 @@ async function evaluacionEstatuto(idSociedad, veredicto) {
 			veredicto
 		})
 	});
-	let icon = veredicto ? "success" : "error";
-	let mensaje = veredicto ? "aprobado" : "rechazado";
-	let accion = veredicto ? "onclick=location.reload();":"";
-	if (response.status === 200) {
+	// let icon = veredicto ? "success" : "error";
+	// let mensaje = veredicto ? "aprobado" : "rechazado";
+	// let accion = "onclick = " + (veredicto ? "location.reload();":"mostrarModalMail()");
+	if (response.status === 200 && veredicto) {
 		Swal.fire({
 			position: 'top',
-			icon,
-			title: 'El estatuto ha sido ' + mensaje + ' correctamente!',
+			icon: 'success',
+			title: 'El estatuto ha sido aprobado correctamente!',
 			showConfirmButton: true,
-			confirmButtonText: `<a ${accion}>Continuar</a>`
-		}).then((result) => {
-
-
+			confirmButtonText: `<a onclick = location.reload();>Continuar</a>`
 		})
-
-
 	} else {
-		mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+		// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
 	}
 }
 
+async function mostrarModalMail(idSociedad){
 
-
-
-async function enviarMailTesting(idSociedad){
 	Swal.fire({
-		title: 'El socio no se ha encontrado',
-		html: '<div class="swal2-html-container mt-0">Por favor registrelo</div>' +
-			'<label for="nombreSocioRegistro">Nombre</label>' +
-			'<input type="text" id="nombreSocioRegistro" onkeydown="if(enterPress(event)){apellidoSocioRegistro.focus();}checkRegistro()" placeholder="Ingrese el nombre" class="swal2-input">' +
-			'<p class="note note-warning p-1 mt-3 mb-0" id="validacionNombre" hidden><strong>Importante: </strong><small id="validacionNombreTexto"></small></p>' +
-			'<label for="apellidoSocioRegistro">Apellido</label>' +
-			'<input type="text" id="apellidoSocioRegistro" oninput="checkRegistro()" placeholder="Ingrese el apellido" class="swal2-input">' +
-			'<p class="note note-warning p-1 mt-3 mb-0" id="validacionApellido" hidden><strong>Importante: </strong><small id="validacionApellidoTexto"></small></p>',
-
-		customClass: {
-			htmlContainer: ''
-		},
+		title: 'Envío de mail',
+		input: 'textarea',
+		inputLabel: 'Por favor ingrese el mail con las sugerencias',
+		inputPlaceholder: 'Escriba aquí las sugerencias...',
+		inputAttributes: {'aria-label': 'Escriba aquí las sugerencias...'},
+		confirmButtonText: 'Enviar mail <i class="far fa-envelope"></i>',
 		cancelButtonText: 'Cancelar',
 		showCancelButton: true,
 		showConfirmButton: true,
-		confirmButtonText: 'Enviar ',
 		reverseButtons: true,
 		showLoaderOnConfirm: true,
-		preConfirm: (socio) => {
-			return fetch(localHost+'/socio/', {
+		inputValidator: (value) => {
+			return new Promise(async (resolve) => {
+				if (value == '') {
+					resolve('Por favor ingrese el contenido del mail');
+				} else if(await evaluacionEstatuto(idSociedad, false)){
+					resolve();
+				}
+			})
+		},
+		preConfirm: (contenidoMail) => {
+			return fetch(localHost+'/enviarMail/', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
 					},
 					body: JSON.stringify({
-						first_name: nombreSocioRegistro.value,
-						last_name: apellidoSocioRegistro.value,
-						dni: dniSocio.value
+						contenido: contenidoMail.value
 					})
 				})
 				.then(response => {
@@ -128,24 +121,14 @@ async function enviarMailTesting(idSociedad){
 				})
 				.catch(error => {
 					Swal.showValidationMessage(
-						`${error}. No se pudo crear el socio`
+						`${error}. No se pudo enviar el mail. Por favor intentelo nuevamente`
 					)
 				})
 		},
 		allowOutsideClick: () => !Swal.isLoading()
 	}).then((result) => {
-		if (result.isConfirmed) {
-			idSocioAgregado = result.value.id;
-			apellidoSocio.value = result.value.first_name;
-			nombreSocio.value = result.value.last_name;
-			mostrarCamposAportes();
-		}
+
 	})
-	let buttonSwal = document.getElementsByClassName("swal2-confirm")[0];
-	buttonSwal.addEventListener('mouseover', validarRegistroSocio.bind(this));
-	buttonSwal.id = "btnRegistrarSocio";
-	buttonSwal.disabled = true;
-	nombreSocioRegistro.focus();
 }
 
 
