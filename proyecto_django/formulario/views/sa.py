@@ -17,7 +17,7 @@ from services.bonita_service import (assign_task, bonita_login_call,
                                      execute_task, set_bonita_variable,
                                      start_bonita_process)
 from services.estampillado_service import api_call_with_retry
-from services.mail_service import (mail_num_expediente,
+from services.mail_service import (mail_estatuto_invalido, mail_num_expediente,
                                    mail_solicitud_incorrecta)
 
 # # el objeto env se usa para traer las variables de entorno
@@ -180,10 +180,13 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                         sa.name, apoderado.first_name, sa.representative_email, limit_date):
                     # !! tal vez aca, revertir transacciones
                     print('El mail de correcciones NO pudo enviarse...')
+
+            # Acciones de bonita
             set_bonita_variable(request.session, sa.case_id,
                                 'aprobado_por_mesa', verdict)
             task_id = assign_task(request.session, sa.case_id)
             execute_task(request.session, task_id)
+
             return Response(status=status.HTTP_200_OK)
         else:
             return Response('No se ha enviado el parametro veredicto', status=status.HTTP_400_BAD_REQUEST)
@@ -222,18 +225,26 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             return Response(data='Debe ser rol Escribano para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
         if 'veredicto' in request.data:
             sa = self.get_object()
+
+            # Traer info de apoderado (para envio de mails)
+            apoderado = sa.sociosa_set.get(is_representative=True).partner
+
             verdict = request.data['veredicto']
             if verdict:
-                # TODO Aca llamar a api de estampillado
+                # TODO Aca llamar a api de estampillado (SE HACE DESDE EL FRONT)
                 pass
             else:
-                pass
+                if not mail_estatuto_invalido(sa.name, apoderado.first_name, sa.representative_email, request.data['observaciones']):
+                    print('El mail de estatuto rechazado NO pudo enviarse...')
+
+            # Acciones de bonita
             set_bonita_variable(request.session, sa.case_id,
                                 'estatuto_aprobado', verdict)
             if not user_agent.startswith('Java'):
                 # Si vino del script de bonita, NO hay que avanzar la tarea a mano, ya lo hizo el motor de bonita
                 task_id = assign_task(request.session, sa.case_id)
                 execute_task(request.session, task_id)
+
             return Response(status=status.HTTP_200_OK)
         else:
             return Response('No se ha enviado el parametro veredicto', status=status.HTTP_400_BAD_REQUEST)

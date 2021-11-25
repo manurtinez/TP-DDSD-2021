@@ -55,8 +55,6 @@ def mail_estatuto_invalido(nombre_sa, nombre_apoderado, destinatario, observacio
         # payload['observacion'] = obs_array
         response = requests.post(
             BASE_URL + '/estatuto-invalido', data=payload)
-        print(payload)
-        print(response.text)
         if response.status_code == 200:
             return True
     except requests.exceptions.RequestException as e:
