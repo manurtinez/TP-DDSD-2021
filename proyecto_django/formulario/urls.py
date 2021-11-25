@@ -1,8 +1,15 @@
 from django.urls import include, path
-from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 
-from formulario.views import *
+from formulario.views.bonita import (BonitaViewSet, bonita_login, estadistica_promedio_resolucion,
+                                     estadisticas_casos_abiertos,
+                                     estadisticas_por_area,
+                                     estadisticas_usuario, logout)
+from formulario.views.sa import SociedadAnonimaViewSet
+from formulario.views.socios import SocioViewSet
+from formulario.views.templates import (a_evaluar_estatuto, alta_sa, dashboard,
+                                        login_template, pendientes,
+                                        ver_sa_publica)
 
 # Create default router and add viewsets
 router = DefaultRouter()
@@ -13,30 +20,22 @@ router.register(r'socio', SocioViewSet, basename='socio')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('login', TemplateView.as_view(
-        template_name='login.html'), name="login"),
     # TODO refactorizar estos template views, pasarlos al ViewSet para simplificar estas urls
-    path('sociedad_anonima/alta', TemplateView.as_view(
-        template_name='altaDeFormulario.html'), name="alta_formulario"),
-    path('sociedad_anonima/ver', TemplateView.as_view(
-        template_name='verSociedadPublica.html'), name="ver_sociedad_publica"),
+    path('sociedad_anonima/alta', alta_sa, name="alta_formulario"),
+    path('sociedad_anonima/ver', ver_sa_publica, name="ver_sociedad_publica"),
     path('sociedad_anonima/pendientes', pendientes,
          name="listado_sociedades_pendientes_aprobacion"),
-    path('sociedad_anonima/a_estampillar', TemplateView.as_view(
-        template_name='listadoDeSociedadesEstampillar.html'), name="listado_sociedades_estampillar"),
-    path('sociedad_anonima/a_evaluar', TemplateView.as_view(
-        template_name='listadoDeSociedadesEvaluacionEstatuto.html'), name="listado_sociedades_a_evaluar"),
-    path('sociedad_anonima/verDetalle', TemplateView.as_view(
-        template_name='verDetalleSociedad.html'), name="detalle_sociedad_anonima"),
-    path('dashboard', TemplateView.as_view(
-        template_name='dashboard.html'), name="dashboard"),
+    path('sociedad_anonima/a_evaluar', a_evaluar_estatuto,
+         name="listado_sociedades_a_evaluar"),
+    path('dashboard', dashboard, name="dashboard"),
     path('bonita/sociedades/obtener_por_task/<str:task_name>',
          BonitaViewSet.as_view({"get": "obtener_por_task"})),
     path('bonita/login', bonita_login, name='bonita_login'),
     path('bonita/logout',
          logout, name='logout'),
-    path('login', TemplateView.as_view(template_name='login.html'), name='login'),
+    path('login', login_template, name='login'),
     path('estadisticas/por_area/<str:area>', estadisticas_por_area),
     path('estadisticas/sociedades_en_proceso/', estadisticas_casos_abiertos),
     path('estadisticas/usuarios/<str:condicion>', estadisticas_usuario),
+    path('estadisticas/promedio_resolucion/', estadistica_promedio_resolucion),
 ]
