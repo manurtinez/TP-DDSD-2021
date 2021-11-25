@@ -113,21 +113,21 @@
 								<div class="row no-gutters align-items-center">
 									<div class="col mr-2">
 										<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-											Sociedades anónimas en proceso de aprobación </div>
+											Sociedades anónimas en proceso</div>
 										<div class="row no-gutters align-items-center mt-3 ">
 											<div class="col-auto">
-												<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">90%</div>
+												<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><span id="porcentajeSociedadesProcesoAprobacion"></span><span>%</span></div>
 											</div>
 											<div class="col">
 												<div class="progress progress-sm mr-2">
-													<div class="progress-bar bg-warning" role="progressbar" style="width: 90%"
-														aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+													<div class="progress-bar bg-warning" role="progressbar" id="barraPorcentajeSociedadesProcesoAprobacion" style="width:0%"
+															aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"><span id="porcentajeEstatutosConfirmados"></span><span></span></div>
 												</div>
 											</div>
 										</div>
 									</div>
 									<div class="col-auto">
-										<span class="h2 text-gray-500">180/200</span>
+										<div class="h2 text-gray-500"><span id="spanCantSociedadesActivas"></span>/<span id="spanTotalSociedades"></span></div>
 									</div>
 								</div>
 							</div>
@@ -212,12 +212,12 @@
 												Estautos confirmados </div>
 											<div class="row no-gutters align-items-center mt-3 ">
 												<div class="col-auto">
-													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><span id="porcentajeSociedadesEstatutoAprobadas"></span><span>%</span></div>
 												</div>
 												<div class="col">
 													<div class="progress progress-sm mr-2">
 														<div class="progress-bar bg-success" role="progressbar" id="barraPorcentajeEstatutosConfirmados" style="width:0%"
-															aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"><span id="porcentajeEstatutosConfirmados"></span><span>%</span></div>
+															aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"><span id="porcentajeEstatutosConfirmados"></span><span></span></div>
 													</div>
 												</div>
 											</div>
@@ -237,13 +237,13 @@
 											<div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
 												Estatutos rechazados </div>
 											<div class="row no-gutters align-items-center mt-3 ">
-												<div class="col-auto">
-													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
+												<div class="col-auto">													
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><span id="porcentajeSociedadesEstatutoRechazadas"></span><span>%</span></div>
 												</div>
 												<div class="col">
 													<div class="progress progress-sm mr-2">
 														<div class="progress-bar bg-danger" role="progressbar" id="barraPorcentajeEstatutosRechazados" style="width:0%"
-															aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span id="porcentajeEstatutosRechazados"></span><span>%</span></div>
+															aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span id="porcentajeEstatutosRechazados"></span><span></span></div>
 													</div>
 												</div>
 											</div>
@@ -291,36 +291,17 @@
 				<span aria-hidden="true">×</span>
 			</button>
 			</div>
-			<div class="modal-body">
-				 <span class="input-group-text border-0" id="comentarioPrueba"></span> 
-				<table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
+			<div class="modal-body">		
+				<table id="tablaUsuariosRechazos" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
 					<thead class="table-warning align-top">
 					  <tr class="px-5">
-						<th scope="col">Puesto</th>
-						<th scope="col">Usuario</th>				
+						<th scope="col">Cantidad de rechazos</th>
+						<th scope="col">Usuario</th>	
+						<th scope="col">Rol</th>				
 					  </tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th>1°</th>
-							<td>Luis Marianete</td>
-						</tr>
-						<tr>
-							<th >2°</th>
-							<td>Matias Mosquera</td>
-						</tr>
-						<tr>
-							<th>3°</th>
-							<td>Juan Marcos Marascutti</td>
-						</tr>
-						<tr>
-							<th >4°</th>
-							<td>Miguelucho</td>
-						</tr>
-						<tr>
-							<th >5°</th>
-							<td>Roberto Juarez</td>
-						</tr>
+
 					</tbody>
 				  </table>
 			</div>
@@ -335,7 +316,7 @@
 
   <!-- MODAL USUARIOS CON MAYOR CANTIDAD DE APROBACIONES -->
 	  <section class="modal fade" id="modalUsuariosAprobados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-dialog modal-dialog-scrollable w-100">
 		  <div class="modal-content">
 			<div class="modal-header">
 			  <h5 class="modal-title">Usuarios con mayor cantidad de aprobaciones</h5>
@@ -344,34 +325,16 @@
 			</button>
 			</div>
 			<div class="modal-body">			
-				<table id="tablaSocios" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
+				<table id="tablaUsuariosAprobados" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
 					<thead class="table-primary align-top">
 					  <tr class="px-5">
-						<th scope="col">Puesto</th>
-						<th scope="col">Usuario</th>				
+						<th scope="col">Cant. de aprobaciones</th>
+						<th scope="col">Usuario</th>		
+						<th scope="col">Rol</th>				
 					  </tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th>1°</th>
-							<td>Luis Marianete</td>
-						</tr>
-						<tr>
-							<th >2°</th>
-							<td>Matias Mosquera</td>
-						</tr>
-						<tr>
-							<th>3°</th>
-							<td>Juan Marcos Marascutti</td>
-						</tr>
-						<tr>
-							<th >4°</th>
-							<td>Miguelucho</td>
-						</tr>
-						<tr>
-							<th >5°</th>
-							<td>Roberto Juarez</td>
-						</tr>
+						
 					</tbody>
 				  </table>
 			</div>
