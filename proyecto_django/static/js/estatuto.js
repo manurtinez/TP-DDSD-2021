@@ -29,27 +29,27 @@ function obtenerBotones(idSociedad, newCell) {
 
 async function descargarEstatuto(idSociedad) {
 	// VER MAS ADELANTE CUAL ES EL ENDPOINT QUE SE DEFINA EN DJANGO PARA DESCARGAR ESTATUTO
-	const response = await fetch(localHost + urlDescargarEstauto + idSociedad, {
-		method: 'POST',
-		headers: {
-			'X-CSRFToken': csrftoken,
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({
-			id: idSociedad
-		})
-	});
-	if (response.status === 201) {
-		Swal.fire({
-			position: 'top',
-			icon: 'success',
-			title: 'El estatuto ha sido descargado correctamente!',
-			showConfirmButton: true,
-			confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
-		})
-	} else {
-		// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
-	}
+	// const response = await fetch(localHost + urlDescargarEstauto + idSociedad, {
+	// 	method: 'POST',
+	// 	headers: {
+	// 		'X-CSRFToken': csrftoken,
+	// 		'Content-Type': 'application/json',
+	// 	},
+	// 	body: JSON.stringify({
+	// 		id: idSociedad
+	// 	})
+	// });
+	// if (response.status === 201) {
+	// 	Swal.fire({
+	// 		position: 'top',
+	// 		icon: 'success',
+	// 		title: 'El estatuto ha sido descargado correctamente!',
+	// 		showConfirmButton: true,
+	// 		confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
+	// 	})
+	// } else {
+	// 	// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+	// }
 }
 
 async function resolucionEstatuto(idSociedad, veredicto, observaciones) {
@@ -78,7 +78,11 @@ async function aprobarEstatuto(idSociedad) {
 				icon: 'success',
 				title: 'El estatuto ha sido aprobado correctamente!',
 				showConfirmButton: true,
-				confirmButtonText: `<a onclick = location.reload();>Continuar</a>`
+				confirmButtonText: `Continuar`
+			}).then((result) => {
+				if (result.isConfirmed) {
+					location.reload()
+				}
 			})
 		} else {
 			mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
