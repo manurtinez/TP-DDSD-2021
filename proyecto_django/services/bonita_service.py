@@ -200,7 +200,7 @@ def get_cases_for_task(session, task_name):
     try:
         case_ids = []
         task_list = bonita_api_call(session,
-                                    '/bpm/humanTask', 'get', f'?f=displayName={task_name}')
+                                    '/bpm/humanTask', 'get', f'?c=1000000&f=displayName={task_name}')
         for task in task_list:
             case_ids.append(int(task['caseId']))
         return case_ids
