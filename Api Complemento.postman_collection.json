@@ -441,6 +441,71 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Carpeta Digital",
+			"item": [
+				{
+					"name": "Crear PDF en Google Drive",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre_sociedad",
+									"value": "FedProducciones",
+									"type": "text"
+								},
+								{
+									"key": "fecha_creacion",
+									"value": "5/08/2021",
+									"type": "text"
+								},
+								{
+									"key": "qr",
+									"value": "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",
+									"type": "text"
+								},
+								{
+									"key": "socios[0][0]",
+									"value": "pepe",
+									"type": "text"
+								},
+								{
+									"key": "socios[0][1]",
+									"value": "40",
+									"type": "text"
+								},
+								{
+									"key": "socios[1][0]",
+									"value": "Maria",
+									"type": "text"
+								},
+								{
+									"key": "socios[1][1]",
+									"value": "60",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/api/drive/carpeta-digital",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"drive",
+								"carpeta-digital"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

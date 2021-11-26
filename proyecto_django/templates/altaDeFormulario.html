@@ -110,23 +110,23 @@
 
         <div class="row " id="containerExporta" hidden>
 
-        <div id="sociedad_anonima_vue" class="col-auto cmb-4">
-          <!-- continentes -->
-          <select class="form-select" v-model="continente" @change="getPaises()">
-            <option selected>Continente</option>
-            <option v-for="item in continentes" :value="item">{{item.name}}</option>
-          </select>
-          <!-- paises -->
-          <select class="form-select"v-model="pais" :disabled="continente == null" @change="getEstados()">
-            <option selected>Pais</option>
-            <option v-for="item in paises" :value="item">{{item.name}}</option>
-          </select>
-          <!-- estados -->
-          <select class="form-select" v-model="estado" :disabled="pais == null">
-            <option selected>Open this select menu</option>
-            <option v-for="item in estados" :value="item">{{item.name}}</option>
-          </select>
-        </div>
+          <div id="sociedad_anonima_vue" class="col-auto cmb-4">
+            <!-- continentes -->
+            <select class="form-select" v-model="continente" @change="getPaises()">
+              <option selected :value="null">Continente</option>
+              <option v-for="cont in continentes" :value="cont">-<%cont.name%></option>
+            </select>
+            <!-- paises -->
+            <select class="form-select"v-model="pais" :disabled="continente == null" @change="getEstados()">
+              <option selected :value="null">Pais</option>
+              <option v-for="pais in paises" :value="pais">-<%pais.name%></option>
+            </select>
+            <!-- estados -->
+            <select class="form-select" v-model="estado" :disabled="pais == null">
+              <option selected :value="null">Estados</option>
+              <option v-for="estado in estados" :value="estado">-<%estado.name%></option>
+            </select>
+          </div>
 
           <div id="containerEstados" class="col-auto cmb-4" hidden>
             <div class="input-group">
@@ -257,6 +257,7 @@
 
     var vue = new Vue({
       el: '#sociedad_anonima_vue',
+      delimiters: ["<%","%>"],
       data() {
           return {
             continentes: [],
@@ -265,7 +266,7 @@
             continente: null,
             pais: null,
             estado: null,
-            calle: ''
+            calle: 'dsvgsadgs'
           };
       },
       computed: {},
@@ -273,10 +274,7 @@
       mounted() {
           axios.get("http://localhost/api/geo/continente")
           .then((response) => {
-              this.continentes.push({ value: null, text: 'Continente', disabled: true });
-              response.data.forEach(element => {
-                this.continentes.push({value: element, text: element.name});
-              });
+              this.continentes = response.data;
           }).catch((error) => {
               console.log(error);
           });
@@ -287,10 +285,7 @@
           .then((response) => {
               this.paises = [];
               this.estados = [];
-              this.paises.push({ value: null, text: 'Pais', disabled: true });
-              response.data.forEach(element => {
-                this.paises.push({value: element, text: element.name});
-              });
+              this.paises = response.data;
               this.pais = null;
               this.estado = null;
           }).catch((error) => {
@@ -301,13 +296,10 @@
           axios.get("http://localhost/api/geo/pais/"+this.pais.code+"/estado")
           .then((response) => {
               this.estados = [];
-              this.estados.push({ value: null, text: 'Estado', disabled: true });
               if(response.data.isEmpty){
-                this.estados.push({ value: {code: 'Sin Estado', name: ''}, text: 'Sin Estado' });
+                this.estados.push({ code: 'Sin Estado', name: '' });
               }
-              response.data.forEach(element => {
-                this.estados.push({value: element, text: element.name});
-              });
+              this.estados =  response.data;
               this.estado = null;
           }).catch((error) => {
               console.log(error);

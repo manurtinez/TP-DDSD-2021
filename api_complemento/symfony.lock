@@ -82,11 +82,35 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "dompdf/dompdf": {
+        "version": "v1.1.1"
+    },
     "egulias/email-validator": {
         "version": "3.1.2"
     },
+    "firebase/php-jwt": {
+        "version": "v5.5.1"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
+    },
+    "google/apiclient": {
+        "version": "2.11",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "49c5d7a66d863d28513979bf0666dc77599100c0"
+        },
+        "files": [
+            "config/packages/google_apiclient.yaml"
+        ]
+    },
+    "google/apiclient-services": {
+        "version": "v0.223.0"
+    },
+    "google/auth": {
+        "version": "v1.18.0"
     },
     "guzzlehttp/guzzle": {
         "version": "7.4.0"
@@ -99,6 +123,9 @@
     },
     "laminas/laminas-code": {
         "version": "4.4.3"
+    },
+    "laminas/laminas-escaper": {
+        "version": "2.9.0"
     },
     "lcobucci/clock": {
         "version": "2.0.0"
@@ -118,6 +145,9 @@
             "./config/packages/lexik_jwt_authentication.yaml"
         ]
     },
+    "monolog/monolog": {
+        "version": "2.3.5"
+    },
     "namshi/jose": {
         "version": "7.2.3"
     },
@@ -135,6 +165,21 @@
     },
     "nikic/php-parser": {
         "version": "v4.13.0"
+    },
+    "paragonie/constant_time_encoding": {
+        "version": "v2.4.0"
+    },
+    "phenx/php-font-lib": {
+        "version": "0.5.2"
+    },
+    "phenx/php-svg-lib": {
+        "version": "0.3.4"
+    },
+    "phpoffice/phpword": {
+        "version": "0.18.2"
+    },
+    "phpseclib/phpseclib": {
+        "version": "3.0.11"
     },
     "psr/cache": {
         "version": "2.0.0"
@@ -156,6 +201,9 @@
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
+    },
+    "sabberworm/php-css-parser": {
+        "version": "8.3.1"
     },
     "sensio/framework-extra-bundle": {
         "version": "6.2",
