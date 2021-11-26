@@ -203,7 +203,11 @@ async function registrarSociedad() {
 			icon: 'success',
 			title: 'La sociedad ha sido guardada correctamente!',
 			showConfirmButton: true,
-			confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
+			confirmButtonText: 'Continuar'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				location.reload()
+			}
 		})
 		const parsedResponse = await response.json();
 
@@ -278,9 +282,8 @@ async function getSociedadesPorTask(estadoTarea) {
 			newCell.appendChild(newText);
 		}
 	} catch (error) {
-		window.location.replace(localHost+"/login");
 		// mostrarModalMensaje('Ocurrió un error al obtener las sociedades. Por favor, refresque la página');
-		// console.log(error);
+		console.log(error);
 	}
 }
 
