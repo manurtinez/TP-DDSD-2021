@@ -1,3 +1,5 @@
+## Se incluye el modelo de bonita en un archivo `.bos` en la raiz del proyecto, para ser importado al studio.
+
 # Pasos para correr el proyecto django
 
 1. Tener `Docker` instalado (junto con `docker compose`). En windows, `Docker Desktop` trae ambos, en linux fijarse [en este link](https://docs.docker.com/engine/install/).
