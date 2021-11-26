@@ -61,7 +61,7 @@ async function enviarMail(idSociedad) {
 			icon: 'success',
 			title: 'El mail ha sido enviado correctamente!',
 			showConfirmButton: true,
-			confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
+			confirmButtonText: 'Continuar'
 		})
 		
 	} else {
@@ -89,7 +89,11 @@ if (response.status === 200) {
 		icon,
 		title: 'La sociedad ha sido '+mensaje+' correctamente!',
 		showConfirmButton: true,
-		confirmButtonText: '<a onclick=location.reload();>Continuar</a>'
+		confirmButtonText: 'Continuar'
+	}).then((result) => {
+		if (result.isConfirmed) {
+			location.reload()
+		}
 	})
 	
 } else {

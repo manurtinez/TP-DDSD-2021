@@ -24,9 +24,9 @@ async function calcularEstadisticasME() {
 	spansTotal = document.querySelectorAll('.totalSociedadesRegistradas');
 	let totalAprobados = datos["aprobados"];
   let totalRechazados = parseInt(datos["rechazados"]);
-	spanCantConfirmaciones.textContent = totalAprobados;
-	spanCantRechazos.textContent = totalRechazados;
-	total = totalAprobados + totalRechazados;
+	spanCantConfirmaciones.textContent = isNaN(totalAprobados) ? 0 : totalAprobados;
+	spanCantRechazos.textContent = isNaN(totalRechazados) ? 0 : totalRechazados;
+	total = isNaN(totalAprobados + totalRechazados) ? 0 : totalAprobados + totalRechazados;
 	spansTotal.forEach(span => {
 		span.textContent = total;
 	});
@@ -52,10 +52,10 @@ async function calcularEstadisticasLegales() {
 	spansTotal = document.querySelectorAll('.totalEstatutosEvaluados');
 	let totalAprobados = datos["aprobados"];
   let totalRechazados = parseInt(datos["rechazados"]);
-	spanCantConfirmacionesLegales.textContent = totalAprobados;
+	spanCantConfirmacionesLegales.textContent = isNaN(totalAprobados) ? 0 : totalAprobados;
 
-	spanCantRechazosLegales.textContent = totalRechazados;
-	total = totalAprobados + totalRechazados;
+	spanCantRechazosLegales.textContent = isNaN(totalRechazados) ? 0 : totalRechazados;
+	total = isNaN(totalAprobados + totalRechazados) ? 0 : totalAprobados + totalRechazados;
 	
 	spansTotal.forEach(span => {
 		span.textContent = total;
@@ -69,7 +69,7 @@ async function calcularEstadisticasLegales() {
 
 
 function completarPorcentajes(unPorcentaje,spanTextoPorcentaje,barraPorcentaje) {
-	spanTextoPorcentaje.textContent = unPorcentaje;
+	spanTextoPorcentaje.textContent = isNaN(unPorcentaje) ? 0 : unPorcentaje;
 	barraPorcentaje.style.width = unPorcentaje+"%";
 }
 
@@ -81,9 +81,9 @@ async function mostrarSociedadesEnProcesoAprobacion() {
 		spansTotal = document.querySelectorAll('.totalEstatutosEvaluados');
 		let totalActivos = response["activos"];
 		let totalFinalizados = response["finalizados"];
-		let total = totalActivos + totalFinalizados;
-		spanCantSociedadesActivas.textContent = totalActivos;		
-		spanTotalSociedades.textContent = total;
+		let total = isNaN(totalActivos + totalFinalizados) ? 0 : totalActivos + totalFinalizados;
+		spanCantSociedadesActivas.textContent = isNaN(totalActivos) ? 0 : totalActivos;		
+		spanTotalSociedades.textContent = isNaN(total) ? 0 : total;
 
 		let porcentajeProcesoAprobacion = (totalActivos * 100) / total;
 		completarPorcentajes(porcentajeProcesoAprobacion.toFixed(2),porcentajeSociedadesProcesoAprobacion,barraPorcentajeSociedadesProcesoAprobacion);		
@@ -95,8 +95,7 @@ async function mostrarSociedadesEnProcesoAprobacion() {
 
 // ESTADISTICAS TIEMPO DE RESOLUCION DE LOS PROCESOS
 function mostrarTiempoResolucionProcesos() {
-	tiempoResolucionProcesos.textContent= "2hs 45 minutos (desde JS)";
-
+	tiempoResolucionProcesos.textContent= "2hs 45 minutos";
 }
 
 

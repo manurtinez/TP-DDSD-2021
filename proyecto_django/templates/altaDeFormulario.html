@@ -23,7 +23,7 @@
 <body class="bg-light" onload="refrescarTabla_Select()">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'alta_formulario' %}">Sistema de Sociedades</a>
+      <a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
         aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -109,30 +109,26 @@
         </div>
 
         <div class="row " id="containerExporta" hidden>
-          <div class="col-auto cmb-4">
-            <div class="input-group">
-              <span class="input-group-text border-0">País:</span>
-              <div class="input-group-text"><i class="fas fa-globe-americas"></i></div>
-              <button class="btn btn-primary w-auto" type="button"
-                onclick="if (paisesDeExportacion.hidden==true){paisesDeExportacion.hidden=false}else{paisesDeExportacion.hidden=true} ">Seleccioná
-                los Paises... <i class="fas fa-angle-down"></i>
-              </button>
-            </div>
-            <select autocomplete="off" id="paisesDeExportacion" name="paisesDeExportacion"
-              class="form-select select-checkbox w-100" hidden multiple size="auto"
-              onmousedown="customSelect(event,this);">
-              <option value="">Mexico</option>
-              <option value="">España</option>
-              <option value="">Suiza</option>
-              <option value="">Francia</option>
-              <option value="">Colombia</option>
-              <option value="">Chile</option>
-              <option value="">Peru</option>
-              <option value="">Australia</option>
-            </select>
-          </div>
 
-          <div class="col-auto cmb-4">
+        <div id="sociedad_anonima_vue" class="col-auto cmb-4">
+          <!-- continentes -->
+          <select class="form-select" v-model="continente" @change="getPaises()">
+            <option selected>Continente</option>
+            <option v-for="item in continentes" :value="item">{{item.name}}</option>
+          </select>
+          <!-- paises -->
+          <select class="form-select"v-model="pais" :disabled="continente == null" @change="getEstados()">
+            <option selected>Pais</option>
+            <option v-for="item in paises" :value="item">{{item.name}}</option>
+          </select>
+          <!-- estados -->
+          <select class="form-select" v-model="estado" :disabled="pais == null">
+            <option selected>Open this select menu</option>
+            <option v-for="item in estados" :value="item">{{item.name}}</option>
+          </select>
+        </div>
+
+          <div id="containerEstados" class="col-auto cmb-4" hidden>
             <div class="input-group">
               <span class="input-group-text border-0">Estado:</span>
               <div class="input-group-text"><i class="fas fa-flag-usa"></i></div>
@@ -248,6 +244,78 @@
     </div>
   </form>
 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+  <script>
+      Vue.mixin({
+        computed: {
+            urlApi: function () {
+                return "http://localhost/api";
+            }
+        }
+    });
+
+    var vue = new Vue({
+      el: '#sociedad_anonima_vue',
+      data() {
+          return {
+            continentes: [],
+            paises: [{ value: null, text: 'Pais', disabled: true }],
+            estados: [{ value: null, text: 'Estado', disabled: true }],
+            continente: null,
+            pais: null,
+            estado: null,
+            calle: ''
+          };
+      },
+      computed: {},
+
+      mounted() {
+          axios.get("http://localhost/api/geo/continente")
+          .then((response) => {
+              this.continentes.push({ value: null, text: 'Continente', disabled: true });
+              response.data.forEach(element => {
+                this.continentes.push({value: element, text: element.name});
+              });
+          }).catch((error) => {
+              console.log(error);
+          });
+      },
+      methods: {
+        getPaises(){
+          axios.get("http://localhost/api/geo/continente/"+this.continente.code+"/pais")
+          .then((response) => {
+              this.paises = [];
+              this.estados = [];
+              this.paises.push({ value: null, text: 'Pais', disabled: true });
+              response.data.forEach(element => {
+                this.paises.push({value: element, text: element.name});
+              });
+              this.pais = null;
+              this.estado = null;
+          }).catch((error) => {
+              console.log(error);
+          });
+        },
+        getEstados(){
+          axios.get("http://localhost/api/geo/pais/"+this.pais.code+"/estado")
+          .then((response) => {
+              this.estados = [];
+              this.estados.push({ value: null, text: 'Estado', disabled: true });
+              if(response.data.isEmpty){
+                this.estados.push({ value: {code: 'Sin Estado', name: ''}, text: 'Sin Estado' });
+              }
+              response.data.forEach(element => {
+                this.estados.push({value: element, text: element.name});
+              });
+              this.estado = null;
+          }).catch((error) => {
+              console.log(error);
+          });
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>
