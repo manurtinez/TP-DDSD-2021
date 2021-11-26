@@ -1,4 +1,4 @@
-import requests
+from datetime import datetime
 
 from .bonita_service import bonita_api_call
 
@@ -112,3 +112,27 @@ def max_stats_user(session, condition):
         results.append(
             {'id': id, 'nombre': user_data['firstname'], 'apellido': user_data['lastname'], 'rol': role, 'cantidad': count})
     return results
+
+
+def average_case_resolution(session):
+    """"""
+    # Obtener proceso de bonita para usar el ID
+    bonita_process = bonita_api_call(
+        session, '/bpm/process', 'get', '?s=Proceso')[0]
+
+    # Traer casos completados
+    completed_cases = bonita_api_call(
+        session, '/bpm/archivedCase', 'get', '?f=processDefinitionId={}'.format(bonita_process['id']))
+
+    total_time = 0
+
+    for case in completed_cases:
+        start_date = datetime.strptime(case['start'].split('.')[
+                                       0], '%Y-%m-%d %H:%M:%S')
+        end_date = datetime.strptime(case['end_date'].split('.')[
+                                     0], '%Y-%m-%d %H:%M:%S')
+
+        total_time += (end_date - start_date).seconds
+
+    average = total_time / len(completed_cases)
+    return average

@@ -6,7 +6,7 @@ from formulario.models import SociedadAnonima
 from services.bonita_service import (bonita_login_call,
                                      bonita_logout,
                                      get_cases_for_task)
-from services.bonita_statistics import area_statistics, get_open_cases, max_stats_user
+from services.bonita_statistics import area_statistics, average_case_resolution, get_open_cases, max_stats_user
 from formulario.permissions import bonita_permission
 from formulario.serializers import SociedadAnonimaRetrieveSerializer
 
@@ -120,3 +120,12 @@ def estadisticas_usuario(request, *args, **kwargs):
     condition = kwargs['condicion']
     results = max_stats_user(request.session, condition)
     return Response(data=results, status=status.HTTP_200_OK)
+
+
+@api_view()
+def estadistica_promedio_resolucion(request):
+    if not bonita_permission(request, 'any'):
+        # Se necesita estar logeado (con cualquier usuario) para acceder
+        return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
+    average = average_case_resolution(request.session)
+    return Response(data=average, status=status.HTTP_200_OK)
