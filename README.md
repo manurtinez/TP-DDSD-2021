@@ -12,7 +12,14 @@ IMPORTANTE: Cada vez que se agreguen modelos nuevos, o se cambien los existentes
 
 IMPORTANTE 2: Se DEBE tener corriendo el Bonita Studio (y su servidor) para poder realizar CUALQUIER accion que requiera de bonita (que son casi todas). Algunas acciones funcionaran de todas formas, pero tiraran errores.
 
+IMPORTANTE 3: la imagen de la api complemento puede que tarde en construirse. Tener paciencia
+
 A este punto, la app deberia estar corriendo en `localhost:8000`, y se puede ver desde el navegador.
 Asimismo, la api complementaria quedara servida en `localhost`.
+
+Las credenciales de los usuarios (cada uno con el rol que indica su nombre) que se incluyen son:
+
+- Nombres de usuario: Apoderado1, JuancitoMesa, JuancitoEscribano, JuancitoDireccion
+- contraseña: bpm (para todos)
 
 ADICIONALMENTE, el comando `docker exec -ti django_DSSD manage.py collectstatic` debe ser usado para generar los estaticos de la interfaz admin de django, si se quiere usar. Para usar la interfaz de admin, debe crearse un superusuario con `docker exec -ti django_DSSD python manage.py createsuperuser`, y luego, entrar a `localhost:8000/admin` con el usuario y contraseña
