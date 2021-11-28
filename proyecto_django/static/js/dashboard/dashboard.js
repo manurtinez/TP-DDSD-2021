@@ -6,6 +6,12 @@ function obtenerDatosIniciales() {
 	this.mostrarSociedadesEnProcesoAprobacion();
     this.calcularEstadisticasME();
 	this.calcularEstadisticasLegales();
+	// Estadisticas legales
+	mostrarContieneMayorExportacion();
+	mostrarLenguajesDePaisesMayorExportacion();
+	mostrarProvinciasMayorRegistroSociedades();
+	mostrarContinentesPaisesNoExportacion();
+
 }
 
 // ESTADISTICAS MESA DE ENTRADAS
@@ -23,7 +29,7 @@ async function calcularEstadisticasME() {
 	let datos = await obtenerEstadisticasME();
 	spansTotal = document.querySelectorAll('.totalSociedadesRegistradas');
 	let totalAprobados = datos["aprobados"];
-  let totalRechazados = parseInt(datos["rechazados"]);
+    let totalRechazados = parseInt(datos["rechazados"]);
 	spanCantConfirmaciones.textContent = isNaN(totalAprobados) ? 0 : totalAprobados;
 	spanCantRechazos.textContent = isNaN(totalRechazados) ? 0 : totalRechazados;
 	total = isNaN(totalAprobados + totalRechazados) ? 0 : totalAprobados + totalRechazados;
@@ -102,7 +108,6 @@ function mostrarTiempoResolucionProcesos() {
 // ESTADISTICAS USUARIOS CON MAYOR CANTIDAD DE RECHAZOS
 async function mostrarUsuariosMayorCantRechazos() {
 	let response = await fetch(localHost + '/estadisticas/usuarios/rechazos').then(response => response.json());
-
 	if (response) {
 		response.forEach(dato => {  
 			//comentarioPrueba.textContent = dato.nombre;
@@ -148,6 +153,30 @@ async function mostrarUsuariosMayorCantAprobaciones() {
 	} else {
 		return false;
 	}
+}
+
+
+
+// ESTADISTICAS GEOGRÁFICAS
+
+// CONTINENTE HACIA DONDE MAS SE EXPORTA
+async function mostrarContieneMayorExportacion() {
+	continenteMayorExportacion.textContent= "Europa";
+}
+
+// LENGUAJES DE PAISES HACIA DONDE MAS SE EXPORTA
+async function mostrarLenguajesDePaisesMayorExportacion() {
+
+}
+
+// PROVINCIAS DONDE SE REGISTRAN MAS SOCIEDADES
+async function mostrarProvinciasMayorRegistroSociedades() {
+
+}
+
+// CONTINENTES/PAISES A LOS QUE NO SE EXPORTA
+async function mostrarContinentesPaisesNoExportacion() {
+
 }
 
 
