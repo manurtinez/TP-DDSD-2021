@@ -4,9 +4,7 @@ import environ
 import traceback
 
 
-from django.conf import settings
-
-from .types import java_types
+from .types import BonitaNotOpenException, java_types
 
 # # el objeto env se usa para traer las variables de entorno
 env = environ.Env()
@@ -52,8 +50,11 @@ def bonita_api_call(session, resource,  method, url_params='', data={}):
     except json.decoder.JSONDecodeError:
         print('La respuesta del servidor estaba vacia')
         return True
+    except requests.exceptions.ConnectionError as conn_e:
+        print('Exception de conexion: ', conn_e)
+        raise BonitaNotOpenException
     except requests.exceptions.RequestException as req_e:
-        print(req_e)
+        print('Excepcion de request: ', req_e)
         return False
 
 
@@ -103,8 +104,11 @@ def bonita_login_call(session, user, password):
                 user_data['id'])
             session['bonita_role'] = bonita_api_call(
                 session, '/identity/membership', 'get', url_params)[0]['role_id']['name']
-    except (requests.exceptions.RequestException, ) as e:
-        print(e)
+    except requests.exceptions.ConnectionError as conn_e:
+        print(conn_e)
+        raise BonitaNotOpenException
+    except requests.exceptions.RequestException as req_e:
+        print(req_e)
         return 500
     except KeyError as e:
         print('KeyError: ' + str(e))
@@ -151,6 +155,9 @@ def start_bonita_process(session, new_sa):
         #             'type': java_types[type(value).__name__], 'value': value})
 
         return bonita_case
+    except requests.exceptions.ConnectionError as conn_e:
+        print(conn_e)
+        raise BonitaNotOpenException
     except (requests.exceptions.RequestException, KeyError):
         print('Error al iniciar proceso de bonita --> ', traceback.format_exc())
         return None

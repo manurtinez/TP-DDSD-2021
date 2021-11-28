@@ -13,3 +13,10 @@ class JWTException(Exception):
     Esta simple excepcion es para saber cuando hubo un error de JWT y actuar en consecuencia
     """
     pass
+
+
+class BonitaNotOpenException(Exception):
+    """
+    Uso esta excepcion para determinar que el fallo fue debido a que el server de bonita no esta corriendo o no se encuentra disponible
+    """
+    pass

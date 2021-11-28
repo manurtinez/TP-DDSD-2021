@@ -3,6 +3,7 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from formulario.models import SociedadAnonima
+from services.types import BonitaNotOpenException
 from services.bonita_service import (bonita_login_call,
                                      bonita_logout,
                                      get_cases_for_task)
@@ -32,7 +33,11 @@ class BonitaViewSet(viewsets.ViewSet):
         Returns:
             * list[int] | None
         """
-        case_ids = get_cases_for_task(request.session, kwargs['task_name'])
+        try:
+            case_ids = get_cases_for_task(request.session, kwargs['task_name'])
+        except BonitaNotOpenException:
+            return Response(
+                data='El servidor de Bonita no se encuentra corriendo o no esta disponible', status=status.HTTP_503_SERVICE_UNAVAILABLE)
         queryset = SociedadAnonima.objects.filter(case_id__in=case_ids)
         serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -48,8 +53,12 @@ def bonita_login(request):
         * password (str): contraseña de bonita del usuario
     """
     data = request.data
-    response_code = bonita_login_call(request.session,
-                                      data['user'], data['password'])
+    try:
+        response_code = bonita_login_call(request.session,
+                                          data['user'], data['password'])
+    except BonitaNotOpenException:
+        return Response(
+            data='El servidor de Bonita no se encuentra corriendo o no esta disponible', status=status.HTTP_503_SERVICE_UNAVAILABLE)
     if response_code == 204:
         role = request.session['bonita_role']
         if role == 'Empleado mesa':
@@ -63,8 +72,6 @@ def bonita_login(request):
         # Agregar caso para el dashboard cuanto este el usuario admin
     elif response_code == 401:
         return Response(data="Las credenciales fueron incorrectas", status=status.HTTP_401_UNAUTHORIZED)
-    else:
-        return Response(data="Hubo algun problema interno realizando el login", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view()
@@ -90,8 +97,12 @@ def estadisticas_por_area(request, *args, **kwargs):
     if not bonita_permission(request, 'any'):
         # Se necesita estar logeado (con cualquier usuario) para acceder
         return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
-    area = kwargs['area']
-    results = area_statistics(request.session, area)
+    try:
+        area = kwargs['area']
+        results = area_statistics(request.session, area)
+    except BonitaNotOpenException:
+        return Response(
+            data='El servidor de Bonita no se encuentra corriendo o no esta disponible', status=status.HTTP_503_SERVICE_UNAVAILABLE)
     return Response(data=results, status=status.HTTP_200_OK)
 
 
@@ -107,9 +118,12 @@ def estadisticas_casos_abiertos(request):
     if not bonita_permission(request, 'any'):
         # Se necesita estar logeado (con cualquier usuario) para acceder
         return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
-    count = get_open_cases(request.session)
-    return Response(data=count, status=status.HTTP_200_OK) if count else Response(
-        data='Hubo algun problema al calcular la estadistica', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    try:
+        count = get_open_cases(request.session)
+    except BonitaNotOpenException:
+        return Response(
+            data='El servidor de Bonita no se encuentra corriendo o no esta disponible', status=status.HTTP_503_SERVICE_UNAVAILABLE)
+    return Response(data=count, status=status.HTTP_200_OK)
 
 
 @api_view()
@@ -117,8 +131,12 @@ def estadisticas_usuario(request, *args, **kwargs):
     if not bonita_permission(request, 'any'):
         # Se necesita estar logeado (con cualquier usuario) para acceder
         return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
-    condition = kwargs['condicion']
-    results = max_stats_user(request.session, condition)
+    try:
+        condition = kwargs['condicion']
+        results = max_stats_user(request.session, condition)
+    except BonitaNotOpenException:
+        return Response(
+            data='El servidor de Bonita no se encuentra corriendo o no esta disponible', status=status.HTTP_503_SERVICE_UNAVAILABLE)
     return Response(data=results, status=status.HTTP_200_OK)
 
 
@@ -127,5 +145,9 @@ def estadistica_promedio_resolucion(request):
     if not bonita_permission(request, 'any'):
         # Se necesita estar logeado (con cualquier usuario) para acceder
         return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
-    average = average_case_resolution(request.session)
+    try:
+        average = average_case_resolution(request.session)
+    except BonitaNotOpenException:
+        return Response(
+            data='El servidor de Bonita no se encuentra corriendo o no esta disponible', status=status.HTTP_503_SERVICE_UNAVAILABLE)
     return Response(data=average, status=status.HTTP_200_OK)
