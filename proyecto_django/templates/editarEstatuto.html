@@ -1,3 +1,4 @@
+<!-- {% load static %} -->
 <!DOCTYPE html>
 <html lang="es">
 
@@ -5,6 +6,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--<link rel="icon" href="images/logo.ico">-->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
@@ -13,9 +15,9 @@
   <link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
   <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/sociedad.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/socios.js' %}"></script>
+ 
 
-  <title>Editar estatuto | Dirección Nacional de Personas Jurídicas</title>
+  <title>Modificación de estatuto | Dirección Nacional de Personas Jurídicas</title>
 </head>
 
 <body class="bg-light" onload="refrescarTabla_Select()">
@@ -29,19 +31,19 @@
     </div>
   </nav>
 
-  <form action={% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data"
-    class="card container shadow pb-4 px-4 my-5" id="formularioSociedad" name="formularioSociedad"
-    onsubmit="return validarFormulario(event);">
+ <form  action= {% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data"
+    class="card container shadow pb-4 px-4 my-5" id="formularioSociedadEditar" name="formularioSociedadEditar"
+    onsubmit="return validarFormularioEditarSociedad(event);" >
     {% csrf_token %}
     <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Modificación de estatuto</h3>
     <div class="card-body shadow my-4 text-left px-0 py-4" id="bodyFormulario">
       <h4><span class="badge etiqueta-form bg-primary">Estatuto</span></h4>
       <section class="container container-form" id="containerSociedad">
         <div class="input-group cmy-4">
-          <span class="input-group-text border-0"> Nombre de la sociedad:</span>
+          <span class="input-group-text border-0"> Nombre:</span>
           <div class="input-group-text"><i class="fas fa-users"></i></div>
           <input type="text" class="form-control w-auto" id="nombreSociedad" name="nombreSociedad"
-            value=" Juan Rodriguez & Roberto Fernandez Sociedad de Hecho" disabled>
+            value="Por ej. Juan Rodriguez & Roberto Fernandez Sociedad de Hecho" disabled>
         </div>
 
         <div class="input-group  cmb-4">
@@ -49,7 +51,6 @@
           <div class="input-group-text"><i class="fas fa-paperclip"></i></div>
           <input type="file" class="" value="" id="estatuto" name="estatuto">
         </div>
-        <div class="row " id="containerExporta" hidden>
       </section>
     </div>
     <div class="text-center">
@@ -58,7 +59,7 @@
     </div>
   </form>
 
-
+ 
 </body>
 
 </html>
