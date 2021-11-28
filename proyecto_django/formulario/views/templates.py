@@ -25,3 +25,11 @@ def ver_sa_publica(request):
 
 def alta_sa(request):
     return render(request, 'altaDeFormulario.html')
+
+
+def editar_sa(request):
+    return render(request, 'editarFormulario.html')
+
+
+def editar_estatuto(request):
+    return render(request, 'editarEstatuto.html')

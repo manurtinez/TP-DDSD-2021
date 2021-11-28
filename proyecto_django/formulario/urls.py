@@ -9,7 +9,7 @@ from formulario.views.sa import SociedadAnonimaViewSet
 from formulario.views.socios import SocioViewSet
 from formulario.views.templates import (a_evaluar_estatuto, alta_sa, dashboard,
                                         login_template, pendientes,
-                                        ver_sa_publica)
+                                        ver_sa_publica, editar_estatuto, editar_sa)
 
 # Create default router and add viewsets
 router = DefaultRouter()
@@ -22,6 +22,8 @@ urlpatterns = [
     path('', include(router.urls)),
     # TODO refactorizar estos template views, pasarlos al ViewSet para simplificar estas urls
     path('sociedad_anonima/alta', alta_sa, name="alta_formulario"),
+    path('sociedad_anonima/estatuto/editar', editar_estatuto, name="editar_estatuto"),
+    path('sociedad_anonima/editar', editar_sa, name="editar_sa"),
     path('sociedad_anonima/ver', ver_sa_publica, name="ver_sociedad_publica"),
     path('sociedad_anonima/pendientes', pendientes,
          name="listado_sociedades_pendientes_aprobacion"),

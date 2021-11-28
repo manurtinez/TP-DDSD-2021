@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Tablero de control gerencial</title>
+	<title>Tablero de control gerencial | Dirección Nacional de Personas Jurídicas</title>
 	<link href="{% static 'css/all.min.css' %}" rel="stylesheet" type="text/css">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
 	<link
@@ -253,13 +253,91 @@
 										</div>
 									</div>
 								</div>
+							</div>										
+						</div>
+					</div>
+				</div>
+
+				<!-- ESTADISTICAS GEOGRAFICAS -->
+				<div class="row justify-content-center mt-5">				
+					<h1 class="my-4 text-gray-800  font-weight-bold text-center ">Estadísticas geográficas</h1>
+					<div class="col-xl-2 col-md-6 mb-4 h-100">					
+						<div class="card border-left-info shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-info text-uppercase mb-1">Continente hacia donde más se exporta</div>
+										<div class="h5 mb-0 font-weight-bold text-gray-800 mt-4" id="continenteMayorExportacion"></div>
+									</div>
+									<div class="col-auto">
+										<i class="fas fa-globe-africa fa-2x text-gray-300"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xl-2 col-md-6 mb-4 h-100">
+						<div class="card border-left-primary shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+											Lenguajes de países hacia donde más se exporta
+										</div>
+										<a href="#modalLenguajesPaisesExporta"  data-target="#modalLenguajesPaisesExporta" data-toggle="modal" class="btn btn-primary btn-icon-split mt-2">
+											<span class="text">Ver lenguajes</span>
+										</a>
+									</div>
+									<div class="col-auto">
+										<span class="h1 text-gray-300"><i class="fas fa-spell-check"></i></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xl-2 col-md-6 mb-4 h-100">
+						<div class="card border-left-info shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+											Provincias donde se registran más sociedades
+										</div>
+										<a href="#modalProvinciasRegistroSociedades"  data-target="#modalProvinciasRegistroSociedades" data-toggle="modal" class="btn btn-info btn-icon-split mt-2">
+											<span class="text">Ver provincias</span>
+									</a>								
+									</div>
+									<div class="col-auto">
+										<span class="h1 text-gray-300"><i class="fas fa-flag"></i></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xl-2 col-md-6 mb-4 h-100">
+						<div class="card border-left-primary shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+											Continentes/paises a los que no se exporta
+										</div>
+										<a href="#modalContientesPaisesExportacion"  data-target="#modalContientesPaisesExportacion" data-toggle="modal" class="btn btn-primary btn-icon-split mt-2">
+											<span class="text">Ver contientes/paises</span>
+									</a>								
+									</div>
+									<div class="col-auto">
+										<span class="h1 text-gray-300"><i class="fas fa-globe-americas"></i></span>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				
-		
-
 		
 
 			<footer class="sticky-footer bg-white">
@@ -270,10 +348,7 @@
 				</div>
 			</footer>
 
-
 		</div>
-
-
 	</div>
 
 	<a class="scroll-to-top rounded" href="#page-top">
@@ -310,11 +385,14 @@
 				<span aria-hidden="true">Volver</span>
 			  </button>
 			</div>
+
+		
+
 		  </div>
 		</div>
 	  </section>
 
-  <!-- MODAL USUARIOS CON MAYOR CANTIDAD DE APROBACIONES -->
+  	<!-- MODAL USUARIOS CON MAYOR CANTIDAD DE APROBACIONES -->
 	  <section class="modal fade" id="modalUsuariosAprobados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-scrollable w-100">
 		  <div class="modal-content">
@@ -346,6 +424,105 @@
 		  </div>
 		</div>
 	  </section>
+
+	<!-- MODALS DE ESTADISTICAS -->	
+	<!-- MODAL LENGUAJES DE PAISES A DONDE MAS SE EXPORTA  -->
+	<section class="modal fade" id="modalLenguajesPaisesExporta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable w-100">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title">Lenguajes de paises a donde más se exporta </h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">×</span>
+			</button>
+			</div>
+			<div class="modal-body">			
+				<table id="tablaUsuariosAprobados" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
+					<thead class="table-primary align-top">
+					  <tr class="px-5">
+						<th scope="col">Lenguaje</th>
+						
+					  </tr>
+					</thead>
+					<tbody>
+						
+					</tbody>
+				  </table>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btnVolver btn-primary" data-dismiss="modal"  aria-label="Close">
+				<span aria-hidden="true">Volver</span>
+			  </button>
+			</div>
+		  </div>
+		</div>
+	  </section>	
+
+	<!-- MODAL PROVINCIAS DONDE SE REGISTRAN MAS SOCIEDADES -->
+	<section class="modal fade" id="modalProvinciasRegistroSociedades" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable w-100">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title">Provincias donde se registran más sociedades </h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">×</span>
+			</button>
+			</div>
+			<div class="modal-body">			
+				<table id="tablaUsuariosAprobados" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
+					<thead class="table-info align-top">
+					  <tr class="px-5">
+						<th scope="col">Provincia</th>
+						
+					  </tr>
+					</thead>
+					<tbody>
+						
+					</tbody>
+				  </table>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btnVolver btn-info" data-dismiss="modal"  aria-label="Close">
+				<span aria-hidden="true">Volver</span>
+			  </button>
+			</div>
+		  </div>
+		</div>
+	  </section>
+
+	<!-- MODAL CONTINENTES/PAISES A LOS QUE NO SE EXPORTA   -->
+	<section class="modal fade" id="modalContientesPaisesExportacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable w-100">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title">Continentes/paises a los que no se exporta</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">×</span>
+			</button>
+			</div>
+			<div class="modal-body">			
+				<table id="tablaUsuariosAprobados" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
+					<thead class="table-primary align-top">
+					  <tr class="px-5">
+						<th scope="col">Contiente</th>
+						<th scope="col">País</th>						
+					  </tr>
+					</thead>
+					<tbody>
+						
+					</tbody>
+				  </table>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btnVolver btn-primary" data-dismiss="modal"  aria-label="Close">
+				<span aria-hidden="true">Volver</span>
+			  </button>
+			</div>
+		  </div>
+		</div>
+	  </section>
+
+
 
 
 	<script type="text/javascript" src="{% static 'js/dashboard/jquery.min.js' %}"></script>

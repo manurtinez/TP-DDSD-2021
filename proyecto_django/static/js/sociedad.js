@@ -337,3 +337,66 @@ async function mostrarSociedad(idSociedad){
 	const modalSociedad = new mdb.Modal(document.getElementById('modalVerDetalle'));
 	modalSociedad.show();
 }
+
+
+
+
+/* async */ function validarFormularioEditarSociedad(event) {
+	// ESTATUTO DE CONFORMACION - VACIO
+	if (document.formularioSociedadEditar.estatuto.value.length == 0) {
+		let $mensaje = 'Por favor, ingresá el estatuto de conformación.';
+		document.formularioSociedadEditar.estatuto.focus();
+		mostrarModalMensaje($mensaje);
+		return false;
+	}
+
+	// ESTATUTO DE CONFORMACION - TAMAÑO DEL ARCHIVO
+	var input = document.getElementById('estatuto');
+	var file = input.files[0];
+	if (file.size > 3000000) {
+		let $mensaje = 'Por favor, el estatuto de conformacón debe pesar menos de 3 megabytes.';
+		mostrarModalMensaje($mensaje);
+		return false;
+	}
+
+	// ESTATUTO DE CONFORMACION - FORMATO DEL ARCHIVO 
+	var fileInput = document.getElementById('estatuto');
+	var filePath = fileInput.value;
+	var extensionesPermitidas = /(.pdf|.docx|.odt)$/i;
+	if (!extensionesPermitidas.exec(filePath)) {
+		fileInput.value = '';
+		let $mensaje = 'Por favor, el formato de archivo del estatuto de conformación debe ser .docx, .odt ó .pdf';
+		mostrarModalMensaje($mensaje);
+		return false;
+	}
+
+	modificarEstatuto();
+	return true;
+}
+
+
+async function modificarEstatuto() {
+	// Modificar el endpoint cuando se tenga el put de actualizar estatuto	
+		const formData = new FormData();
+		formData.append('file', document.getElementById('estatuto').files[0]);
+		const fileResponse = await fetch(`${localHost}/sociedad_anonima/${parsedResponse.id}/subir_archivo/`, {
+			method: 'POST',
+			body: formData,
+		});
+
+		if (response.status === 201) {
+			Swal.fire({
+				position: 'top',
+				icon: 'success',
+				title: 'El estatuto ha sido modificado correctamente!',
+				showConfirmButton: true,
+				confirmButtonText: 'Continuar'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					location.reload()
+				}
+			})			
+		} else if (fileResponse.status !== 200) {		
+			mostrarModalMensaje('Hubo un error al subir el archivo. Por favor, reintentelo');
+		}
+}
