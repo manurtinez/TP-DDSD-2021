@@ -77,6 +77,13 @@ def estampillado_api_call(method, endpoint, data, url_params):
     return response.json()
 
 
+def complementaria_api_call(method, endpoint, data={}, url_params=''):
+    response = requests.request(method, url=env('API_COMPLEMENTARIA_URL')+endpoint+url_params,
+                                data=data
+                                )
+    return response.json()
+
+
 def api_call_with_retry(method, endpoint, data={}, url_params=''):
     """
     Esta funcion realiza un request HTTP al recurso de la API de estampillado que se necesite.

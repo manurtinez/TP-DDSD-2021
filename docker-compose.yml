@@ -38,8 +38,8 @@ services:
     container_name: api_complemento
     ports: 
       - 80:80
-    volumes:
-      - ./api_complemento:/var/www
+    # volumes:
+    #   - ./api_complemento:/var/www
     depends_on:
       - db
     network_mode: "host"
