@@ -166,16 +166,79 @@ async function mostrarContieneMayorExportacion() {
 
 // LENGUAJES DE PAISES HACIA DONDE MAS SE EXPORTA
 async function mostrarLenguajesDePaisesMayorExportacion() {
+	// Ver cual es el endpoint cuando esté definido en django
+	let response = await fetch(localHost + '/estadisticas/usuarios/aprobaciones').then(response => response.json());
+
+	if (response) {
+		response.forEach(dato => {  			
+			let newRow = tablaLenguajesPaisesExporta.tBodies[0].insertRow(-1);
+			let newCell = newRow.insertCell(-1);
+			let newText = document.createTextNode(dato.cantidad);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.rol);
+			newCell.appendChild(newText);			
+			return newRow.rowIndex; 
+		});
+		
+	} else {
+		return false;
+	}
 
 }
 
 // PROVINCIAS DONDE SE REGISTRAN MAS SOCIEDADES
 async function mostrarProvinciasMayorRegistroSociedades() {
+	// Ver cual es el endpoint cuando esté definido en django
+	let response = await fetch(localHost + '/estadisticas/usuarios/aprobaciones').then(response => response.json());
+
+	if (response) {
+		response.forEach(dato => {  			
+			let newRow = tablaProvinciasRegistroSociedades.tBodies[0].insertRow(-1);
+			let newCell = newRow.insertCell(-1);
+			let newText = document.createTextNode(dato.cantidad);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.rol);
+			newCell.appendChild(newText);			
+			return newRow.rowIndex; 
+		});
+		
+	} else {
+		return false;
+	}
 
 }
 
-// CONTINENTES/PAISES A LOS QUE NO SE EXPORTA
+// CONTINENTES/PAISES A LOS QUE NO SE EXPORTA   
 async function mostrarContinentesPaisesNoExportacion() {
+	// Ver cual es el endpoint cuando esté definido en django
+	let response = await fetch(localHost + '/estadisticas/usuarios/aprobaciones').then(response => response.json());
+
+	if (response) {
+		response.forEach(dato => {  			
+			let newRow = tablaContientesPaisesExportacion.tBodies[0].insertRow(-1);
+			let newCell = newRow.insertCell(-1);
+			let newText = document.createTextNode(dato.cantidad);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.rol);
+			newCell.appendChild(newText);			
+			return newRow.rowIndex; 
+		});
+		
+	} else {
+		return false;
+	}
 
 }
 
