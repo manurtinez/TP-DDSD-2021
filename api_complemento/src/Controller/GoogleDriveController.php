@@ -27,12 +27,18 @@ class GoogleDriveController extends ApiController
         $nombre_sociedad = str_replace(' ', '', strtolower($request->get('nombre_sociedad')));
         $fecha_creacion = $request->get('fecha_creacion');
         $qr = $request->get('qr');
+        $estatuto = $request->get('estatuto');
         $socios = $request->get('socios');
 
-        if($nombre_sociedad == null || $fecha_creacion == null || $qr == null || $socios == null){
+        if($nombre_sociedad == null || $fecha_creacion == null || $qr == null || $estatuto == null || $socios == null){
             $this->setStatusCode(400);
             return $this->respondWithErrors("Debe indicar todos los parámetros");
         }
+
+        $estatuto_data = base64_decode($estatuto);
+        $pathTemFileQr = $this->getParameter('kernel.project_dir') . '/public/qr_tmp.png';
+        file_put_contents($pathTemFileQr, $estatuto_data);
+        $googleDriveFile = $this->uploadFileToGoogleDriveAction($file);
 
         $file = new \stdClass();
         $file->fileName = $nombre_sociedad;
@@ -62,8 +68,8 @@ class GoogleDriveController extends ApiController
         
         $templateProcessor->cloneRow('apoderado_nombre', count($socios));
         foreach ($socios as $clave => $valor) {
-            $templateProcessor->setValue('apoderado_nombre#'.($clave+1), $valor[0]);
-            $templateProcessor->setValue('apoderado_porcentaje#'.($clave+1), $valor[1]);
+            $templateProcessor->setValue('apoderado_nombre#'.($clave+1), $valor['nombre']);
+            $templateProcessor->setValue('apoderado_porcentaje#'.($clave+1), $valor['aporte']);
         }
 
         $publicDir = $this->getParameter('kernel.project_dir') . '/public';
