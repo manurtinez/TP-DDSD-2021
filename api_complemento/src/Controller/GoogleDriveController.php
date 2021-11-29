@@ -35,14 +35,19 @@ class GoogleDriveController extends ApiController
             return $this->respondWithErrors("Debe indicar todos los parámetros");
         }
 
-        // $estatuto_data = base64_decode($estatuto);
-        // $pathTemFileQr = $this->getParameter('kernel.project_dir') . '/public/qr_tmp.png';
-        // file_put_contents($pathTemFileQr, $estatuto_data);
-        // $googleDriveFile = $this->uploadFileToGoogleDriveAction($file);
+
+        $estatuto_data = base64_decode($estatuto);
+        $pathTemFileEstatuto = $this->getParameter('kernel.project_dir') . '/public/estatuto_tmp.pdf';
+        file_put_contents($pathTemFileEstatuto, $estatuto_data);
+        $file = new \stdClass();
+        $file->fileName = "estatuto_".$nombre_sociedad;
+        $file->content = file_get_contents($pathTemFileEstatuto);
+        unlink($pathTemFileEstatuto);
+        $estatutoGoogleDriveFile = $this->uploadFileToGoogleDriveAction($file);
 
         $file = new \stdClass();
         $file->fileName = $nombre_sociedad;
-        $file->content = $this->createPDF($nombre_sociedad,$fecha_creacion,$qr,$socios);
+        $file->content = $this->createPDF($nombre_sociedad,$fecha_creacion,$qr,$socios,$estatutoGoogleDriveFile);
 
         $googleDriveFile = $this->uploadFileToGoogleDriveAction($file);
 
@@ -53,11 +58,12 @@ class GoogleDriveController extends ApiController
         ]);
     }
 
-    private function createPDF($nombre_sociedad,$fecha_creacion,$qr,$socios){
+    private function createPDF($nombre_sociedad,$fecha_creacion,$qr,$socios,$estatutoGoogleDriveFile){
         $templateProcessor = new TemplateProcessor($this->getParameter('kernel.project_dir') . '/public/template.docx');
 
         $templateProcessor->setValue('nombre_sociedad', $nombre_sociedad);
         $templateProcessor->setValue('fecha_creacion', $fecha_creacion);
+        $templateProcessor->setValue('estatuto', "https://drive.google.com/open?id=".$estatutoGoogleDriveFile->getId());
         $templateProcessor->setValue('qr', $qr);
 
         $qr_data = base64_decode($qr);
