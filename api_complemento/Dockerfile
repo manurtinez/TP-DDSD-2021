@@ -1,5 +1,5 @@
 FROM php:7.4-apache
- 
+
 RUN a2enmod rewrite
 
 RUN apt-get update && \
@@ -13,23 +13,22 @@ RUN apt-get update && \
     docker-php-ext-install -j$(nproc) zip opcache intl pdo_pgsql pgsql gd && \
     docker-php-ext-enable apcu pdo_pgsql sodium && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
- 
+
 RUN wget https://getcomposer.org/download/2.0.9/composer.phar \
     && mv composer.phar /usr/bin/composer && chmod +x /usr/bin/composer
- 
+
 
 WORKDIR /var/www 
 
 # … cut for readability
- 
+
 COPY docker/apache.conf /etc/apache2/sites-enabled/000-default.conf
-COPY docker/entrypoint.sh /entrypoint.sh
-COPY . /var/www
- 
+COPY --chown=33:33 . /var/www/html/
+
 # … cut for readability
- 
-RUN chmod +x /entrypoint.sh
- 
+
+RUN chmod +x /var/www/html/docker/entrypoint.sh
+
 CMD ["apache2-foreground"]
- 
-ENTRYPOINT ["/entrypoint.sh"]
+
+ENTRYPOINT ["/var/www/html/docker/entrypoint.sh"]
