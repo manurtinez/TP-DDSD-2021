@@ -1,6 +1,6 @@
 // Esto cuando este hecho va a recibir por parametro el id de la sociedad, por ahora siempre la 1
-async function getQR(id) {
-	const response = await fetch(`http://localhost:8000/sociedad_anonima/${id}/obtener_estampillado/`)
+async function getQR(nroEstampillado) {
+	const response = await fetch(`http://localhost:8000/sociedad_anonima/${nroEstampillado}/obtener_estampillado/`)
 	const imgElement = document.getElementById('qrSociedad')
 	if (response.status === 200) {
 		jsonResponse = await response.json()
@@ -25,8 +25,8 @@ return socio != null ? socio : false;
 
 async function mostrarSociedad() {
 	let params = new URLSearchParams(location.search);
-	let nroExp = params.get('nroExpediente');
-	getQR(nroExp);
+	let nroEstampillado = params.get('nroEstampillado');
+	getQR(nroEstampillado);
 	const sociedad = await sociedadPorId(nroExp);  
 	nombreSociedad.value = sociedad.name;
 	fechaCreacion.value =  fechaToString(new Date(sociedad.creation_date+" 00:00"));
