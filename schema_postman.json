@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ccc3984d-03e4-4935-8c8d-81cf7081336b",
+		"_postman_id": "b6864dde-925c-4b22-a52e-dab8016a3612",
 		"name": "proyecto DSSD",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -934,7 +934,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"sociedad1\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30\r\n        }\r\n    ],\r\n    \"export_countries\": [\r\n        \"argentina\",\r\n        \"brasil\"\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"asd\"\r\n}",
+									"raw": "{\r\n    \"name\": \"s\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30\r\n        }\r\n    ],\r\n    \"export_countries\": [\r\n        \"argentina\",\r\n        \"brasil\"\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"asd\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -966,19 +966,19 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "/home/manu/tp-agronomia-oo2/doc/Proyecto_TP_Final_POO2.pdf"
+											"src": "/C:/Users/Manu/Desktop/TP DSSD/Trabajo practico integrador.pdf"
 										}
 									]
 								},
 								"url": {
-									"raw": "localhost:8000/sociedad_anonima/2/subir_archivo/",
+									"raw": "localhost:8000/sociedad_anonima/32/subir_archivo/",
 									"host": [
 										"localhost"
 									],
 									"port": "8000",
 									"path": [
 										"sociedad_anonima",
-										"2",
+										"32",
 										"subir_archivo",
 										""
 									]
@@ -1208,6 +1208,36 @@
 										"estadisticas",
 										"por_area",
 										"legales"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "estadisticas usuarios",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": null
+							},
+							"response": []
+						},
+						{
+							"name": "estadisticas sociedades en proceso",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/estadisticas/sociedades_en_proceso/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"estadisticas",
+										"sociedades_en_proceso",
+										""
 									]
 								}
 							},

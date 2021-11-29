@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from .bonita_service import bonita_api_call
+from .bonita_service import bonita_api_call, get_archived_cases, get_open_cases
 
 
 def area_statistics(session, area):
@@ -31,23 +31,52 @@ def area_statistics(session, area):
     return result_dict
 
 
-def get_open_cases(session):
+def open_cases_statistics(session):
     """
     Este metodo devuelve cuantos casos hay en proceso ("started") y cuantos hay finalizados.
     """
-    # Obtener proceso de bonita para usar el ID
-    bonita_process = bonita_api_call(
-        session, '/bpm/process', 'get', '?s=Proceso')[0]
 
     # Traer casos activos
-    open_case_list = bonita_api_call(
-        session, '/bpm/case', 'get', '?f=processDefinitionId={}'.format(bonita_process['id']))
-
+    open_case_list = get_open_cases(session)
     # Traer casos activos
-    archived_case_list = bonita_api_call(
-        session, '/bpm/archivedCase', 'get', '?f=processDefinitionId={}'.format(bonita_process['id']))
+    archived_case_list = get_archived_cases(session)
 
     return {"activos": len(open_case_list), "finalizados": len(archived_case_list)}
+
+
+def process_user_count(session, merged_list, all_archived_cases, condition):
+    """
+    Este metodo hace el procesamiento necesario para contabilizar aceptaciones / rechazos dado una lista de casos.
+    """
+    count_dict = {}
+    for task in merged_list:
+        user_id = task['executedBy']
+        # Si la tarea es de un caso archivado, SIEMPRE seran verdadero que fue aceptada en ambos lados
+        if task['caseId'] in all_archived_cases:
+            # Sumo contador del id de usuario que ejecuto dicha tarea
+            if user_id not in count_dict:
+                count_dict[user_id] = 1
+            else:
+                count_dict[user_id] += 1
+        else:
+            if task['name'].startswith('Rev'):
+                # Es de mesa
+                var_name = 'aprobado_por_mesa'
+            else:
+                var_name = 'estatuto_aprobado'
+
+            # Traigo variable de caso
+            case_var = bonita_api_call(session, '/bpm/caseVariable', 'get',
+                                       '/{case_id}/{var}'.format(case_id=task['caseId'], var=var_name))['value']
+
+            # Chequeo que se cumpla la condicion adecuada
+            if (condition == 'aprobaciones' and case_var == 'true') or (condition == 'rechazos' and case_var == 'false'):
+                # Sumo contador del id de usuario que ejecuto dicha tarea
+                if user_id not in count_dict:
+                    count_dict[user_id] = 1
+                else:
+                    count_dict[user_id] += 1
+    return count_dict
 
 
 def max_stats_user(session, condition):
@@ -64,28 +93,26 @@ def max_stats_user(session, condition):
     legales_tasks = bonita_api_call(
         session, '/bpm/archivedTask', 'get', '?f=state=completed&f=name=Evaluación del estatuto')
 
-    # Juntar las 2 listas en una sola
+    # Traer tareas de envio de recordatorio, ya que los casos de estas deben omitirse
+    recordatorio_tasks = bonita_api_call(
+        session, '/bpm/archivedTask', 'get', '?f=state=completed&f=name=Envio mail recordatorio')
+    # Me quedo con los ids de los casos de estas
+    recordatorio_tasks = [task['caseId'] for task in recordatorio_tasks]
+
+    # Traer casos que PUDIERON haber pasado por email de recordatorio, para omitirlas de los resultados
+    all_archived_cases = get_archived_cases(session)
+    # Me quedo solo con los ids de los casos que terminaron debido a falta de correccion de datos
+    all_archived_cases = [case['rootCaseId'] for case in all_archived_cases]
+
+    # Juntar las 2 listas (mesa y legales) en una sola
     merged_list = mesa_tasks + legales_tasks
 
-    count_dict = {}
-    for task in merged_list:
-        if task['name'].startswith('Rev'):
-            # Es de mesa
-            var_name = 'aprobado_por_mesa'
-        else:
-            var_name = 'estatuto_aprobado'
+    # OMITO todas las tasks que pertenezcan a casos que pasaron por el recordatorio
+    merged_list = [task for task in merged_list if task['caseId']
+                   not in recordatorio_tasks]
 
-        # Traigo variable de caso
-        case_var = bonita_api_call(session, '/bpm/caseVariable', 'get',
-                                   '/{case_id}/{var}'.format(case_id=task['caseId'], var=var_name))['value']
-
-        if (condition == 'aprobaciones' and case_var == 'true') or (condition == 'rechazos' and case_var == 'false'):
-            user_id = task['executedBy']
-            # Sumo contador del id de usuario que ejecuto dicha tarea
-            if user_id not in count_dict:
-                count_dict[user_id] = 1
-            else:
-                count_dict[user_id] += 1
+    count_dict = process_user_count(
+        session, merged_list, all_archived_cases, condition)
 
     # Extraer el id cuyo contador fue el maximo
     # max_id = max(count_dict, key=count_dict.get)
@@ -115,7 +142,9 @@ def max_stats_user(session, condition):
 
 
 def average_case_resolution(session):
-    """"""
+    """
+    Este metodo calcula el tiempo promedio de resolucion de procesos, teniendo en cuenta todos los que estan terminados.
+    """
     # Obtener proceso de bonita para usar el ID
     bonita_process = bonita_api_call(
         session, '/bpm/process', 'get', '?s=Proceso')[0]

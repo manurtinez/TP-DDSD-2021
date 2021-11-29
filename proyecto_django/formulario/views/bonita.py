@@ -3,11 +3,12 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from formulario.models import SociedadAnonima
+from services.bonita_statistics import open_cases_statistics
 from services.types import BonitaNotOpenException
 from services.bonita_service import (bonita_login_call,
                                      bonita_logout,
                                      get_cases_for_task)
-from services.bonita_statistics import area_statistics, average_case_resolution, get_open_cases, max_stats_user
+from services.bonita_statistics import area_statistics, average_case_resolution, max_stats_user
 from formulario.permissions import bonita_permission
 from formulario.serializers import SociedadAnonimaRetrieveSerializer
 
@@ -119,7 +120,7 @@ def estadisticas_casos_abiertos(request):
         # Se necesita estar logeado (con cualquier usuario) para acceder
         return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
     try:
-        count = get_open_cases(request.session)
+        count = open_cases_statistics(request.session)
     except BonitaNotOpenException:
         return Response(
             data='El servidor de Bonita no se encuentra corriendo o no esta disponible', status=status.HTTP_503_SERVICE_UNAVAILABLE)

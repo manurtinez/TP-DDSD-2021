@@ -223,3 +223,27 @@ def bonita_logout():
     except requests.exceptions.RequestException as e:
         print(e)
         return False
+
+
+def get_archived_cases(session):
+    # Obtener proceso de bonita para usar el ID
+    bonita_process = bonita_api_call(
+        session, '/bpm/process', 'get', '?s=Proceso')[0]
+
+    # Traer casos completados
+    completed_cases = bonita_api_call(
+        session, '/bpm/archivedCase', 'get', '?f=processDefinitionId={}'.format(bonita_process['id']))
+
+    return completed_cases
+
+
+def get_open_cases(session):
+    # Obtener proceso de bonita para usar el ID
+    bonita_process = bonita_api_call(
+        session, '/bpm/process', 'get', '?s=Proceso')[0]
+
+    # Traer casos completados
+    open_cases = bonita_api_call(
+        session, '/bpm/case', 'get', '?f=processDefinitionId={}'.format(bonita_process['id']))
+
+    return open_cases
