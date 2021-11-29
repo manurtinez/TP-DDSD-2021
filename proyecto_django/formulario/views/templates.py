@@ -19,7 +19,7 @@ def login_template(request):
     return render(request, 'login.html')
 
 
-def ver_sa_publica(request):
+def ver_sa_publica(request, hash):
     return render(request, 'verSociedadPublica.html')
 
 

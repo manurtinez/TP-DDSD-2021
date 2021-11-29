@@ -11,9 +11,12 @@ async function getQR(id) {
 	}
 }
 
-async function sociedadPorId(idSociedad) {
+async function sociedadPorHash(hash) {
 	// Se contempla solamente el caso positivo si se encontro la sociedad o si no. Faltan agregar los casos para otras respuestas del servidor
-	let sociedad = await fetch(localHost + '/sociedad_anonima/' + idSociedad).then(response => response.json());
+	let sociedad = await fetch(localHost + '/sociedad_anonima/?stamp_hash=' + hash).then(async response => {
+		const jsonResponse = await response.json()
+		return jsonResponse[0]
+	});
 	return sociedad != null ? sociedad : false;
 }
 
@@ -24,10 +27,9 @@ return socio != null ? socio : false;
 }
 
 async function mostrarSociedad() {
-	let params = new URLSearchParams(location.search);
-	let nroExp = params.get('nroExpediente');
-	getQR(nroExp);
-	const sociedad = await sociedadPorId(nroExp);  
+	const hash = window.location.href.split('/').pop()
+	const sociedad = await sociedadPorHash(hash);
+	await getQR(sociedad.id);
 	nombreSociedad.value = sociedad.name;
 	fechaCreacion.value =  fechaToString(new Date(sociedad.creation_date+" 00:00"));
 	sociedad.sociosa_set.forEach(async socioParcial => {
