@@ -35,10 +35,10 @@ class GoogleDriveController extends ApiController
             return $this->respondWithErrors("Debe indicar todos los parámetros");
         }
 
-        $estatuto_data = base64_decode($estatuto);
-        $pathTemFileQr = $this->getParameter('kernel.project_dir') . '/public/qr_tmp.png';
-        file_put_contents($pathTemFileQr, $estatuto_data);
-        $googleDriveFile = $this->uploadFileToGoogleDriveAction($file);
+        // $estatuto_data = base64_decode($estatuto);
+        // $pathTemFileQr = $this->getParameter('kernel.project_dir') . '/public/qr_tmp.png';
+        // file_put_contents($pathTemFileQr, $estatuto_data);
+        // $googleDriveFile = $this->uploadFileToGoogleDriveAction($file);
 
         $file = new \stdClass();
         $file->fileName = $nombre_sociedad;
