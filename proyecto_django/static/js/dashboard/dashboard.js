@@ -7,10 +7,10 @@ function obtenerDatosIniciales() {
     this.calcularEstadisticasME();
 	this.calcularEstadisticasLegales();
 	// Estadisticas legales
-	mostrarContieneMayorExportacion();
-	mostrarLenguajesDePaisesMayorExportacion();
-	mostrarProvinciasMayorRegistroSociedades();
-	mostrarContinentesPaisesNoExportacion();
+	this.mostrarContieneMayorExportacion();
+	this.mostrarLenguajesDePaisesMayorExportacion();
+	this.mostrarProvinciasMayorRegistroSociedades();
+	this.mostrarContinentesPaisesNoExportacion();
 
 }
 
@@ -57,15 +57,12 @@ async function calcularEstadisticasLegales() {
 	let datos = await obtenerEstadisticasLegales();
 	spansTotal = document.querySelectorAll('.totalEstatutosEvaluados');
 	let totalAprobados = datos["aprobados"];
-  let totalRechazados = parseInt(datos["rechazados"]);
+    let totalRechazados = parseInt(datos["rechazados"]);
 	spanCantConfirmacionesLegales.textContent = isNaN(totalAprobados) ? 0 : totalAprobados;
-
 	spanCantRechazosLegales.textContent = isNaN(totalRechazados) ? 0 : totalRechazados;
 	total = isNaN(totalAprobados + totalRechazados) ? 0 : totalAprobados + totalRechazados;
-	
 	spansTotal.forEach(span => {
 		span.textContent = total;
-	
 	});
 	let porcentajeAprobados = (totalAprobados * 100) / total;
 	completarPorcentajes(porcentajeAprobados.toFixed(2),porcentajeSociedadesEstatutoAprobadas,barraPorcentajeEstatutosConfirmados);
@@ -100,41 +97,60 @@ async function mostrarSociedadesEnProcesoAprobacion() {
 
 
 // ESTADISTICAS TIEMPO DE RESOLUCION DE LOS PROCESOS
+
 function mostrarTiempoResolucionProcesos() {
-	tiempoResolucionProcesos.textContent= "2hs 45 minutos";
+	let response = await fetch(localHost + '/estadisticas/promedio_resolucion').then(response => response.json());
+
+	if (response) {	
+		let tiempoResolucion = response["activos"];
+		tiempoResolucionProcesos.textContent= tiempoResolucion;
+	} else {
+		return false;
+	}
+
 }
 
 
 // ESTADISTICAS USUARIOS CON MAYOR CANTIDAD DE RECHAZOS
 async function mostrarUsuariosMayorCantRechazos() {
 	let response = await fetch(localHost + '/estadisticas/usuarios/rechazos').then(response => response.json());
-	if (response) {
+	
+	if (response == '') {
+		let newRow = tablaUsuariosRechazos.tBodies[0].insertRow(-1);
+		let newCell = newRow.insertCell(-1);
+		newCell.colSpan = 3;
+		let newText = document.createTextNode("No se encontraron registros");
+		newCell.appendChild(newText);
+	} else {	
 		response.forEach(dato => {  
 			//comentarioPrueba.textContent = dato.nombre;
-			let newRow = tablaUsuariosRechazos.tBodies[0].insertRow(-1);
-			let newCell = newRow.insertCell(-1);
-			let newText = document.createTextNode(dato.cantidad);
-			newCell.appendChild(newText);
-			newCell = newRow.insertCell(-1);
-			newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
-			newCell.appendChild(newText);
-			newCell = newRow.insertCell(-1);
-			newText = document.createTextNode(dato.rol);
-			newCell.appendChild(newText);			
-			return newRow.rowIndex; 
+		let newRow = tablaUsuariosRechazos.tBodies[0].insertRow(-1);
+		let newCell = newRow.insertCell(-1);
+		let newText = document.createTextNode(dato.cantidad);
+		newCell.appendChild(newText);
+		newCell = newRow.insertCell(-1);
+		newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
+		newCell.appendChild(newText);
+		newCell = newRow.insertCell(-1);
+		newText = document.createTextNode(dato.rol);
+		newCell.appendChild(newText);			
+		return newRow.rowIndex; 
 		});
-		
-	} else {
-		return false;
-	}
+	} 
 }
 
 
-// ESTADISTICAS USUARIOS CON MAYOR CANTIDAD DE RECHAZOS
+// ESTADISTICAS USUARIOS CON MAYOR CANTIDAD DE APROBACIONES
 async function mostrarUsuariosMayorCantAprobaciones() {
 	let response = await fetch(localHost + '/estadisticas/usuarios/aprobaciones').then(response => response.json());
 
-	if (response) {
+	if (response == '') {
+		let newRow = tablaUsuariosAprobados.tBodies[0].insertRow(-1);
+		let newCell = newRow.insertCell(-1);
+		newCell.colSpan = 3;
+		let newText = document.createTextNode("No se encontraron registros");
+		newCell.appendChild(newText);
+	} else {
 		response.forEach(dato => {  
 			//comentarioPrueba.textContent = dato.nombre;
 			let newRow = tablaUsuariosAprobados.tBodies[0].insertRow(-1);
@@ -149,9 +165,6 @@ async function mostrarUsuariosMayorCantAprobaciones() {
 			newCell.appendChild(newText);			
 			return newRow.rowIndex; 
 		});
-		
-	} else {
-		return false;
 	}
 }
 

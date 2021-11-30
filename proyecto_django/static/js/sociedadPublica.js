@@ -1,6 +1,6 @@
 // Esto cuando este hecho va a recibir por parametro el id de la sociedad, por ahora siempre la 1
-async function getQR(id) {
-	const response = await fetch(`http://localhost:8000/sociedad_anonima/${id}/obtener_estampillado/`)
+async function getQR(nroEstampillado) {
+	const response = await fetch(`http://localhost:8000/sociedad_anonima/${nroEstampillado}/obtener_estampillado/`)
 	const imgElement = document.getElementById('qrSociedad')
 	if (response.status === 200) {
 		jsonResponse = await response.json()
