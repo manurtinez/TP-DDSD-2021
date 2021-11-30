@@ -19,15 +19,35 @@ def area_statistics(session, area):
     else:
         task_name = 'Evaluación del estatuto'
         var_name = 'estatuto_aprobado'
+
     completed_tasks = bonita_api_call(
         session, '/bpm/archivedTask', 'get', f'?f=state=completed&f=name={task_name}')
+
+    # Traer tareas de envio de recordatorio, ya que los casos de estas deben omitirse
+    recordatorio_tasks = bonita_api_call(
+        session, '/bpm/archivedTask', 'get', '?f=state=completed&f=name=Envio mail recordatorio')
+    # Me quedo con los ids de los casos de estas
+    recordatorio_tasks = [task['caseId'] for task in recordatorio_tasks]
+
+    # Traer casos que PUDIERON haber pasado por email de recordatorio, para omitirlas de los resultados
+    all_archived_cases = get_archived_cases(session)
+    # Me quedo solo con los ids de los casos que terminaron debido a falta de correccion de datos
+    all_archived_cases = [case['rootCaseId'] for case in all_archived_cases]
+
     for task in completed_tasks:
-        result = bonita_api_call(session, '/bpm/caseVariable', 'get',
-                                 '/{case_id}/{var}'.format(case_id=task['caseId'], var=var_name))['value']
-        if result == 'true':
-            result_dict['aprobados'] += 1
-        else:
+        # Si la tarea termino por el camino de recordatorio, podemos asumir que fue rechazada por parte de mesa entradas,
+        # y nunca siquiera llego a la aprobacion del estatuto
+        if task['caseId'] in recordatorio_tasks and task['caseId'] in all_archived_cases:
             result_dict['rechazados'] += 1
+        elif task['caseId'] in all_archived_cases:
+            pass
+        else:   # Si entra aca, es que no estaba archivada. Se trae la variable.
+            result = bonita_api_call(session, '/bpm/caseVariable', 'get',
+                                     '/{case_id}/{var}'.format(case_id=task['caseId'], var=var_name))['value']
+            if result == 'true':
+                result_dict['aprobados'] += 1
+            else:
+                result_dict['rechazados'] += 1
     return result_dict
 
 
