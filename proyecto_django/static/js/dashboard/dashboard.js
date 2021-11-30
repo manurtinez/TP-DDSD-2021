@@ -7,10 +7,10 @@ function obtenerDatosIniciales() {
     this.calcularEstadisticasME();
 	this.calcularEstadisticasLegales();
 	// Estadisticas legales
-	mostrarContieneMayorExportacion();
-	mostrarLenguajesDePaisesMayorExportacion();
-	mostrarProvinciasMayorRegistroSociedades();
-	mostrarContinentesPaisesNoExportacion();
+	this.mostrarContieneMayorExportacion();
+	this.mostrarLenguajesDePaisesMayorExportacion();
+	this.mostrarProvinciasMayorRegistroSociedades();
+	this.mostrarContinentesPaisesNoExportacion();
 
 }
 

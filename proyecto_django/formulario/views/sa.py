@@ -118,7 +118,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         base64_file = base64.b64encode(
             sa.comformation_statute.read()).decode('ascii')
         response = api_call_with_retry(
-            method='post', endpoint='/api/estampillado', data={"estatuto": base64_file, "num_expediente": numero_expediente, "url_organismo_solicitante": "localhost"})
+            method='post', endpoint='/api/estampillado', data={"estatuto": base64_file, "num_expediente": numero_expediente, "url_organismo_solicitante": "localhost:8000/sociedad_anonima/ver"})
         if not 'status' in response:
             sa.stamp_hash = response['hash']
             sa.save()
@@ -129,6 +129,8 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     @action(detail=True)
     def obtener_estampillado(self, request, pk=None):
         sa = self.get_object()
+        if not sa.stamp_hash:
+            return Response(data='La sociedad con el id dado aun no tiene estampillado', status=status.HTTP_400_BAD_REQUEST)
         hash = sa.stamp_hash
         response = api_call_with_retry(
             method='get', endpoint='/api/estampillado/', url_params=hash)
