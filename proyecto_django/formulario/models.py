@@ -19,8 +19,10 @@ class SociedadAnonima(models.Model):
     export_countries = ArrayField(models.CharField(
         max_length=30), default=default_country_list)
 
-    # TODO El file va a haber que definir donde se sube, por ahora local
     comformation_statute = models.FileField(upload_to='uploads/', null=True)
+    # Link que corresponde a la carpeta digital en drive
+    drive_folder_link = models.CharField(
+        max_length=128, unique=True, null=True)
 
     representative_email = models.CharField(max_length=30)
     stamp_hash = models.CharField(max_length=50, unique=True, null=True)

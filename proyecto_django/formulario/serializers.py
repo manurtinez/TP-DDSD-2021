@@ -67,8 +67,18 @@ class SociedadAnonimaRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SociedadAnonima
-        fields = ['name', 'real_domicile', 'legal_domicile', 'creation_date',
-                  'comformation_statute', 'export_countries', 'representative_email', 'sociosa_set', 'id', 'stamp_hash', 'case_id', 'numero_expediente']
+        fields = ['name',
+                  'real_domicile',
+                  'legal_domicile',
+                  'creation_date',
+                  'comformation_statute',
+                  'export_countries',
+                  'representative_email',
+                  'sociosa_set', 'id',
+                  'stamp_hash',
+                  'case_id',
+                  'numero_expediente',
+                  'drive_folder_link']
 
     #     def get_partners(self, obj):
     #     return SocioSASerializer(instance=obj.sociosa_set.all(), many=True)

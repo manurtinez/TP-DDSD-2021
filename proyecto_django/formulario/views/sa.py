@@ -268,7 +268,8 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             "nombre_sociedad": sa.name,
             "fecha_creacion": sa.creation_date.strftime('%d/%m/%Y'),
             "qr": qr,
-            "estatuto": 'hgjhg',
+            "estatuto": base64.b64encode(
+                sa.comformation_statute.read()).decode('ascii'),    # TODO agregar el estatuto real en base64
         }
 
         # Iterar socios y agregarlos al payload
@@ -280,8 +281,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         response = complementaria_api_call(
             method='post', endpoint='/api/drive/carpeta-digital', data=payload)
 
-        # TODO guardar url devuelta en DB, por ahora la devuelvo
+        sa.drive_folder_link = response['success']['url']
+        sa.save()
+
+        # TODO mandar mail de final de proceso
         if response['status'] == 200:
-            return Response(data=response['success']['url'])
+            return Response(data='La carpeta digital fue creada con exito. El archivo pdf se puede ver en ' + response['success']['url'])
         else:
             return Response(data='Hubo algun error al crear la carpeta digital', status=status.HTTP_502_BAD_GATEWAY)

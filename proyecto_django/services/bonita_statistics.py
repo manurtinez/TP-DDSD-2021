@@ -40,6 +40,7 @@ def area_statistics(session, area):
         if task['caseId'] in recordatorio_tasks and task['caseId'] in all_archived_cases:
             result_dict['rechazados'] += 1
         elif task['caseId'] in all_archived_cases:
+            # !! TODO aca deberian agarrarse las estadisticas guardadas en la DB, porque los archivados es imposible saber
             pass
         else:   # Si entra aca, es que no estaba archivada. Se trae la variable.
             result = bonita_api_call(session, '/bpm/caseVariable', 'get',
