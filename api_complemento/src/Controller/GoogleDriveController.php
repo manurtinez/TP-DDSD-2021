@@ -27,16 +27,27 @@ class GoogleDriveController extends ApiController
         $nombre_sociedad = str_replace(' ', '', strtolower($request->get('nombre_sociedad')));
         $fecha_creacion = $request->get('fecha_creacion');
         $qr = $request->get('qr');
+        $estatuto = $request->get('estatuto');
         $socios = $request->get('socios');
 
-        if($nombre_sociedad == null || $fecha_creacion == null || $qr == null || $socios == null){
+        if($nombre_sociedad == null || $fecha_creacion == null || $qr == null || $estatuto == null || $socios == null){
             $this->setStatusCode(400);
             return $this->respondWithErrors("Debe indicar todos los parámetros");
         }
 
+
+        $estatuto_data = base64_decode($estatuto);
+        $pathTemFileEstatuto = $this->getParameter('kernel.project_dir') . '/public/estatuto_tmp.pdf';
+        file_put_contents($pathTemFileEstatuto, $estatuto_data);
+        $file = new \stdClass();
+        $file->fileName = "estatuto_".$nombre_sociedad;
+        $file->content = file_get_contents($pathTemFileEstatuto);
+        unlink($pathTemFileEstatuto);
+        $estatutoGoogleDriveFile = $this->uploadFileToGoogleDriveAction($file);
+
         $file = new \stdClass();
         $file->fileName = $nombre_sociedad;
-        $file->content = $this->createPDF($nombre_sociedad,$fecha_creacion,$qr,$socios);
+        $file->content = $this->createPDF($nombre_sociedad,$fecha_creacion,$qr,$socios,$estatutoGoogleDriveFile);
 
         $googleDriveFile = $this->uploadFileToGoogleDriveAction($file);
 
@@ -47,11 +58,12 @@ class GoogleDriveController extends ApiController
         ]);
     }
 
-    private function createPDF($nombre_sociedad,$fecha_creacion,$qr,$socios){
+    private function createPDF($nombre_sociedad,$fecha_creacion,$qr,$socios,$estatutoGoogleDriveFile){
         $templateProcessor = new TemplateProcessor($this->getParameter('kernel.project_dir') . '/public/template.docx');
 
         $templateProcessor->setValue('nombre_sociedad', $nombre_sociedad);
         $templateProcessor->setValue('fecha_creacion', $fecha_creacion);
+        $templateProcessor->setValue('estatuto', "https://drive.google.com/open?id=".$estatutoGoogleDriveFile->getId());
         $templateProcessor->setValue('qr', $qr);
 
         $qr_data = base64_decode($qr);
@@ -62,8 +74,8 @@ class GoogleDriveController extends ApiController
         
         $templateProcessor->cloneRow('apoderado_nombre', count($socios));
         foreach ($socios as $clave => $valor) {
-            $templateProcessor->setValue('apoderado_nombre#'.($clave+1), $valor[0]);
-            $templateProcessor->setValue('apoderado_porcentaje#'.($clave+1), $valor[1]);
+            $templateProcessor->setValue('apoderado_nombre#'.($clave+1), $valor['nombre']);
+            $templateProcessor->setValue('apoderado_porcentaje#'.($clave+1), $valor['aporte']);
         }
 
         $publicDir = $this->getParameter('kernel.project_dir') . '/public';

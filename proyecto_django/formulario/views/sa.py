@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from services.bonita_service import (assign_task, bonita_login_call,
                                      execute_task, set_bonita_variable,
                                      start_bonita_process)
-from services.estampillado_service import api_call_with_retry
+from services.estampillado_service import api_call_with_retry, complementaria_api_call
 from services.mail_service import (mail_estatuto_invalido, mail_num_expediente,
                                    mail_solicitud_incorrecta)
 
@@ -250,3 +250,38 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_200_OK)
         else:
             return Response('No se ha enviado el parametro veredicto', status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True)
+    def crear_carpeta_digital(self, request, pk=None):
+        """
+        Este endpoint realiza la creacion de una carpeta DIGITAL dada una sociedad anonima, en google drive.
+        """
+        sa = self.get_object()
+        if not sa.stamp_hash:
+            return Response(data='La sociedad con el id dado aun no tiene estampillado', status=status.HTTP_400_BAD_REQUEST)
+        partners = sa.sociosa_set.all()
+
+        # Obtener qr del servicio
+        qr = api_call_with_retry(
+            method='get', endpoint='/api/estampillado/', url_params=sa.stamp_hash)['qr']
+        payload = {
+            "nombre_sociedad": sa.name,
+            "fecha_creacion": sa.creation_date.strftime('%d/%m/%Y'),
+            "qr": qr,
+            "estatuto": 'hgjhg',
+        }
+
+        # Iterar socios y agregarlos al payload
+        for i, socioSA in enumerate(partners):
+            payload[f'socios[{i}][nombre]'] = socioSA.partner.first_name
+            payload[f'socios[{i}][aporte]'] = int(socioSA.percentage)
+
+        # Llamar a api
+        response = complementaria_api_call(
+            method='post', endpoint='/api/drive/carpeta-digital', data=payload)
+
+        # TODO guardar url devuelta en DB, por ahora la devuelvo
+        if response['status'] == 200:
+            return Response(data=response['success']['url'])
+        else:
+            return Response(data='Hubo algun error al crear la carpeta digital', status=status.HTTP_502_BAD_GATEWAY)

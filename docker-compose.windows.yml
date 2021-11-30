@@ -37,7 +37,7 @@ services:
     ports: 
       - 80:80
     volumes:
-      - ./api_complemento:/var/www
+      - ./api_complemento:/var/www/html
     depends_on:
       - db
 volumes: 
