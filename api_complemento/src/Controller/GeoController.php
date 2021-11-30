@@ -61,7 +61,7 @@ class GeoController extends AbstractController
                 "query" => '
                     query($continentCode: ID!){
                         continent(code: $continentCode) {
-                            countries {name code }
+                            countries {name code languages { code name native }}
                         }
                     }'
             ],
