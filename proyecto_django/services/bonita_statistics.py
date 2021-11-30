@@ -165,13 +165,12 @@ def average_case_resolution(session):
     """
     Este metodo calcula el tiempo promedio de resolucion de procesos, teniendo en cuenta todos los que estan terminados.
     """
-    # Obtener proceso de bonita para usar el ID
-    bonita_process = bonita_api_call(
-        session, '/bpm/process', 'get', '?s=Proceso')[0]
-
     # Traer casos completados
-    completed_cases = bonita_api_call(
-        session, '/bpm/archivedCase', 'get', '?f=processDefinitionId={}'.format(bonita_process['id']))
+    completed_cases = get_archived_cases(session)
+
+    # Si no se encontraron casos, devolver 0
+    if len(completed_cases) == 0:
+        return 0
 
     total_time = 0
 
