@@ -4,19 +4,19 @@ function obtenerDatosIniciales() {
 	this.mostrarUsuariosMayorCantRechazos();
 	this.mostrarUsuariosMayorCantAprobaciones();
 	this.mostrarSociedadesEnProcesoAprobacion();
-    this.calcularEstadisticasME();
-	this.calcularEstadisticasLegales();
+    this.calcularEstadisticasME(); 
+	this.calcularEstadisticasLegales(); 
 	// Estadisticas legales
 	this.mostrarContieneMayorExportacion();
 	this.mostrarLenguajesDePaisesMayorExportacion();
 	this.mostrarProvinciasMayorRegistroSociedades();
-	this.mostrarContinentesPaisesNoExportacion();
-
+	this.mostrarContinentesPaisesNoExportacion(); 
 }
 
 // ESTADISTICAS MESA DE ENTRADAS
 async function obtenerEstadisticasME() {
 	let response = await fetch(localHost + '/estadisticas/por_area/mesa').then(response => response.json());
+	
 	let datos = response;
 	if (datos) {
 		return datos;
@@ -45,6 +45,7 @@ async function calcularEstadisticasME() {
 // ESTADISTICAS LEGALES
 async function obtenerEstadisticasLegales() {
 	let response = await fetch(localHost + '/estadisticas/por_area/legales').then(response => response.json());
+
 	let datos = response;
 	if (datos) {
 		return datos;
@@ -66,7 +67,7 @@ async function calcularEstadisticasLegales() {
 	});
 	let porcentajeAprobados = (totalAprobados * 100) / total;
 	completarPorcentajes(porcentajeAprobados.toFixed(2),porcentajeSociedadesEstatutoAprobadas,barraPorcentajeEstatutosConfirmados);
-	let porcentajeRechazados = (totalAprobados * 100) / total;
+	let porcentajeRechazados = (totalRechazados * 100) / total;
 	completarPorcentajes(porcentajeRechazados.toFixed(2),porcentajeSociedadesEstatutoRechazadas,barraPorcentajeEstatutosRechazados);
 }
 
@@ -75,6 +76,7 @@ function completarPorcentajes(unPorcentaje,spanTextoPorcentaje,barraPorcentaje) 
 	spanTextoPorcentaje.textContent = isNaN(unPorcentaje) ? 0 : unPorcentaje;
 	barraPorcentaje.style.width = unPorcentaje+"%";
 }
+
 
 // ESTADISTICAS SOCIEDADES EN PROCESO
 async function mostrarSociedadesEnProcesoAprobacion() {
@@ -97,24 +99,24 @@ async function mostrarSociedadesEnProcesoAprobacion() {
 
 
 // ESTADISTICAS TIEMPO DE RESOLUCION DE LOS PROCESOS
-
-function mostrarTiempoResolucionProcesos() {
+async function mostrarTiempoResolucionProcesos() {
 	let response = await fetch(localHost + '/estadisticas/promedio_resolucion').then(response => response.json());
 
-	if (response) {	
-		let tiempoResolucion = response["activos"];
-		tiempoResolucionProcesos.textContent= tiempoResolucion;
+	if (response) {			
+		let minutos = (response / 60);
+		let horas = (minutos / 60).toFixed(0);
+		let segundos =  (minutos % 1)*60;
+		tiempoResolucionProcesos.textContent= horas+ " horas, "+minutos.toFixed(0)+ " minutos, "+segundos.toFixed(0)+ " segundos";
 	} else {
 		return false;
 	}
-
 }
 
 
 // ESTADISTICAS USUARIOS CON MAYOR CANTIDAD DE RECHAZOS
 async function mostrarUsuariosMayorCantRechazos() {
 	let response = await fetch(localHost + '/estadisticas/usuarios/rechazos').then(response => response.json());
-	
+
 	if (response == '') {
 		let newRow = tablaUsuariosRechazos.tBodies[0].insertRow(-1);
 		let newCell = newRow.insertCell(-1);
@@ -122,19 +124,18 @@ async function mostrarUsuariosMayorCantRechazos() {
 		let newText = document.createTextNode("No se encontraron registros");
 		newCell.appendChild(newText);
 	} else {	
-		response.forEach(dato => {  
-			//comentarioPrueba.textContent = dato.nombre;
-		let newRow = tablaUsuariosRechazos.tBodies[0].insertRow(-1);
-		let newCell = newRow.insertCell(-1);
-		let newText = document.createTextNode(dato.cantidad);
-		newCell.appendChild(newText);
-		newCell = newRow.insertCell(-1);
-		newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
-		newCell.appendChild(newText);
-		newCell = newRow.insertCell(-1);
-		newText = document.createTextNode(dato.rol);
-		newCell.appendChild(newText);			
-		return newRow.rowIndex; 
+		response.forEach(dato => {  	
+			let newRow = tablaUsuariosRechazos.tBodies[0].insertRow(-1);
+			let newCell = newRow.insertCell(-1);
+			let newText = document.createTextNode(dato.cantidad);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
+			newCell.appendChild(newText);
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(dato.rol);
+			newCell.appendChild(newText);			
+			return newRow.rowIndex; 
 		});
 	} 
 }
@@ -151,8 +152,7 @@ async function mostrarUsuariosMayorCantAprobaciones() {
 		let newText = document.createTextNode("No se encontraron registros");
 		newCell.appendChild(newText);
 	} else {
-		response.forEach(dato => {  
-			//comentarioPrueba.textContent = dato.nombre;
+		response.forEach(dato => {  			
 			let newRow = tablaUsuariosAprobados.tBodies[0].insertRow(-1);
 			let newCell = newRow.insertCell(-1);
 			let newText = document.createTextNode(dato.cantidad);
@@ -254,8 +254,6 @@ async function mostrarContinentesPaisesNoExportacion() {
 	}
 
 }
-
-
 
 
 
