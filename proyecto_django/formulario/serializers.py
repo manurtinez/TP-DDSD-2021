@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-from .models import SociedadAnonima, Socio, SocioSA
+from .models import Pais, SociedadAnonima, Socio, SocioSA
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -43,6 +43,26 @@ class SocioPercentageSerializer(serializers.Serializer):
     is_representative = serializers.BooleanField(default=False)
 
 
+class PaisSerializer(serializers.Serializer):
+    """
+    Este serializer corresponde a la estructura esperada para cada pais dentro de un continente
+    """
+    languages = serializers.ListField()
+    states = serializers.ListField()
+
+    class Meta:
+        model = Pais
+        fields = '__all__'
+
+
+class ContinenteSerializer(serializers.Serializer):
+    """
+    Este serializer corresponde a la estructura esperada para cada continente.
+    """
+    code = serializers.CharField(max_length=3)
+    countries = PaisSerializer(many=True)
+
+
 class SociedadAnonimaSerializer(serializers.ModelSerializer):
     """
     Este serializer corresponde a la clase SociedadAnonima (para el create)
@@ -50,11 +70,13 @@ class SociedadAnonimaSerializer(serializers.ModelSerializer):
     comformation_statute = serializers.FileField(required=False)
     partners = SocioPercentageSerializer(many=True)
     stamp_hash = serializers.CharField(required=False)
+    exports = ContinenteSerializer(many=True)
 
     class Meta:
         model = SociedadAnonima
         fields = ['name', 'legal_domicile', 'real_domicile',
-                  'creation_date', 'export_countries', 'representative_email', 'comformation_statute', 'partners', 'stamp_hash', 'case_id']
+                  'creation_date',
+                  'representative_email', 'comformation_statute', 'partners', 'stamp_hash', 'case_id', 'exports']
 
 
 class SociedadAnonimaRetrieveSerializer(serializers.ModelSerializer):
@@ -72,7 +94,6 @@ class SociedadAnonimaRetrieveSerializer(serializers.ModelSerializer):
                   'legal_domicile',
                   'creation_date',
                   'comformation_statute',
-                  'export_countries',
                   'representative_email',
                   'sociosa_set', 'id',
                   'stamp_hash',

@@ -6,7 +6,7 @@ import environ
 from django.db.utils import IntegrityError
 from django.http.response import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from formulario.models import SociedadAnonima, Socio
+from formulario.models import Exportacion, Pais, SociedadAnonima, Socio
 from formulario.permissions import bonita_permission
 from formulario.serializers import (SociedadAnonimaRetrieveSerializer,
                                     SociedadAnonimaSerializer)
@@ -38,6 +38,21 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name', 'stamp_hash']
 
+    def process_partners(self, new_sa, partners):
+        for socio in partners:
+            partner = Socio.objects.get(pk=socio['id'])
+            new_sa.partners.add(
+                partner, through_defaults={'percentage': socio['percentage'], 'is_representative': socio.get('is_representative', False)})
+
+    def process_exports(self, new_sa, export_info):
+        for continent in export_info:
+            for country in continent['countries']:
+                country_object, created = Pais.objects.get_or_create(
+                    code=country['code'], languages=country['languages'])
+                exportacion = Exportacion.objects.create(
+                    sa=new_sa, continent=continent['code'], country=country_object, states=country['states'])
+                exportacion.save()
+
     def create(self, request):
         """
         Este metodo define la creacion de los objetos Sociedad Anonima
@@ -48,16 +63,17 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             data = request.data
 
             # Se crea la nueva SA y se guarda
-            new_sa = SociedadAnonima.objects.create(name=data['name'], legal_domicile=data['legal_domicile'], creation_date=data['creation_date'],
-                                                    real_domicile=data['real_domicile'], export_countries=data['export_countries'],
+            new_sa = SociedadAnonima.objects.create(name=data['name'], legal_domicile=data['legal_domicile'],
+                                                    creation_date=data['creation_date'], real_domicile=data['real_domicile'],
                                                     representative_email=data['representative_email'])
 
             # Se agregan los socios que hayan venido
             partners = data['partners']
-            for socio in partners:
-                partner = Socio.objects.get(pk=socio['id'])
-                new_sa.partners.add(
-                    partner, through_defaults={'percentage': socio['percentage'], 'is_representative': socio.get('is_representative', False)})
+            self.process_partners(new_sa, partners)
+
+            # Se crean los datos de exportacion
+            export_info = data['exports']
+            self.process_exports(new_sa, export_info)
 
             # Se inicia el proceso en bonita si se esta local
             if env('DJANGO_DEVELOPMENT') == 'True':

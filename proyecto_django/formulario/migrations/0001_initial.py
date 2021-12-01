@@ -17,12 +17,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SociedadAnonima',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=30)),
                 ('creation_date', models.DateTimeField(auto_now_add=True)),
                 ('legal_domicile', models.CharField(max_length=30)),
                 ('real_domicile', models.CharField(max_length=30)),
-                ('export_countries', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=30), default=formulario.models.default_country_list, size=None)),
+                ('export_countries', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(
+                    max_length=30), default=list, size=None)),
                 ('comformation_statute', models.FileField(upload_to='uploads/')),
             ],
             options={
@@ -32,7 +34,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Socio',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('first_name', models.CharField(max_length=30)),
                 ('last_name', models.CharField(max_length=30)),
                 ('email', models.CharField(max_length=30, null=True)),
@@ -44,16 +47,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SocioSA',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('percentage', models.FloatField(max_length=4)),
                 ('is_representative', models.BooleanField(default=False)),
-                ('partner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='formulario.socio')),
-                ('sa', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='formulario.sociedadanonima')),
+                ('partner', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='formulario.socio')),
+                ('sa', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='formulario.sociedadanonima')),
             ],
         ),
         migrations.AddField(
             model_name='sociedadanonima',
             name='partners',
-            field=models.ManyToManyField(related_name='socio_sa', through='formulario.SocioSA', to='formulario.Socio'),
+            field=models.ManyToManyField(
+                related_name='socio_sa', through='formulario.SocioSA', to='formulario.Socio'),
         ),
     ]

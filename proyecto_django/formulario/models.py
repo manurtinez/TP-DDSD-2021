@@ -2,11 +2,24 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
-def default_country_list():
-    return list(['Argentina'])
+class Pais(models.Model):
+    """
+    Este modelo representa un pais, con su codigo y los codigos de sus idiomas
+    """
+    code = models.CharField(max_length=3, null=False, unique=True)
+    languages = ArrayField(models.CharField(
+        max_length=3, null=False), default=list)
 
 
-# Create your models here.
+class Exportacion(models.Model):
+    """
+    Este modelo representa a cuales lugares (continentes, paises, estados) exporta una sociedad anonima.
+    """
+    sa = models.ForeignKey('SociedadAnonima', on_delete=models.DO_NOTHING)
+    continent = models.CharField(max_length=4, null=False)
+    country = models.ForeignKey(Pais, on_delete=models.DO_NOTHING)
+    states = ArrayField(models.CharField(
+        max_length=100, null=False), default=list)
 
 
 class SociedadAnonima(models.Model):
@@ -16,8 +29,6 @@ class SociedadAnonima(models.Model):
         'Socio', through='SocioSA')
     legal_domicile = models.CharField(max_length=30)
     real_domicile = models.CharField(max_length=30)
-    export_countries = ArrayField(models.CharField(
-        max_length=30), default=default_country_list)
 
     comformation_statute = models.FileField(upload_to='uploads/', null=True)
     # Link que corresponde a la carpeta digital en drive
