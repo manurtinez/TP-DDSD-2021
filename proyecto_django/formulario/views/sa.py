@@ -285,7 +285,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             "fecha_creacion": sa.creation_date.strftime('%d/%m/%Y'),
             "qr": qr,
             "estatuto": base64.b64encode(
-                sa.comformation_statute.read()).decode('ascii'),    # TODO agregar el estatuto real en base64
+                sa.comformation_statute.read()).decode('ascii'),
         }
 
         # Iterar socios y agregarlos al payload

@@ -98,6 +98,8 @@ def bonita_login_call(session, user, password):
             user_data = [
                 us for us in user_response if us['userName'] == user][0]
             session['bonita_id'] = user_data['id']
+            session['user_firstname'] = user_data['firstname']
+            session['user_lastname'] = user_data['lastname']
 
             # Con el id obtenido, traer el rol del usuario para realizar permisos luego
             url_params = '?p=0&c=10&f=user_id={}&d=role_id&o=ASSIGNED_DATE_ASC'.format(

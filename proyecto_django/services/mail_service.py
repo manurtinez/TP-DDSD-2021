@@ -10,7 +10,7 @@ BASE_URL = env('API_COMPLEMENTARIA_URL') + '/api/email/send'
 
 def mail_solicitud_incorrecta(nombre_sa, nombre_apoderado, destinatario, plazo):
     """
-    Este metodo realiza el envio del mail de solicitud incorrecta (cuando es rechazada por mesa de entradas)
+    Este metodo realiza el envio del mail de solicitud RECHAZADA por mesa de entradas
     """
     try:
         payload = {'nombre_sociedad': nombre_sa,
@@ -28,7 +28,7 @@ def mail_solicitud_incorrecta(nombre_sa, nombre_apoderado, destinatario, plazo):
 
 def mail_num_expediente(nombre_sa, nombre_apoderado, destinatario, num_expediente):
     """
-    Este metodo realiza el envio del mail de solicitud incorrecta (cuando es rechazada por mesa de entradas)
+    Este metodo realiza el envio del mail de solicitud ACEPTADA  por mesa de entradas
     """
     try:
         payload = {'nombre_sociedad': nombre_sa,
@@ -46,7 +46,7 @@ def mail_num_expediente(nombre_sa, nombre_apoderado, destinatario, num_expedient
 
 def mail_estatuto_invalido(nombre_sa, nombre_apoderado, destinatario, observaciones):
     """
-    Este metodo realiza el envio del mail de solicitud incorrecta (cuando es rechazada por mesa de entradas)
+    Este metodo realiza el envio del mail de solicitud RECHAZADA por parte de legales
     """
     try:
         payload = {'nombre_sociedad': nombre_sa,
