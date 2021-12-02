@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b6864dde-925c-4b22-a52e-dab8016a3612",
+		"_postman_id": "ccc3984d-03e4-4935-8c8d-81cf7081336b",
 		"name": "proyecto DSSD",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -265,7 +265,7 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "http://localhost:8080/bonita/api/bpm/process?name=Direccion Nacional de Personas Juridicas",
+							"raw": "http://localhost:8080/bonita/api/bpm/process?name=Proceso",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -280,7 +280,7 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "Direccion Nacional de Personas Juridicas"
+									"value": "Proceso"
 								}
 							]
 						}
@@ -293,7 +293,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/bonita/API/bpm/case?f=processDefinitionId=7495271316608092434",
+							"raw": "http://localhost:8080/bonita/API/bpm/archivedCase?f=processDefinitionId=7758069622438604371",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -303,12 +303,40 @@
 								"bonita",
 								"API",
 								"bpm",
-								"case"
+								"archivedCase"
 							],
 							"query": [
 								{
 									"key": "f",
-									"value": "processDefinitionId=7495271316608092434"
+									"value": "processDefinitionId=7758069622438604371"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "lista cases ARCHIVADOS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bonita/API/bpm/archivedCase?f=processDefinitionId=7831316869228688686",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bonita",
+								"API",
+								"bpm",
+								"archivedCase"
+							],
+							"query": [
+								{
+									"key": "f",
+									"value": "processDefinitionId=7831316869228688686"
 								}
 							]
 						}
@@ -934,7 +962,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"s\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30\r\n        }\r\n    ],\r\n    \"export_countries\": [\r\n        \"argentina\",\r\n        \"brasil\"\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"asd\"\r\n}",
+									"raw": "{\r\n    \"name\": \"sociaeaaadaaakaAa1101\",\r\n    \"legal_domicile\": \"asd\",\r\n    \"creation_date\": \"1970-12-12\",\r\n    \"partners\": [\r\n        {\r\n            \"id\": 1,\r\n            \"percentage\": 30,\r\n            \"is_representative\": true\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"percentage\": 70\r\n        }\r\n    ],\r\n    \"exports\": [\r\n        {\r\n            \"code\": \"NA\",\r\n            \"countries\": [\r\n                {\r\n                    \"code\": \"US\",\r\n                    \"states\": [\r\n                        \"California\",\r\n                        \"Connecticut\",\r\n                        \"New York\"\r\n                    ],\r\n                    \"languages\": [\r\n                        \"bs\",\r\n                        \"hr\"\r\n                    ]\r\n                },\r\n                {\r\n                    \"code\": \"DE\",\r\n                    \"states\": [\r\n                        \"Baden-Württemberg\",\r\n                        \"Bayern\"\r\n                    ],\r\n                    \"languages\": [\r\n                        \"de\"\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"code\": \"SA\",\r\n            \"countries\": [\r\n                {\r\n                    \"code\": \"AR\",\r\n                    \"states\": [\r\n                        \"Catamarca\",\r\n                        \"Jujuy\"\r\n                    ],\r\n                    \"languages\": [\r\n                        \"es\",\r\n                        \"gn\"\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"real_domicile\": \"asd\",\r\n    \"representative_email\": \"mantinez@gmail.com\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -966,19 +994,19 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "/C:/Users/Manu/Desktop/TP DSSD/Trabajo practico integrador.pdf"
+											"src": "/home/manu/tp-agronomia-oo2/doc/Proyecto_TP_Final_POO2.pdf"
 										}
 									]
 								},
 								"url": {
-									"raw": "localhost:8000/sociedad_anonima/32/subir_archivo/",
+									"raw": "localhost:8000/sociedad_anonima/2/subir_archivo/",
 									"host": [
 										"localhost"
 									],
 									"port": "8000",
 									"path": [
 										"sociedad_anonima",
-										"32",
+										"2",
 										"subir_archivo",
 										""
 									]
@@ -1085,7 +1113,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"veredicto\": true\n}",
+									"raw": "{\n    \"veredicto\": true,\n    \"observaciones\": \"obs1\\nobs2\\nobs3\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1093,18 +1121,48 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:8000/sociedad_anonima/1/evaluar_estatuto/",
+									"raw": "localhost:8000/sociedad_anonima/26/evaluar_estatuto/",
 									"host": [
 										"localhost"
 									],
 									"port": "8000",
 									"path": [
 										"sociedad_anonima",
-										"1",
+										"26",
 										"evaluar_estatuto",
 										""
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "solicitar estampillado",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8000/sociedad_anonima/2/solicitar_estampillado/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"sociedad_anonima",
+										"2",
+										"solicitar_estampillado",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "crear carpeta digital",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": null
 							},
 							"response": []
 						}
@@ -1214,16 +1272,7 @@
 							"response": []
 						},
 						{
-							"name": "estadisticas usuarios",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": null
-							},
-							"response": []
-						},
-						{
-							"name": "estadisticas sociedades en proceso",
+							"name": "estadisticas SA en proceso",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1240,6 +1289,15 @@
 										""
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "estadisticas tiempo promedio",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": null
 							},
 							"response": []
 						}
@@ -1349,7 +1407,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"estatuto\": \"\",\n    \"num_expediente\": \"1\",\n    \"url_organismo_solicitante\": \"localhost\"\n}",
+							"raw": "{\n    \"estatuto\": \"REpBTkdPX0RFVkVMT1BNRU5UPVRydWUKQVBJX0VTVEFNUElMTEFET19VUkw9aHR0cHM6Ly9pbmZpbml0ZS1pbmxldC0zMDA0My5oZXJva3VhcHAuY29tCgojIC0tPiBQQVJBIExJTlVYCkJPTklUQV9IT1NUPWxvY2FsaG9zdAoKIyAtLT4gUEFSQSBXSU5ET1dTCkJPTklUQV9IT1NUPWhvc3QuZG9ja2VyLmludGVybmFs\",\n    \"num_expediente\": \"11212\",\n    \"url_organismo_solicitante\": \"localhost\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1357,18 +1415,26 @@
 							}
 						},
 						"url": {
-							"raw": "https://infinite-inlet-30043.herokuapp.com/api/estampillado",
-							"protocol": "https",
+							"raw": "http://localhost:80/api/estampillado",
+							"protocol": "http",
 							"host": [
-								"infinite-inlet-30043",
-								"herokuapp",
-								"com"
+								"localhost"
 							],
+							"port": "80",
 							"path": [
 								"api",
 								"estampillado"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtener estampillado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
 					},
 					"response": []
 				}
