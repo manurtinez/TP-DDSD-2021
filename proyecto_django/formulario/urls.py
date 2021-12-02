@@ -10,6 +10,7 @@ from formulario.views.socios import SocioViewSet
 from formulario.views.templates import (a_evaluar_estatuto, alta_sa, dashboard,
                                         login_template, pendientes,
                                         ver_sa_publica, editar_estatuto, editar_sa)
+from formulario.views.countries import top_continente
 
 # Create default router and add viewsets
 router = DefaultRouter()
@@ -42,4 +43,5 @@ urlpatterns = [
     path('estadisticas/sociedades_en_proceso/', estadisticas_casos_abiertos),
     path('estadisticas/usuarios/<str:condicion>', estadisticas_usuario),
     path('estadisticas/promedio_resolucion/', estadistica_promedio_resolucion),
+    path('estadisticas_exp/top_continente/', top_continente),
 ]
