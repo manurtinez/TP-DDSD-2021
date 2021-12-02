@@ -1,6 +1,11 @@
 import requests
+import environ
 
-BASE_URL = 'http://localhost/api/email/send'
+# # el objeto env se usa para traer las variables de entorno
+env = environ.Env()
+environ.Env.read_env()
+
+BASE_URL = env('API_COMPLEMENTARIA_URL') + '/api/email/send'
 
 
 def mail_solicitud_incorrecta(nombre_sa, nombre_apoderado, destinatario, plazo):
