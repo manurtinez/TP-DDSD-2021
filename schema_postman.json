@@ -1300,6 +1300,133 @@
 								"url": null
 							},
 							"response": []
+						},
+						{
+							"name": "estadistica rechazos",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/estadisticas/usuarios/rechazados",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"estadisticas",
+										"usuarios",
+										"rechazados"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "estadistica aprobaciones",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/estadisticas/usuarios/aprobaciones",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"estadisticas",
+										"usuarios",
+										"aprobaciones"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "estadisticas exportaciones",
+					"item": [
+						{
+							"name": "top continente (excluye america)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8000/estadisticas_exp/top_continente/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"estadisticas_exp",
+										"top_continente",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "lenguajes de pais mas exportado",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8000/estadisticas_exp/top_paises_lenguajes/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"estadisticas_exp",
+										"top_paises_lenguajes",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "estados con mas sociedades",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8000/estadisticas_exp/top_estados/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"estadisticas_exp",
+										"top_estados",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "continentes sin exportaciones",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8000/estadisticas_exp/continentes_sin_exportaciones/",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"estadisticas_exp",
+										"continentes_sin_exportaciones",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
