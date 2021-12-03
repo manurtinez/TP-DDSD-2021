@@ -125,9 +125,6 @@ def start_bonita_process(session, new_sa):
     NOTA: hay que refactorizar el login y implementar manejo de excepciones.
     """
     try:
-        # Por ahora, el login hardcodeado cada vez que se crea una SA
-        bonita_login_call(session, 'Apoderado1', 'bpm')
-
         # Esto devuelve un array de procesos, en nuestro caso, uno solo, como Dict
         bonita_process = bonita_api_call(
             session, '/bpm/process', 'get', '?s=Proceso')[0]

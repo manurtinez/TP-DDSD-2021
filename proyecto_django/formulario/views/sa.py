@@ -20,6 +20,8 @@ from services.estampillado_service import api_call_with_retry, complementaria_ap
 from services.mail_service import (mail_estatuto_invalido, mail_num_expediente,
                                    mail_solicitud_incorrecta)
 
+from services.types import BonitaNotOpenException
+
 # # el objeto env se usa para traer las variables de entorno
 env = environ.Env()
 environ.Env.read_env()
@@ -57,8 +59,13 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         """
         Este metodo define la creacion de los objetos Sociedad Anonima
         """
-        serializer = SociedadAnonimaSerializer(data=request.data)
+        try:
+            # Por ahora, el login hardcodeado cada vez que se crea una SA
+            bonita_login_call(request.session, 'Apoderado1', 'bpm')
+        except BonitaNotOpenException:
+            return Response(data='El servidor de bonita no se encuentra corriendo. Abortando...')
 
+        serializer = SociedadAnonimaSerializer(data=request.data)
         if serializer.is_valid():
             data = request.data
 
