@@ -4,6 +4,8 @@ from formulario.models import Exportacion
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from services.geo_service import get_all_continent_codes
+
 
 @api_view()
 def top_continent(request):
@@ -66,3 +68,19 @@ def top_export_states(request, limit):
 
     # Retorno la lista hasta el limite
     return Response(data=state_list[:limit])
+
+
+@api_view()
+def not_exported_continents(request):
+    """
+    Este endpoint devuelve los continentes a los que actualmente no esta exportando ninguna sociedad
+    """
+    # Traigo el total de continentes
+    cont_codes = get_all_continent_codes()
+
+    # Traigo la lista de continentes de la DB
+    db_continents = list(Exportacion.objects.all().values_list(
+        'continent', flat=True).distinct())
+
+    # Devuelvo la diferencia entre todos los continentes y los de la db
+    return Response(data=list(set(cont_codes) - set(db_continents)))
