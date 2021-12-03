@@ -44,7 +44,7 @@ urlpatterns = [
     path('estadisticas/usuarios/<str:condition>', estadisticas_usuario),
     path('estadisticas/promedio_resolucion/', estadistica_promedio_resolucion),
     path('estadisticas_exp/top_continente/', top_continent),
-    path('estadisticas_exp/top_paises_lenguajes/', top_country_languages),
+    path('estadisticas_exp/top_paises_lenguajes/<int:limit>', top_country_languages),
     path('estadisticas_exp/top_estados/<int:limit>', top_export_states),
     path('estadisticas_exp/continentes_sin_exportaciones/', not_exported_continents),
 ]

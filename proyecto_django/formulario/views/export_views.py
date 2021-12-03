@@ -29,21 +29,20 @@ def top_continent(request):
 
 
 @api_view()
-def top_country_languages(request):
+def top_country_languages(request, limit):
     """
     Este metodo devuelve los lenguajes de los paises a donde mas sociedades exportan.
     """
     queryset = Exportacion.objects.all()
 
     # Agregacion para ordenar exportaciones por ocurrencia de paises descendente
-    queryset = queryset.annotate(country_count=Count(
-        'country_id')).order_by('-country_count')
+    # Se agarran los primeros n (limit)
+    queryset = queryset.values('country_id').annotate(country_count=Count(
+        'country_id')).order_by('-country_count')[:limit]
 
-    # Agarro el primero
-    country = queryset.first().country
-
-    # Retorno los lenguajes del primer pais
-    return Response(data=country.languages if country else [])
+    # Armo lista con codigo y lenguaje de c/u paises del top
+    result_list = queryset.all().values('country__code', 'country__languages')
+    return Response(data=result_list)
 
 
 @api_view()
