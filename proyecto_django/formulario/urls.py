@@ -41,7 +41,7 @@ urlpatterns = [
     path('login', login_template, name='login'),
     path('estadisticas/por_area/<str:area>', estadisticas_por_area),
     path('estadisticas/sociedades_en_proceso/', estadisticas_casos_abiertos),
-    path('estadisticas/usuarios/<str:condicion>', estadisticas_usuario),
+    path('estadisticas/usuarios/<str:condition>', estadisticas_usuario),
     path('estadisticas/promedio_resolucion/', estadistica_promedio_resolucion),
     path('estadisticas_exp/top_continente/', top_continent),
     path('estadisticas_exp/top_paises_lenguajes/', top_country_languages),
