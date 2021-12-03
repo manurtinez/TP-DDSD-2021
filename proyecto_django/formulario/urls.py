@@ -10,7 +10,7 @@ from formulario.views.socios import SocioViewSet
 from formulario.views.templates import (a_evaluar_estatuto, alta_sa, dashboard,
                                         login_template, pendientes,
                                         ver_sa_publica, editar_estatuto, editar_sa)
-from formulario.views.countries import top_continente
+from formulario.views.export_views import top_continent, top_country_languages, top_export_states, not_exported_continents
 
 # Create default router and add viewsets
 router = DefaultRouter()
@@ -41,7 +41,10 @@ urlpatterns = [
     path('login', login_template, name='login'),
     path('estadisticas/por_area/<str:area>', estadisticas_por_area),
     path('estadisticas/sociedades_en_proceso/', estadisticas_casos_abiertos),
-    path('estadisticas/usuarios/<str:condicion>', estadisticas_usuario),
+    path('estadisticas/usuarios/<str:condition>', estadisticas_usuario),
     path('estadisticas/promedio_resolucion/', estadistica_promedio_resolucion),
-    path('estadisticas_exp/top_continente/', top_continente),
+    path('estadisticas_exp/top_continente/', top_continent),
+    path('estadisticas_exp/top_paises_lenguajes/<int:limit>', top_country_languages),
+    path('estadisticas_exp/top_estados/<int:limit>', top_export_states),
+    path('estadisticas_exp/continentes_sin_exportaciones/', not_exported_continents),
 ]
