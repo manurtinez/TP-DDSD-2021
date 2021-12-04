@@ -174,31 +174,42 @@ async function mostrarUsuariosMayorCantAprobaciones() {
 
 // CONTINENTE HACIA DONDE MAS SE EXPORTA
 async function mostrarContieneMayorExportacion() {
-	continenteMayorExportacion.textContent= "Europa";
+	let response = await fetch(localHost + '/estadisticas_exp/top_continente').then(response => response.json());
+	console.log("resposne" +response);
+	console.log("response stringify "+JSON.stringify(response));
+
+	if (response === ' ') {		
+		continenteMayorExportacion.textContent= "No existen sociedades registradas para calcular la estadística";		
+	} else {			
+		continenteMayorExportacion.textContent= response;			
+	} 
 }
 
-// LENGUAJES DE PAISES HACIA DONDE MAS SE EXPORTA
-async function mostrarLenguajesDePaisesMayorExportacion() {
-	// Ver cual es el endpoint cuando esté definido en django
-	let response = await fetch(localHost + '/estadisticas/usuarios/aprobaciones').then(response => response.json());
 
-	if (response) {
+// LENGUAJES DE PAISES HACIA DONDE MAS SE EXPORTA   
+async function mostrarLenguajesDePaisesMayorExportacion() {
+	let response = await fetch(localHost + '/estadisticas_exp/top_paises_lenguajes/10').then(response => response.json());
+	console.log("Response lenguajes" +response);
+
+	if (response == '') {
+		let newRow = tablaLenguajesPaisesExporta.tBodies[0].insertRow(-1);
+		let newCell = newRow.insertCell(-1);
+		newCell.colSpan = 3;
+		let newText = document.createTextNode("No se encontraron registros");
+		newCell.appendChild(newText);
+	} else {		
 		response.forEach(dato => {  			
 			let newRow = tablaLenguajesPaisesExporta.tBodies[0].insertRow(-1);
 			let newCell = newRow.insertCell(-1);
-			let newText = document.createTextNode(dato.cantidad);
-			newCell.appendChild(newText);
+			let newText = document.createTextNode(dato.country__code);
+			newCell.appendChild(newText);			 
 			newCell = newRow.insertCell(-1);
-			newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
-			newCell.appendChild(newText);
-			newCell = newRow.insertCell(-1);
-			newText = document.createTextNode(dato.rol);
-			newCell.appendChild(newText);			
-			return newRow.rowIndex; 
+			dato.country__languages.forEach(lenguaje =>  {				
+				newText = document.createTextNode(lenguaje);				
+				newCell.appendChild(newText);
+				newText = newText + ' ';
+			});
 		});
-		
-	} else {
-		return false;
 	}
 
 }
@@ -206,20 +217,14 @@ async function mostrarLenguajesDePaisesMayorExportacion() {
 // PROVINCIAS DONDE SE REGISTRAN MAS SOCIEDADES
 async function mostrarProvinciasMayorRegistroSociedades() {
 	// Ver cual es el endpoint cuando esté definido en django
-	let response = await fetch(localHost + '/estadisticas/usuarios/aprobaciones').then(response => response.json());
+	let response = await fetch(localHost + '/estadisticas_exp/top_estados/10').then(response => response.json());
 
 	if (response) {
 		response.forEach(dato => {  			
 			let newRow = tablaProvinciasRegistroSociedades.tBodies[0].insertRow(-1);
 			let newCell = newRow.insertCell(-1);
-			let newText = document.createTextNode(dato.cantidad);
+			let newText = document.createTextNode(dato);
 			newCell.appendChild(newText);
-			newCell = newRow.insertCell(-1);
-			newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
-			newCell.appendChild(newText);
-			newCell = newRow.insertCell(-1);
-			newText = document.createTextNode(dato.rol);
-			newCell.appendChild(newText);			
 			return newRow.rowIndex; 
 		});
 		
@@ -232,23 +237,17 @@ async function mostrarProvinciasMayorRegistroSociedades() {
 // CONTINENTES/PAISES A LOS QUE NO SE EXPORTA   
 async function mostrarContinentesPaisesNoExportacion() {
 	// Ver cual es el endpoint cuando esté definido en django
-	let response = await fetch(localHost + '/estadisticas/usuarios/aprobaciones').then(response => response.json());
+	let response = await fetch(localHost + '/estadisticas_exp/continentes_sin_exportaciones/').then(response => response.json());
 
 	if (response) {
 		response.forEach(dato => {  			
 			let newRow = tablaContientesPaisesExportacion.tBodies[0].insertRow(-1);
 			let newCell = newRow.insertCell(-1);
-			let newText = document.createTextNode(dato.cantidad);
+			let newText = document.createTextNode(dato);
 			newCell.appendChild(newText);
-			newCell = newRow.insertCell(-1);
-			newText = document.createTextNode(dato.nombre + ' ' + dato.apellido);
-			newCell.appendChild(newText);
-			newCell = newRow.insertCell(-1);
-			newText = document.createTextNode(dato.rol);
-			newCell.appendChild(newText);			
+				
 			return newRow.rowIndex; 
 		});
-		
 	} else {
 		return false;
 	}
