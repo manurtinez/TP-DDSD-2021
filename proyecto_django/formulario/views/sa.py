@@ -6,7 +6,7 @@ import environ
 from django.db.utils import IntegrityError
 from django.http.response import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from formulario.models import Exportacion, Pais, SociedadAnonima, Socio
+from formulario.models import Exportacion, Pais, SAHashes, SociedadAnonima, Socio
 from formulario.permissions import bonita_permission
 from formulario.serializers import (SociedadAnonimaRetrieveSerializer,
                                     SociedadAnonimaSerializer)
@@ -73,6 +73,9 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             new_sa = SociedadAnonima.objects.create(name=data['name'], legal_domicile=data['legal_domicile'],
                                                     creation_date=data['creation_date'], real_domicile=data['real_domicile'],
                                                     representative_email=data['representative_email'])
+
+            # Se crea nuevo objeto con el hash asignado
+            SAHashes.objects.create(sa=new_sa, hash=uuid4().hex)
 
             # Se agregan los socios que hayan venido
             partners = data['partners']
@@ -197,7 +200,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                     # !! tal vez aca, revertir transacciones
                     print('El mail de num expediente NO pudo enviarse...')
             else:
-                # Definir la fecha limite de correcciones (A RECIBIR POR PARAMETRO)
+                # !! Definir la fecha limite de correcciones (A RECIBIR POR PARAMETRO)
                 # !! Por ahora, 7 dias desde dia actual
                 limit_date = (datetime.now() + timedelta(days=7)
                               ).strftime('%d-%m-%Y')

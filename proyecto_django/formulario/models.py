@@ -74,3 +74,11 @@ class SocioSA(models.Model):
     class Meta():
         # Solo puede existir un par de (socio, SA)
         unique_together = [['partner', 'sa']]
+
+
+class SAHashes(models.Model):
+    """
+    Este modelo asocia ids de sociedades con hashes generados en la creacion, para realizar "authentication" anónima
+    """
+    sa = models.ForeignKey(SociedadAnonima, on_delete=models.CASCADE)
+    hash = models.CharField(max_length=32, unique=True, null=False)
