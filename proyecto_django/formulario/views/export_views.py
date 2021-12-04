@@ -4,7 +4,7 @@ from formulario.models import Exportacion
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from services.geo_service import get_all_continent_codes
+from services.geo_service import get_all_continents, get_countries_by_continent
 
 
 @api_view()
@@ -72,14 +72,25 @@ def top_export_states(request, limit):
 @api_view()
 def not_exported_continents(request):
     """
-    Este endpoint devuelve los continentes a los que actualmente no esta exportando ninguna sociedad
+    Este endpoint devuelve los continentes Y PAISES a los que actualmente no esta exportando ninguna sociedad
     """
     # Traigo el total de continentes
-    cont_codes = get_all_continent_codes()
+    all_continents = get_all_continents()
 
     # Traigo la lista de continentes de la DB
-    db_continents = list(Exportacion.objects.all().values_list(
-        'continent', flat=True).distinct())
+    db_continents = list(Exportacion.objects.all().annotate(code=F(
+        'continent_code'), name=F('continent_name')).values('code', 'name').distinct())
+
+    # Saco la lista diferencia
+    result_continents = [
+        cont for cont in all_continents if cont not in db_continents]
+
+    results = {}
+
+    # Para cada codigo, traigo los paises y armo el response
+    for ct in result_continents:
+        # Pido a la API de paises los de ese continente
+        results[ct['name']] = get_countries_by_continent(ct['code'])
 
     # Devuelvo la diferencia entre todos los continentes y los de la db
-    return Response(data=list(set(cont_codes) - set(db_continents)))
+    return Response(data=results)
