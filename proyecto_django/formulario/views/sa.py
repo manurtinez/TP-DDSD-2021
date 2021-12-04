@@ -6,7 +6,7 @@ import environ
 from django.db.utils import IntegrityError
 from django.http.response import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from formulario.models import Exportacion, Pais, SAHashes, SociedadAnonima, Socio
+from formulario.models import Exportacion, Lenguaje, Pais, SAHashes, SociedadAnonima, Socio
 from formulario.permissions import bonita_permission
 from formulario.serializers import (SociedadAnonimaRetrieveSerializer,
                                     SociedadAnonimaSerializer)
@@ -49,10 +49,14 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     def process_exports(self, new_sa, export_info):
         for continent in export_info:
             for country in continent['countries']:
-                country_object, created = Pais.objects.get_or_create(
-                    code=country['code'], languages=country['languages'])
+                new_country, created = Pais.objects.get_or_create(
+                    code=country['code'], name=country['name'])
+                for language in country['languages']:
+                    new_language, created = Lenguaje.objects.get_or_create(
+                        code=language['code'], name=language['name'], native_name=language['native'])
+                    new_country.languages.add(new_language)
                 exportacion = Exportacion.objects.create(
-                    sa=new_sa, continent=continent['code'], country=country_object, states=country['states'])
+                    sa=new_sa, continent_code=continent['code'], continent_name=continent['name'], country=new_country, states=country['states'])
                 exportacion.save()
 
     def create(self, request):

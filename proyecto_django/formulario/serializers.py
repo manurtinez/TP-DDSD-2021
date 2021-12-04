@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-from .models import Pais, SociedadAnonima, Socio, SocioSA
+from .models import Lenguaje, Pais, SociedadAnonima, Socio, SocioSA
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -43,12 +43,22 @@ class SocioPercentageSerializer(serializers.Serializer):
     is_representative = serializers.BooleanField(default=False)
 
 
+class LenguajeSerializer(serializers.Serializer):
+    """
+    Este serializer corresponde al modelo Lenguaje
+    """
+    code = serializers.CharField(max_length=3)
+    name = serializers.CharField(max_length=20)
+    native = serializers.CharField(max_length=50)
+
+
 class PaisSerializer(serializers.Serializer):
     """
     Este serializer corresponde a la estructura esperada para cada pais dentro de un continente
     """
-    languages = serializers.ListField()
+    languages = LenguajeSerializer(many=True)
     states = serializers.ListField()
+    name = serializers.CharField(max_length=60)
 
     class Meta:
         model = Pais
@@ -60,6 +70,7 @@ class ContinenteSerializer(serializers.Serializer):
     Este serializer corresponde a la estructura esperada para cada continente.
     """
     code = serializers.CharField(max_length=3)
+    name = serializers.CharField(max_length=15)
     countries = PaisSerializer(many=True)
 
 
