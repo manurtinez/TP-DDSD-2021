@@ -4,7 +4,7 @@ from formulario.models import Exportacion
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from services.geo_service import get_all_continents, get_countries_by_continent
+from services.geo_service import get_all_continents, get_country_names_by_continent
 
 
 @api_view()
@@ -15,14 +15,15 @@ def top_continent(request):
     """
     # Excluyo america (norte y sur)
     queryset = Exportacion.objects.exclude(
-        continent='SA').exclude(continent='NA')
+        continent_code='SA').exclude(continent_code='NA')
 
     # Hago agregacion de count de sa_id, agrupada por continent
-    queryset = queryset.values('continent').annotate(
-        continent_count=Count('sa_id', distinct=True)).order_by('-continent_count')
+    queryset = queryset.annotate(
+        continent_count=Count('sa_id', distinct=True), code=F(
+            'continent_code'), name=F('continent_name')).order_by('-continent_count')
 
     # Agarro el primero
-    continent = queryset.first()
+    continent = queryset.values('code', 'name').first()
 
     # Devuelvo el primero (mas cantidad)
     return Response(data=continent if continent else {})
@@ -90,7 +91,7 @@ def not_exported_continents(request):
     # Para cada codigo, traigo los paises y armo el response
     for ct in result_continents:
         # Pido a la API de paises los de ese continente
-        results[ct['name']] = get_countries_by_continent(ct['code'])
+        results[ct['name']] = get_country_names_by_continent(ct['code'])
 
     # Devuelvo la diferencia entre todos los continentes y los de la db
     return Response(data=results)
