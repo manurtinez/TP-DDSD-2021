@@ -1,6 +1,6 @@
 from django.db.models import Count
 from django.db.models.expressions import F, Func
-from formulario.models import Exportacion
+from formulario.models import Exportacion, Pais
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -18,7 +18,7 @@ def top_continent(request):
         continent_code='SA').exclude(continent_code='NA')
 
     # Hago agregacion de count de sa_id, agrupada por continent
-    queryset = queryset.annotate(
+    queryset = queryset.values('continent_code').annotate(
         continent_count=Count('sa_id', distinct=True), code=F(
             'continent_code'), name=F('continent_name')).order_by('-continent_count')
 
@@ -34,15 +34,23 @@ def top_country_languages(request, limit):
     """
     Este metodo devuelve los lenguajes de los paises a donde mas sociedades exportan.
     """
-    queryset = Exportacion.objects.all()
-
     # Agregacion para ordenar exportaciones por ocurrencia de paises descendente
     # Se agarran los primeros n (limit)
-    queryset = queryset.values('country_id').annotate(country_count=Count(
-        'country_id')).order_by('-country_count')[:limit]
+    queryset = Exportacion.objects.values('country_id').annotate(country_count=Count(
+        'country_id'), languages=F('country__languages__name')).order_by('-country_count')[:limit]
 
-    # Armo lista con codigo y lenguaje de c/u paises del top
-    result_list = queryset.all().values('country__code', 'country__languages')
+    # Me quedo con los ids resultantes
+    country_ids = queryset.values_list('country_id', flat=True)
+
+    # Por cada uno armo el response
+    result_list = []
+    for id in country_ids:
+        country = Pais.objects.get(pk=id)
+        languages = [lang for lang in country.languages.values(
+            'code', 'name', 'native_name')]
+        result_list.append({'country_code': country.code,
+                           'country_name': country.name, 'languages': languages})
+
     return Response(data=result_list)
 
 
