@@ -179,8 +179,10 @@ async function mostrarContieneMayorExportacion() {
 
 	if (respuesta == '{}') {		
 		continenteMayorExportacionSinResultados.textContent= "No se encontraron resultados.";		
-	} else {			
-		continenteMayorExportacion.textContent= respuesta;			
+	} else {	
+		let continente = JSON.parse(respuesta);
+		let nombreContiente = continente['name'];			
+		continenteMayorExportacion.textContent= nombreContiente;
 	} 
 }
 
@@ -250,9 +252,7 @@ async function mostrarContinentesPaisesNoExportacion() {
 			newCell.appendChild(newText);
 			newCell = newRow.insertCell(-1);
 			newText = document.createTextNode(response[res]);
-			newCell.appendChild(newText);		
-			console.log("POS: " +res + "resultado: "+response[res]);
-			
+			newCell.appendChild(newText);								
 		}
 	}
 }
