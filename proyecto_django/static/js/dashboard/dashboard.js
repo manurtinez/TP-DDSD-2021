@@ -121,7 +121,7 @@ async function mostrarUsuariosMayorCantRechazos() {
 		let newRow = tablaUsuariosRechazos.tBodies[0].insertRow(-1);
 		let newCell = newRow.insertCell(-1);
 		newCell.colSpan = 3;
-		let newText = document.createTextNode("No se encontraron registros");
+		let newText = document.createTextNode("No se encontraron resultados");
 		newCell.appendChild(newText);
 	} else {	
 		response.forEach(dato => {  	
@@ -149,7 +149,7 @@ async function mostrarUsuariosMayorCantAprobaciones() {
 		let newRow = tablaUsuariosAprobados.tBodies[0].insertRow(-1);
 		let newCell = newRow.insertCell(-1);
 		newCell.colSpan = 3;
-		let newText = document.createTextNode("No se encontraron registros");
+		let newText = document.createTextNode("No se encontraron resultados");
 		newCell.appendChild(newText);
 	} else {
 		response.forEach(dato => {  			
@@ -175,13 +175,12 @@ async function mostrarUsuariosMayorCantAprobaciones() {
 // CONTINENTE HACIA DONDE MAS SE EXPORTA
 async function mostrarContieneMayorExportacion() {
 	let response = await fetch(localHost + '/estadisticas_exp/top_continente').then(response => response.json());
-	console.log("resposne" +response);
-	console.log("response stringify "+JSON.stringify(response));
+	let respuesta = JSON.stringify(response);
 
-	if (response === ' ') {		
-		continenteMayorExportacion.textContent= "No existen sociedades registradas para calcular la estadística";		
+	if (respuesta == '{}') {		
+		continenteMayorExportacionSinResultados.textContent= "No se encontraron resultados.";		
 	} else {			
-		continenteMayorExportacion.textContent= response;			
+		continenteMayorExportacion.textContent= respuesta;			
 	} 
 }
 
@@ -189,34 +188,33 @@ async function mostrarContieneMayorExportacion() {
 // LENGUAJES DE PAISES HACIA DONDE MAS SE EXPORTA   
 async function mostrarLenguajesDePaisesMayorExportacion() {
 	let response = await fetch(localHost + '/estadisticas_exp/top_paises_lenguajes/10').then(response => response.json());
-	console.log("Response lenguajes" +response);
+	let respuesta = JSON.stringify(response);
 
-	if (response == '') {
+	if (respuesta == '') {
 		let newRow = tablaLenguajesPaisesExporta.tBodies[0].insertRow(-1);
 		let newCell = newRow.insertCell(-1);
 		newCell.colSpan = 3;
-		let newText = document.createTextNode("No se encontraron registros");
+		let newText = document.createTextNode("No se encontraron resultados");
 		newCell.appendChild(newText);
 	} else {		
 		response.forEach(dato => {  			
 			let newRow = tablaLenguajesPaisesExporta.tBodies[0].insertRow(-1);
-			let newCell = newRow.insertCell(-1);
-			let newText = document.createTextNode(dato.country__code);
+			let newCell = newRow.insertCell(-1);			
+			let newText = document.createTextNode(dato.country_name);
 			newCell.appendChild(newText);			 
 			newCell = newRow.insertCell(-1);
-			dato.country__languages.forEach(lenguaje =>  {				
+			dato.languages.forEach(lenguaje =>  {				
 				newText = document.createTextNode(lenguaje);				
 				newCell.appendChild(newText);
 				newText = newText + ' ';
 			});
 		});
 	}
-
 }
 
-// PROVINCIAS DONDE SE REGISTRAN MAS SOCIEDADES
+
+// ESTADOS DONDE SE REGISTRAN MAS SOCIEDADES
 async function mostrarProvinciasMayorRegistroSociedades() {
-	// Ver cual es el endpoint cuando esté definido en django
 	let response = await fetch(localHost + '/estadisticas_exp/top_estados/10').then(response => response.json());
 
 	if (response) {
@@ -231,27 +229,32 @@ async function mostrarProvinciasMayorRegistroSociedades() {
 	} else {
 		return false;
 	}
-
 }
 
-// CONTINENTES/PAISES A LOS QUE NO SE EXPORTA   
+
+// CONTINENTES Y PAISES A LOS QUE NO SE EXPORTA   
 async function mostrarContinentesPaisesNoExportacion() {
-	// Ver cual es el endpoint cuando esté definido en django
 	let response = await fetch(localHost + '/estadisticas_exp/continentes_sin_exportaciones/').then(response => response.json());
 
-	if (response) {
-		response.forEach(dato => {  			
+	if (response == '') {
+		let newRow = tablaContientesPaisesExportacion.tBodies[0].insertRow(-1);
+		let newCell = newRow.insertCell(-1);
+		newCell.colSpan = 3;
+		let newText = document.createTextNode("No se encontraron resultados");
+		newCell.appendChild(newText);
+	} else {				
+		for (res in response) {
 			let newRow = tablaContientesPaisesExportacion.tBodies[0].insertRow(-1);
-			let newCell = newRow.insertCell(-1);
-			let newText = document.createTextNode(dato);
+			let newCell = newRow.insertCell(-1);		
+			let newText = document.createTextNode(res);
 			newCell.appendChild(newText);
-				
-			return newRow.rowIndex; 
-		});
-	} else {
-		return false;
+			newCell = newRow.insertCell(-1);
+			newText = document.createTextNode(response[res]);
+			newCell.appendChild(newText);		
+			console.log("POS: " +res + "resultado: "+response[res]);
+			
+		}
 	}
-
 }
 
 
