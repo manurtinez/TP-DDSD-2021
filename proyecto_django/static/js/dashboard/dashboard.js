@@ -204,11 +204,22 @@ async function mostrarLenguajesDePaisesMayorExportacion() {
 			let newCell = newRow.insertCell(-1);			
 			let newText = document.createTextNode(dato.country_name);
 			newCell.appendChild(newText);			 
-			newCell = newRow.insertCell(-1);
-			dato.languages.forEach(lenguaje =>  {				
-				newText = document.createTextNode(lenguaje);				
+			newCell = newRow.insertCell(-1);				
+			let cantActLenguajes = 1;
+			let nombreLenguaje;
+			dato.languages.forEach(lenguaje =>  {	
+				if (dato.languages.length == cantActLenguajes) {				
+					nombreLenguaje = lenguaje.name+  '.';	
+				} else {
+					 nombreLenguaje = lenguaje.name+  ', ';			
+				}
+				cantActLenguajes ++;
+				newText = document.createTextNode(nombreLenguaje);	
+				//newText = newText + ' ';			
 				newCell.appendChild(newText);
-				newText = newText + ' ';
+			
+				//console.log(nombreLenguaje);
+	
 			});
 		});
 	}
