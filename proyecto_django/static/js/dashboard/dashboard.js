@@ -169,7 +169,6 @@ async function mostrarUsuariosMayorCantAprobaciones() {
 }
 
 
-
 // ESTADISTICAS GEOGRÁFICAS
 
 // CONTINENTE HACIA DONDE MAS SE EXPORTA
@@ -214,12 +213,8 @@ async function mostrarLenguajesDePaisesMayorExportacion() {
 					 nombreLenguaje = lenguaje.name+  ', ';			
 				}
 				cantActLenguajes ++;
-				newText = document.createTextNode(nombreLenguaje);	
-				//newText = newText + ' ';			
-				newCell.appendChild(newText);
-			
-				//console.log(nombreLenguaje);
-	
+				newText = document.createTextNode(nombreLenguaje);					
+				newCell.appendChild(newText);					
 			});
 		});
 	}

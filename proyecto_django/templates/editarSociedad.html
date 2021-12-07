@@ -1,6 +1,241 @@
-{% comment %} ACA IRIA LA PAGINA DE EDITAR SOCIEDAD {% endcomment %}
-{% comment %} LOS DATOS DE LA SOCIEDAD PUEDEN SER ACCEDIDOS CON {{ sociedad.<dato> }} {% endcomment %}
-    {{ sociedad.name }}
-    {{ sociedad.creation_date }}
-    {{ sociedad.legal_domicile }}
-    {{ sociedad.representative_email }}
+<!-- {% load static %} -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--<link rel="icon" href="images/logo.ico">-->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+	<link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
+
+	<title>Modificación de sociedad anónima</title>
+</head>
+
+<body id="body" class="bg-light" onload="refrescarTabla_Select(); cargarProvinciasSociedad()">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
+				aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>		
+		</div>
+	</nav>
+
+	<form action={% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data"
+		class="card container shadow pb-4 px-4 my-5" id="formularioSociedad" name="formularioSociedad"
+		onsubmit="return validarFormulario(event);">
+		{% csrf_token %}
+		<h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Modificación de sociedad</h3>
+		<div class="card-body shadow my-4 text-left px-0 py-4" id="bodyFormulario">
+			<h4><span class="badge etiqueta-form bg-primary">Sociedad</span></h4>
+			<section class="container container-form" id="containerSociedad">
+
+				<div class="input-group cmy-4">
+					<span class="input-group-text border-0"> Nombre:</span>
+					<div class="input-group-text"><i class="fas fa-users"></i></div>
+					<input type="text" class="form-control w-auto" id="nombreSociedad" name="nombreSociedad" value="{{ sociedad.name }}">  
+				</div>
+
+				<div class="input-group  cmb-4">
+					<span class="input-group-text border-0">Fecha de creación: </span>
+					<div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+					<input type="date" class="form-control" id="fechaCreacion" name="fechaCreacion" max="dateToday()" value="{{ sociedad.creation_date }}">
+				</div>
+
+				<div class="input-group cmb-4">
+					<span class="input-group-text border-0">Provincia: </span>
+					<div class="input-group-text"><i class="fab fa-font-awesome-flag"></i></div>
+					<select class="form-select text-start" id="provinciaSociedad" name="provinciaSociedad"
+						aria-label="Default select example" autocomplete="off" disabled>
+					</select>
+				</div>
+				
+				<div class="input-group  cmb-4">
+					<span class="input-group-text border-0">Domicilio legal: </span>
+					<div class="input-group-text"><i class="fas fa-city"></i></div>
+					<input type="text" class="form-control" id="domicilioLegal" name="domicilioLegal" value="{{ sociedad.legal_domicile }}">
+				</div>
+
+				<div class="input-group  cmb-4">
+					<span class="input-group-text border-0">Domicilio real: </span>
+					<div class="input-group-text"><i class="fas fa-home"></i></div>
+					<input type="text" class="form-control" id="domicilioReal" name="domicilioReal" value="{{ sociedad.real_domicile }}">
+				</div>
+
+
+				<div class="input-group cmb-4">
+					<span class="input-group-text border-0">Mail del apoderado: </span>
+					<div class="input-group-text"><i class="fas fa-at"></i></div>
+					<input type="text" class="form-control" id="mailApoderado" name="mailApoderado" value="{{ sociedad.representative_email }}">
+				</div>
+
+				<div class="input-group cmb-4">
+					<label for="checkExporta" class="input-group-text border-0">¿Exporta a otros países?</label>
+					<input autocomplete="off" class="form-check-input mt-2 rounded" type="checkbox" id="checkExporta"
+						onchange="checkTheCheckExportaciones(checkExporta);" />
+				</div>
+
+			<section id="containerExporta" hidden>
+
+				<div class="input-group cmb-4">
+					<span class="input-group-text border-0">Continente: </span>
+					<div class="input-group-text"><i class="fas fa-globe-americas"></i></div>
+					<select class="form-select text-start" id="continenteExportacion" name="continenteExportacion"
+						aria-label="Default select example" autocomplete="off" disabled onchange="actualizarSelectPaises()">
+
+					</select>
+				</div>
+
+				<div class="input-group cmb-4">
+					<span class="input-group-text border-0">País: </span>
+					<div class="input-group-text"><i class="fas fa-flag-usa"></i></div>
+					<select class="form-select text-start" id="paisExportacion" name="paisExportacion"
+						aria-label="Default select example" autocomplete="off" disabled onchange="actualizarSelectEstados()">
+						<option hidden selected disabled>Selecioná un país...</option>
+					</select>
+				</div>		
+				
+				<div class="input-group">
+					<span class="input-group-text border-0">Estados/Provincias: </span>
+					<div class="input-group-text"><i class="fab fa-font-awesome-flag"></i></div>
+						<button type="button" disabled autocomplete="off" id="btnEstadosExportacion"  class="form-select text-start w-auto" onclick="estadosExportacion.hidden = estadosExportacion.hidden ? false : true;">Selecciona los estados/provincias...</button>
+						<div class="col-auto ms-2">
+							<button type="button" onclick="agregarLugarExportacion()" id="btnAgregarEstados" title="Agregar estados/provincias"
+								class="btn btn-info py-3"><i class="fas fa-plus"></i></button>
+						</div>
+				</div>		
+				<select class="form-select select-checkbox text-start" id="estadosExportacion" name="estadosExportacion" hidden
+				aria-label="Default select example"  autocomplete="off" multiple size="auto" onmousedown="customSelect(event,this);">
+		
+			</select>		
+			<table hidden id="tablaExportaciones" class="table table-bordered w-75 mx-auto text-center cmb-4">
+				<caption>
+					<h4><span class="badge rounded-pill bg-primary">Listado de lugares exportados</span></h4>
+				</caption>
+				<thead class="table-primary">
+					<tr class="px-5">
+						<th scope="col" style="width: 5%;">#</th>
+						<th scope="col" style="width: 20%;">Continente</th>
+						<th scope="col" style="width: 30%;">Pais</th>
+						<th scope="col" style="width: 40%;">Estado/Provincia</th>
+						<th scope="col" style="width: 5%;">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+
+				</tbody>
+			</table>
+			</section>
+		</section>
+			<h4><span class="badge etiqueta-form bg-primary cmt-4">Socios</span></h4>
+			
+			<section class="container container-form" id="containerSocios">
+				<div class="row" id="containerDni">
+					<div class="col-auto cmy-4">
+						<div class="input-group">
+							<span class="input-group-text border-0">DNI:</span>
+							<div class="input-group-text"><i class="far fa-address-card"></i></div>
+							<input type="text" onkeydown="if(enterPress(event)){if (validarDniSocio()){buscarSocio(this.value)}}" class="form-control" id="dniSocio" name="dniSocio" placeholder="Por ej. 28872367">
+						</div>
+					</div>
+					<div class="col-auto cmy-4">
+						<button type="button" onclick="if(validarDniSocio()){buscarSocio(dniSocio.value)}" id="btnBuscarSocio"
+							class="btn btn-info pl-5"><i class="fas fa-search"></i></button>
+					</div>
+				</div>
+
+				<div class="row" id="containerSocio" hidden>
+					<div class="col-auto cmb-4">
+						<div class="input-group">
+							<span class="input-group-text border-0">Apellido:</span>
+							<div class="input-group-text"><i class="fas fa-user-circle"></i></div>
+							<input type="text" class="form-control text-capitalize" id="apellidoSocio" name="apellidoSocio"
+								placeholder="Por ej. Juan Rodriguez" readonly>
+						</div>
+					</div>
+					<div class="col-auto cmb-4">
+						<div class="input-group">
+							<span class="input-group-text border-0">Nombre:</span>
+							<div class="input-group-text"><i class="fas fa-user-alt"></i></div>
+							<input type="text" class="form-control text-capitalize" id="nombreSocio" name="nombreSocio"
+								placeholder="Por ej. Juan Rodriguez" readonly>
+						</div>
+					</div>
+				</div>
+
+				<div class="row" id="containerAportes" hidden>
+					<div class="col-auto cmb-4">
+						<div class="input-group">
+							<span class="input-group-text border-0">Aportes:</span>
+							<input type="text" class="form-control" id="porcentajeAportes" name="porcentajeAportes"
+								placeholder="Por ej. 50" onkeydown="if(enterPress(event)){if (validarAportesSocio()){agregarSocio(parseInt(porcentajeAportes.value))}}">
+							<div class="input-group-text"><i class="fas fa-percent"></i></div>
+						</div>
+					</div>
+					<div class="col-auto cmb-4">
+						<button type="button"
+							onclick="if (validarAportesSocio()){agregarSocio(parseInt(porcentajeAportes.value))}"
+							id="btnAgregarSocio" class="btn btn-info pl-5">+</button>
+					</div>
+				</div>     
+
+				<table id="tablaSocios" class="table table-bordered w-50 mx-auto text-center cmb-4" hidden>
+					<caption>
+						<h4><span class="badge rounded-pill bg-primary">Listado de socios ingresados</span></h4>
+					</caption>
+					<thead class="table-primary">
+						<tr class="px-5">
+							<th scope="col" style="width: 5%;">#</th>
+							<th scope="col" style="width: 50%;">Socio</th>
+							<th scope="col" class="px-0" style="width: 20%;">% aportes</th>
+							<th scope="col" style="width: 5%;">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+
+				<div class="row ">
+					<div class="col-auto">
+						<div class="input-group cmb-4">
+							<span class="input-group-text border-0">Representante legal/apoderado: </span>
+							<div class="input-group-text"><i class="fas fa-suitcase"></i></div>
+							<select disabled class="form-select text-start" id="representanteLegal" name="representanteLegal"
+								aria-label="Default select example" autocomplete="off">
+								<option hidden selected disabled>Selecioná un representante...</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-auto p-2 text-start" id="divRepresentanteSugerido" hidden><i
+							class="fas fa-info-circle fa-lg"></i><span class="fst-italic">Representante sugerido: </span>
+						<span id="representanteSugerido" class="fw-bold"></span><span class="fw-bold">% de aportes)</span>
+					</div>
+				</div>
+
+			</section>
+
+			</div>
+		</div>
+		<div class="text-center">
+			<button type="submit" id="submit" class="btn btn-info mb-4 mt-3"> <i class="fas fa-save"></i>
+				Modificar</button>
+		</div>
+	</form>
+	<!-- JavaScript -->
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/graphql.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/exportaciones.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/socios.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/sociedad.js' %}"></script>
+
+</body>
+
+</html>
