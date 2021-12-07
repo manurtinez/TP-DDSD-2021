@@ -17,7 +17,7 @@ from services.bonita_service import (assign_task, bonita_login_call,
                                      execute_task, set_bonita_variable,
                                      start_bonita_process)
 from services.estampillado_service import api_call_with_retry, complementaria_api_call, request_stamp
-from services.mail_service import (mail_estatuto_invalido, mail_num_expediente,
+from services.mail_service import (mail_estatuto_invalido, mail_fin_solicitud, mail_num_expediente,
                                    mail_solicitud_incorrecta)
 
 from services.types import BonitaNotOpenException
@@ -308,7 +308,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         sa.drive_folder_link = response['success']['url']
         sa.save()
 
-        # TODO mandar mail de final de proceso
+        # Traer info de apoderado (para envio de mails)
+        apoderado = sa.sociosa_set.get(is_representative=True).partner
+        if not mail_fin_solicitud(sa.name, apoderado.first_name, sa.representative_email):
+            print("el email de fin de proceso NO pudo ser enviado...")
+
         if response['status'] == 200:
             return Response(data='La carpeta digital fue creada con exito. El archivo pdf se puede ver en ' + response['success']['url'])
         else:
