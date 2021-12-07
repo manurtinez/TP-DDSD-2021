@@ -1,6 +1,7 @@
 /* sociedad_anonima/a_evaluar */
 function obtenerBotones(idSociedad, newCell) {
 	let newLink = document.createElement("a");
+	newLink.title = "Descargar estatuto";
 	newLink.href = `http://localhost:8000/sociedad_anonima/${idSociedad}/obtener_estatuto/`;
 	newLink.classList.add("btn", "btn-color-warning", "px-2", "mx-2", "anchoBoton");
 	newIcon = document.createElement("i");
@@ -10,6 +11,7 @@ function obtenerBotones(idSociedad, newCell) {
 	newCell.appendChild(newLink);
 
 	newLink = document.createElement("a");
+	newLink.title = "Rechazar estatuto";
 	newLink.addEventListener('click', rechazarEstatuto.bind(this, idSociedad));
 	newLink.classList.add("btn", "btn-color-danger", 'px-2', "mx-1", 'anchoBoton');
 	newIcon = document.createElement("i");
@@ -18,6 +20,7 @@ function obtenerBotones(idSociedad, newCell) {
 	newCell.appendChild(newLink);
 
 	newLink = document.createElement("a");
+	newLink.title = "Aprobar estatuto";
 	newLink.addEventListener('click', aprobarEstatuto.bind(this, idSociedad));
 	newLink.classList.add("btn", "btn-color-success", 'px-2', 'mx-1', 'anchoBoton');
 	newIcon = document.createElement("i");
@@ -25,31 +28,6 @@ function obtenerBotones(idSociedad, newCell) {
 	newLink.appendChild(newIcon);
 	newCell.appendChild(newLink);
 	newLink = document.createElement("a");
-}
-
-async function descargarEstatuto(idSociedad) {
-	// VER MAS ADELANTE CUAL ES EL ENDPOINT QUE SE DEFINA EN DJANGO PARA DESCARGAR ESTATUTO
-	// const response = await fetch(localHost + urlDescargarEstauto + idSociedad, {
-	// 	method: 'POST',
-	// 	headers: {
-	// 		'X-CSRFToken': csrftoken,
-	// 		'Content-Type': 'application/json',
-	// 	},
-	// 	body: JSON.stringify({
-	// 		id: idSociedad
-	// 	})
-	// });
-	// if (response.status === 201) {
-	// 	Swal.fire({
-	// 		position: 'top',
-	// 		icon: 'success',
-	// 		title: 'El estatuto ha sido descargado correctamente!',
-	// 		showConfirmButton: true,
-	// 		confirmButtonText: '<a onclick=location.reload(true);>Continuar</a>'
-	// 	})
-	// } else {
-	// 	// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
-	// }
 }
 
 async function resolucionEstatuto(idSociedad, veredicto, observaciones) {
@@ -78,6 +56,8 @@ async function aprobarEstatuto(idSociedad) {
 				icon: 'success',
 				title: 'El estatuto ha sido aprobado correctamente!',
 				showConfirmButton: true,
+				allowEscapeKey: false,
+				allowOutsideClick: false,
 				confirmButtonText: `Continuar`
 			}).then((result) => {
 				if (result.isConfirmed) {
@@ -85,9 +65,11 @@ async function aprobarEstatuto(idSociedad) {
 				}
 			})
 		} else {
-			mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+			mostrarModalMensaje('Hubo algun error en el intento de aprobar el estatuto. Por favor, intente nuevamente.');
+		} 
+	} else{
+		mostrarModalMensaje('Hubo algun error al generar el estampillado. Por favor, intente nuevamente.');
 		}
-	}
 }
 
 async function rechazarEstatuto(idSociedad) {
