@@ -37,7 +37,7 @@ class Continent {
 }
 
 class Country {
-	constructor(codePais, namePais,languages) {
+	constructor(codePais, namePais, languages) {
 		this.code = codePais;
 		this.name = namePais;
 		this.languages = languages;
@@ -103,7 +103,7 @@ async function actualizarSelectPaises() {
 }
 
 
-async function optionsInDynamicSelect(aSelect, aFunctionToAddDataInSelect , aFunctionToShowWaitMessage, aFunctionToGetData, aFilterToGetData) {
+async function optionsInDynamicSelect(aSelect, aFunctionToAddDataInSelect, aFunctionToShowWaitMessage, aFunctionToGetData, aFilterToGetData) {
 	aSelect.disabled = true;
 	aSelect.classList.add('cursor-wait');
 	let idInterval = aFunctionToShowWaitMessage();
@@ -111,23 +111,23 @@ async function optionsInDynamicSelect(aSelect, aFunctionToAddDataInSelect , aFun
 	clearInterval(idInterval);
 	//Resetear opciones
 	aSelect.innerText = "";
-	aFunctionToAddDataInSelect(options,aSelect)
+	aFunctionToAddDataInSelect(options, aSelect)
 	aSelect.disabled = false;
 	toggleClasses(aSelect, 'cursor-wait', 'cursor-default');
 }
 
-function agregarOptionsEnSelect(options,aSelect){
+function agregarOptionsEnSelect(options, aSelect) {
 	options.forEach(newOption => {
 		agregarOptionEnSelect(aSelect, newOption.name, newOption.code);
 	});
 }
 
-function agregarOptionsEnSelectMasLenguajes(options,aSelect){
+function agregarOptionsEnSelectMasLenguajes(options, aSelect) {
 	languagesInOptions = [];
 	options.forEach(newOption => {
-			agregarOptionEnSelect(aSelect, newOption.name, newOption.code);
-			languagesInOptions.push(newOption.languages);
-		});
+		agregarOptionEnSelect(aSelect, newOption.name, newOption.code);
+		languagesInOptions.push(newOption.languages);
+	});
 }
 
 function agregaMensajeEspera(aSelect, titleLoading) {
@@ -215,15 +215,20 @@ function quitarLugarExportacion(rowLugarExportacion, idContinente, idPais, estad
 	}).then((result) => {
 		if (result.isConfirmed) {
 			let index = rowLugarExportacion.rowIndex;
-			// Si el país no tiene estados 
-			if (estado == "-") {
-				exportaciones.get(idContinente).countries.get(idPais).states.delete("-");
-			} else {
-				// Si el pais tiene solo el estado borrar el pais
-				exportaciones.get(idContinente).countries.get(idPais).states.delete(estado);
+			exportaciones.get(idContinente).countries.get(idPais).states.delete(estado);
+			// Si el país tiene 1 estado
+			if (exportaciones.get(idContinente).countries.get(idPais).states.size == 0) {
+				exportaciones.get(idContinente).countries.delete(idPais)
+			}
+			// Si el continente no tiene paises
+			if (exportaciones.get(idContinente).countries.size == 0) {
+				exportaciones.delete(idContinente);
 			}
 
-			// Si el continente tiene solo el pais del estado y el pais tiene solo ese estado borrar continente
+			if (exportaciones.size == 0) {
+				tablaExportaciones.hidden = true;
+			}
+
 			rowLugarExportacion.remove();
 			for (index; index < tablaExportaciones.rows.length; index++) {
 				tablaExportaciones.rows[index].cells[0].textContent = tablaExportaciones.rows[index].rowIndex;
