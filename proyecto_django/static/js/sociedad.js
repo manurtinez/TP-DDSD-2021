@@ -169,6 +169,18 @@ async function validarFormulario(event) {
 	return true;
 }
 
+// Esta funcion convierte la estructura de exportaciones a objetos y arrays simples
+function map_to_objects(exportaciones) {
+    return Array.from(exportaciones).map(
+        ([key, value]) => ({
+            ...value, countries: Array.from(value.countries).map(
+                ([key, value]) => ({...value, states: value.states.has('-') ? [] : Array.from(value.states)})
+            )
+        })
+    )
+}
+
+
 async function registrarSociedad() {
 	const response = await fetch(localHost + '/sociedad_anonima/', {
 		method: 'POST',
@@ -184,7 +196,7 @@ async function registrarSociedad() {
 			idApoderado: representanteLegal.value,
 			representative_email: document.formularioSociedad.mailApoderado.value,
 			creation_date: document.formularioSociedad.fechaCreacion.value,
-			exports : JSON.stringify(exportaciones,Map_Set_toJSON)
+			exports : map_to_objects(exportaciones)
 		}),
 
 	});
