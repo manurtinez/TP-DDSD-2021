@@ -3,311 +3,269 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!--<link rel="icon" href="images/logo.ico">-->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
-  <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/sociedad.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/socios.js' %}"></script>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--<link rel="icon" href="images/logo.ico">-->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+	<link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css" />
 
-  <title>Alta de sociedad anónima | Dirección Nacional de Personas Jurídicas</title>
+	<title>Alta de sociedad anónima</title>
 </head>
 
-<body class="bg-light" onload="refrescarTabla_Select()">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
-        aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <!--
-      <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
-        <ul class="navbar-nav">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="/" id="navbarDarkDropdownMenuLink" role="button"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              Comprobantes
-            </a>
-            <ul class="dropdown-menu dropdown-menu-primary" aria-labelledby="navbarDarkDropdownMenuLink">
+<body id="body" class="bg-light" onload="refrescarTabla_Select(); cargarProvinciasSociedad()">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
+				aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<!--
+			<div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+				<ul class="navbar-nav">
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="/" id="navbarDarkDropdownMenuLink" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							Comprobantes
+						</a>
+						<ul class="dropdown-menu dropdown-menu-primary" aria-labelledby="navbarDarkDropdownMenuLink">
 
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link " href="configParameters.html" id="navbarDarkDropdownMenuLink" aria-expanded="false">
-              Configuración
-            </a>
-          </li>
-        </ul>
-      </div>
-      -->
-    </div>
-  </nav>
+						</ul>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link " href="configParameters.html" id="navbarDarkDropdownMenuLink" aria-expanded="false">
+							Configuración
+						</a>
+					</li>
+				</ul>
+			</div>
+			-->
+		</div>
+	</nav>
 
-  <form action={% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data"
-    class="card container shadow pb-4 px-4 my-5" id="formularioSociedad" name="formularioSociedad"
-    onsubmit="return validarFormulario(event);" >
-    {% csrf_token %}
-    <h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Alta de sociedad</h3>
-    <div class="card-body shadow my-4 text-left px-0 py-4" id="bodyFormulario">
-      <h4><span class="badge etiqueta-form bg-primary">Sociedad</span></h4>
-      <section class="container container-form" id="containerSociedad">
-        <div class="input-group cmy-4">
-          <span class="input-group-text border-0"> Nombre:</span>
-          <div class="input-group-text"><i class="fas fa-users"></i></div>
-          <input type="text" class="form-control w-auto" id="nombreSociedad" name="nombreSociedad"
-            placeholder="Por ej. Juan Rodriguez & Roberto Fernandez Sociedad de Hecho">
-        </div>
+	<form action={% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data"
+		class="card container shadow pb-4 px-4 my-5" id="formularioSociedad" name="formularioSociedad"
+		onsubmit="return validarFormulario(event);">
+		{% csrf_token %}
+		<h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Alta de sociedad</h3>
+		<div class="card-body shadow my-4 text-left px-0 py-4" id="bodyFormulario">
+			<h4><span class="badge etiqueta-form bg-primary">Sociedad</span></h4>
+			<section class="container container-form" id="containerSociedad">
+
+				<div class="input-group cmy-4">
+					<span class="input-group-text border-0"> Nombre:</span>
+					<div class="input-group-text"><i class="fas fa-users"></i></div>
+					<input type="text" class="form-control w-auto" id="nombreSociedad" name="nombreSociedad"
+						placeholder="Por ej. Juan Rodriguez & Roberto Fernandez Sociedad de Hecho">
+				</div>
+
+				<div class="input-group  cmb-4">
+					<span class="input-group-text border-0">Fecha de creación: </span>
+					<div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+					<input type="date" class="form-control" id="fechaCreacion" name="fechaCreacion" max="dateToday()">
+				</div>
+
+				<div class="input-group  cmb-4">
+					<span class="input-group-text border-0">Estatuto de conformación: </span>
+					<div class="input-group-text"><i class="fas fa-paperclip"></i></div>
+					<input type="file" class="" value="" id="estatuto" name="estatuto">
+				</div>
+
+				<div class="input-group cmb-4">
+					<span class="input-group-text border-0">Provincia: </span>
+					<div class="input-group-text"><i class="fab fa-font-awesome-flag"></i></div>
+					<select class="form-select text-start" id="provinciaSociedad" name="provinciaSociedad"
+						aria-label="Default select example" autocomplete="off" disabled>
+					</select>
+				</div>
+				
+				<div class="input-group  cmb-4">
+					<span class="input-group-text border-0">Domicilio legal: </span>
+					<div class="input-group-text"><i class="fas fa-city"></i></div>
+					<input type="text" class="form-control" value="" id="domicilioLegal" name="domicilioLegal"
+						placeholder="Por ej. Av. 13 N° 76 e/ 33 y 34">
+				</div>
+
+				<div class="input-group  cmb-4">
+					<span class="input-group-text border-0">Domicilio real: </span>
+					<div class="input-group-text"><i class="fas fa-home"></i></div>
+					<input type="text" class="form-control" value="" id="domicilioReal" name="domicilioReal"
+						placeholder="Por ej. Av. 79 N° 611 e/ 17 y 18">
+				</div>
 
 
-        <div class="input-group  cmb-4">
-          <span class="input-group-text border-0">Fecha de creación: </span>
-          <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-          <input type="date" class="form-control" id="fechaCreacion" name="fechaCreacion" max="dateToday()">
-        </div>
+				<div class="input-group cmb-4">
+					<span class="input-group-text border-0">Mail del apoderado: </span>
+					<div class="input-group-text"><i class="fas fa-at"></i></div>
+					<input type="text" class="form-control" value="" id="mailApoderado" name="mailApoderado"
+						placeholder="Por ej. sancheznicolas@gmail.com">
+				</div>
 
-        <div class="input-group  cmb-4">
-          <span class="input-group-text border-0">Estatuto de conformación: </span>
-          <div class="input-group-text"><i class="fas fa-paperclip"></i></div>
-          <input type="file" class="" value="" id="estatuto" name="estatuto">
-        </div>
+				<div class="input-group cmb-4">
+					<label for="checkExporta" class="input-group-text border-0">¿Exporta a otros países?</label>
+					<input autocomplete="off" class="form-check-input mt-2 rounded" type="checkbox" value="" id="checkExporta"
+						onchange="checkTheCheckAndHideContainer(checkExporta,containerExporta,cargarContinentes);" />
+				</div>
 
-        <div class="input-group  cmb-4">
-          <span class="input-group-text border-0">Domicilio legal: </span>
-          <div class="input-group-text"><i class="fas fa-city"></i></div>
-          <input type="text" class="form-control" value="" id="domicilioLegal" name="domicilioLegal"
-            placeholder="Por ej. Av. 13 N° 76 e/ 33 y 34">
-        </div>
+			<section id="containerExporta" hidden>
 
+				<div class="input-group cmb-4">
+					<span class="input-group-text border-0">Continente: </span>
+					<div class="input-group-text"><i class="fas fa-globe-americas"></i></div>
+					<select class="form-select text-start" id="continenteExportacion" name="continenteExportacion"
+						aria-label="Default select example" autocomplete="off" disabled onchange="actualizarSelectPaises()">
 
-        <div class="input-group  cmb-4">
-          <span class="input-group-text border-0">Domicilio real: </span>
-          <div class="input-group-text"><i class="fas fa-home"></i></div>
-          <input type="text" class="form-control" value="" id="domicilioReal" name="domicilioReal"
-            placeholder="Por ej. Av. 79 N° 611 e/ 17 y 18">
-        </div>
+					</select>
+				</div>
 
+				<div class="input-group cmb-4">
+					<span class="input-group-text border-0">País: </span>
+					<div class="input-group-text"><i class="fas fa-flag-usa"></i></div>
+					<select class="form-select text-start" id="paisExportacion" name="paisExportacion"
+						aria-label="Default select example" autocomplete="off" disabled onchange="actualizarSelectEstados()">
+						<option hidden selected disabled>Selecioná un país...</option>
+					</select>
+				</div>		
+				
+				<div class="input-group">
+					<span class="input-group-text border-0">Estados/Provincias: </span>
+					<div class="input-group-text"><i class="fab fa-font-awesome-flag"></i></div>
+						<button type="button" disabled autocomplete="off" id="btnEstadosExportacion"  class="form-select text-start w-auto" onclick="estadosExportacion.hidden = estadosExportacion.hidden ? false : true;">Selecciona los estados/provincias...</button>
+						<div class="col-auto ms-2">
+							<button type="button" onclick="agregarLugarExportacion()" id="btnAgregarEstados" title="Agregar estados/provincias"
+								class="btn btn-info py-3"><i class="fas fa-plus"></i></button>
+						</div>
+				</div>		
+				<select class="form-select select-checkbox text-start" id="estadosExportacion" name="estadosExportacion" hidden
+				aria-label="Default select example"  autocomplete="off" multiple size="auto" onmousedown="customSelect(event,this);">
+		
+			</select>		
+			<table hidden id="tablaExportaciones" class="table table-hover table-bordered w-75 mx-auto text-center cmb-4">
+				<caption>
+					<h4><span class="badge rounded-pill bg-primary">Listado de lugares exportados</span></h4>
+				</caption>
+				<thead class="table-primary">
+					<tr class="px-5">
+						<th scope="col" style="width: 5%;">#</th>
+						<th scope="col" style="width: 20%;">Continente</th>
+						<th scope="col" style="width: 30%;">Pais</th>
+						<th scope="col" style="width: 40%;">Estado/Provincia</th>
+						<th scope="col" style="width: 5%;">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
 
-        <div class="input-group cmb-4">
-          <span class="input-group-text border-0">Mail del apoderado: </span>
-          <div class="input-group-text"><i class="fas fa-at"></i></div>
-          <input type="text" class="form-control" value="" id="mailApoderado" name="mailApoderado"
-            placeholder="Por ej. sancheznicolas@gmail.com">
-        </div>
+				</tbody>
+			</table>
+			</section>
+		</section>
+			<h4><span class="badge etiqueta-form bg-primary cmt-4">Socios</span></h4>
+			
+			<section class="container container-form" id="containerSocios">
+				<div class="row" id="containerDni">
+					<div class="col-auto cmy-4">
+						<div class="input-group">
+							<span class="input-group-text border-0">DNI:</span>
+							<div class="input-group-text"><i class="far fa-address-card"></i></div>
+							<input type="text" onkeydown="if(enterPress(event)){if (validarDniSocio()){buscarSocio(this.value)}}" class="form-control" id="dniSocio" name="dniSocio" placeholder="Por ej. 28872367">
+						</div>
+					</div>
+					<div class="col-auto cmy-4">
+						<button type="button" onclick="if(validarDniSocio()){buscarSocio(dniSocio.value)}" id="btnBuscarSocio"
+							class="btn btn-info pl-5"><i class="fas fa-search"></i></button>
+					</div>
+				</div>
 
-        <div class="input-group cmb-4">
-          <label for="checkExporta" class="input-group-text border-0">¿Exporta a otros países?</label>
-          <input autocomplete="off" class="form-check-input mt-2" type="checkbox" value="" id="checkExporta"
-            onclick="if (checkExporta.checked){containerExporta.hidden=false}else{containerExporta.hidden=true}" />
-        </div>
+				<div class="row" id="containerSocio" hidden>
+					<div class="col-auto cmb-4">
+						<div class="input-group">
+							<span class="input-group-text border-0">Apellido:</span>
+							<div class="input-group-text"><i class="fas fa-user-circle"></i></div>
+							<input type="text" class="form-control text-capitalize" id="apellidoSocio" name="apellidoSocio"
+								placeholder="Por ej. Juan Rodriguez" readonly>
+						</div>
+					</div>
+					<div class="col-auto cmb-4">
+						<div class="input-group">
+							<span class="input-group-text border-0">Nombre:</span>
+							<div class="input-group-text"><i class="fas fa-user-alt"></i></div>
+							<input type="text" class="form-control text-capitalize" id="nombreSocio" name="nombreSocio"
+								placeholder="Por ej. Juan Rodriguez" readonly>
+						</div>
+					</div>
+				</div>
 
-        <div class="row " id="containerExporta" hidden>
+				<div class="row" id="containerAportes" hidden>
+					<div class="col-auto cmb-4">
+						<div class="input-group">
+							<span class="input-group-text border-0">Aportes:</span>
+							<input type="text" class="form-control" id="porcentajeAportes" name="porcentajeAportes"
+								placeholder="Por ej. 50" onkeydown="if(enterPress(event)){if (validarAportesSocio()){agregarSocio(parseInt(porcentajeAportes.value))}}">
+							<div class="input-group-text"><i class="fas fa-percent"></i></div>
+						</div>
+					</div>
+					<div class="col-auto cmb-4">
+						<button type="button"
+							onclick="if (validarAportesSocio()){agregarSocio(parseInt(porcentajeAportes.value))}"
+							id="btnAgregarSocio" class="btn btn-info pl-5">+</button>
+					</div>
+				</div>     
 
-          <div id="sociedad_anonima_vue" class="col-auto cmb-4">
-            <!-- continentes -->
-            <select class="form-select" v-model="continente" @change="getPaises()">
-              <option selected :value="null">Continente</option>
-              <option v-for="cont in continentes" :value="cont">-<%cont.name%></option>
-            </select>
-            <!-- paises -->
-            <select class="form-select"v-model="pais" :disabled="continente == null" @change="getEstados()">
-              <option selected :value="null">Pais</option>
-              <option v-for="pais in paises" :value="pais">-<%pais.name%></option>
-            </select>
-            <!-- estados -->
-            <select class="form-select" v-model="estado" :disabled="pais == null">
-              <option selected :value="null">Estados</option>
-              <option v-for="estado in estados" :value="estado">-<%estado.name%></option>
-            </select>
-          </div>
+				<table id="tablaSocios" class="table table-hover table-bordered w-50 mx-auto text-center cmb-4" hidden>
+					<caption>
+						<h4><span class="badge rounded-pill bg-primary">Listado de socios ingresados</span></h4>
+					</caption>
+					<thead class="table-primary">
+						<tr class="px-5">
+							<th scope="col" style="width: 5%;">#</th>
+							<th scope="col" style="width: 50%;">Socio</th>
+							<th scope="col" class="px-0" style="width: 20%;">% aportes</th>
+							<th scope="col" style="width: 5%;">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
 
-          <div id="containerEstados" class="col-auto cmb-4" hidden>
-            <div class="input-group">
-              <span class="input-group-text border-0">Estado:</span>
-              <div class="input-group-text"><i class="fas fa-flag-usa"></i></div>
-              <button class="btn btn-primary w-auto" type="button"
-                onclick="if (estadosDeExportacion.hidden==true){estadosDeExportacion.hidden=false}else{estadosDeExportacion.hidden=true}">Selecciona
-                los Estados... <i class="fas fa-angle-down"></i></button>
-            </div>
-            <select autocomplete="off" id="estadosDeExportacion" name="estadosDeExportacion"
-              class="form-select select-checkbox w-100" hidden multiple size="auto"
-              onmousedown="customSelect(event,this);">
-              <option value="">California</option>
-              <option value="">Distrito Federal</option>
-              <option value="">Valais</option>
-              <option value="">Paris</option>
-              <option value="">Bogota</option>
-              <option value="">Colchagua</option>
-              <option value="">Lima</option>
-              <option value="">Nueva Gales del Sur</option>
-            </select>
-          </div>
-        </div>
-      </section>
+					</tbody>
+				</table>
 
-      <h4><span class="badge etiqueta-form bg-primary">Socios</span></h4>
-      
-      <section class="container container-form" id="containerSocios">
-        <div class="row" id="containerDni">
-          <div class="col-auto cmy-4">
-            <div class="input-group">
-              <span class="input-group-text border-0">DNI:</span>
-              <div class="input-group-text"><i class="far fa-address-card"></i></div>
-              <input type="text" onkeydown="if(enterPress(event)){if (validarDniSocio()){buscarSocio(this.value)}}" class="form-control" id="dniSocio" name="dniSocio" placeholder="Por ej. 28872367">
-            </div>
-          </div>
-          <div class="col-auto cmy-4">
-            <button type="button" onclick="if(validarDniSocio()){buscarSocio(dniSocio.value)}" id="btnBuscarSocio"
-              class="btn btn-info pl-5"><i class="fas fa-search"></i></button>
-          </div>
-        </div>
+				<div class="row ">
+					<div class="col-auto">
+						<div class="input-group cmb-4">
+							<span class="input-group-text border-0">Representante legal/apoderado: </span>
+							<div class="input-group-text"><i class="fas fa-suitcase"></i></div>
+							<select disabled class="form-select text-start" id="representanteLegal" name="representanteLegal"
+								aria-label="Default select example" autocomplete="off">
+								<option hidden selected disabled>Selecioná un representante...</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-auto p-2 text-start" id="divRepresentanteSugerido" hidden><i
+							class="fas fa-info-circle fa-lg"></i><span class="fst-italic">Representante sugerido: </span>
+						<span id="representanteSugerido" class="fw-bold"></span><span class="fw-bold">% de aportes)</span>
+					</div>
+				</div>
 
-        <div class="row" id="containerSocio" hidden>
-          <div class="col-auto cmb-4">
-            <div class="input-group">
-              <span class="input-group-text border-0">Apellido:</span>
-              <div class="input-group-text"><i class="fas fa-user-circle"></i></div>
-              <input type="text" class="form-control text-capitalize" id="apellidoSocio" name="apellidoSocio"
-                placeholder="Por ej. Juan Rodriguez" readonly>
-            </div>
-          </div>
-          <div class="col-auto cmb-4">
-            <div class="input-group">
-              <span class="input-group-text border-0">Nombre:</span>
-              <div class="input-group-text"><i class="fas fa-user-alt"></i></div>
-              <input type="text" class="form-control text-capitalize" id="nombreSocio" name="nombreSocio"
-                placeholder="Por ej. Juan Rodriguez" readonly>
-            </div>
-          </div>
-        </div>
-        <div class="row" id="containerAportes" hidden>
-          <div class="col-auto cmb-4">
-            <div class="input-group">
-              <span class="input-group-text border-0">Aportes:</span>
-              <input type="text" class="form-control" id="porcentajeAportes" name="porcentajeAportes"
-                placeholder="Por ej. 50" onkeydown="if(enterPress(event)){if (validarAportesSocio()){agregarSocio(parseInt(porcentajeAportes.value))}}">
-              <div class="input-group-text"><i class="fas fa-percent"></i></div>
-            </div>
-          </div>
-          <div class="col-auto cmb-4">
-            <button type="button"
-              onclick="if (validarAportesSocio()){agregarSocio(parseInt(porcentajeAportes.value))}"
-              id="btnAgregarSocio" class="btn btn-info pl-5">+</button>
-          </div>
-        </div>                      
-        <table id="tablaSocios" class="table table-hover table-bordered w-50 mx-auto text-center cmb-4" hidden>
-          <caption>
-            <h4><span class="badge rounded-pill bg-primary">Listado de socios ingresados</span></h4>
-          </caption>
-          <thead class="table-primary">
-            <tr class="px-5">
-              <th scope="col" style="width: 5%;">#</th>
-              <th scope="col" style="width: 50%;">Socio</th>
-              <th scope="col" class="px-0" style="width: 20%;">% aportes</th>
-              <th scope="col" style="width: 5%;">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
+			</section>
 
-          </tbody>
-        </table>
+			</div>
+		</div>
+		<div class="text-center">
+			<button type="submit" id="submit" class="btn btn-info mb-4 mt-3"> <i class="fas fa-save"></i>
+				Guardar</button>
+		</div>
+	</form>
+	<!-- JavaScript -->
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/graphql.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/exportaciones.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/socios.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/sociedad.js' %}"></script>
 
-        <div class="row ">
-          <div class="col-auto">
-            <div class="input-group cmb-4">
-              <span class="input-group-text border-0">Representante legal/apoderado: </span>
-              <div class="input-group-text"><i class="fas fa-suitcase"></i></div>
-              <select disabled class="form-select text-start" id="representanteLegal" name="representanteLegal"
-                aria-label="Default select example" autocomplete="off">
-                <option hidden selected disabled>Selecioná un representante...</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-auto p-2 text-start" id="divRepresentanteSugerido" hidden><i
-              class="fas fa-info-circle fa-lg"></i><span class="fst-italic">Representante sugerido: </span>
-            <span id="representanteSugerido" class="fw-bold"></span><span class="fw-bold">% de aportes)</span>
-          </div>
-        </div>
-      </section>
-
-    </div>
-    <div class="text-center">
-      <button type="submit" id="submit" class="btn btn-info mb-4 mt-3"> <i class="fas fa-save"></i>
-        Guardar</button>
-    </div>
-  </form>
-
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
-  <script>
-      Vue.mixin({
-        computed: {
-            urlApi: function () {
-                return "http://localhost/api";
-            }
-        }
-    });
-
-    var vue = new Vue({
-      el: '#sociedad_anonima_vue',
-      delimiters: ["<%","%>"],
-      data() {
-          return {
-            continentes: [],
-            paises: [{ value: null, text: 'Pais', disabled: true }],
-            estados: [{ value: null, text: 'Estado', disabled: true }],
-            continente: null,
-            pais: null,
-            estado: null,
-            calle: 'dsvgsadgs'
-          };
-      },
-      computed: {},
-
-      mounted() {
-          axios.get("http://localhost/api/geo/continente")
-          .then((response) => {
-              this.continentes = response.data;
-          }).catch((error) => {
-              console.log(error);
-          });
-      },
-      methods: {
-        getPaises(){
-          axios.get("http://localhost/api/geo/continente/"+this.continente.code+"/pais")
-          .then((response) => {
-              this.paises = [];
-              this.estados = [];
-              this.paises = response.data;
-              this.pais = null;
-              this.estado = null;
-          }).catch((error) => {
-              console.log(error);
-          });
-        },
-        getEstados(){
-          axios.get("http://localhost/api/geo/pais/"+this.pais.code+"/estado")
-          .then((response) => {
-              this.estados = [];
-              if(response.data.isEmpty){
-                this.estados.push({ code: 'Sin Estado', name: '' });
-              }
-              this.estados =  response.data;
-              this.estado = null;
-          }).catch((error) => {
-              console.log(error);
-          });
-        }
-      }
-    });
-  </script>
 </body>
 
 </html>

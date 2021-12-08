@@ -108,6 +108,12 @@ function validarAportesSocio() {
 	return true;
 }
 
+async function socioPorId(idSocio) {
+	// Se contempla solamente el caso positivo si se encontro la socio o si no. Faltan agregar los casos para otras respuestas del servidor
+	let socio = await fetch(localHost + '/socio/' + idSocio).then(response => response.json());
+	return socio != null ? socio : false;
+}
+
 function agregarSocio(porcentajeAportado) {
 	if ((totalPorcentajeSocios += porcentajeAportado) == 100) {
 		Swal.fire({
@@ -164,7 +170,7 @@ function eliminarSocio(rowSocio, idSocio) {
 			let indexFinded = sociosEnSociedad.findIndex(socio => socio.id === idSocio);
 			sociosEnSociedad.splice(indexFinded, 1);
 			porcentajesSocios.splice(indexSocio - 1, 1);
-			rowSocio.remove()
+			rowSocio.remove();
 			for (index; index < tablaSocios.rows.length; index++) {
 				tablaSocios.rows[index].cells[0].textContent = tablaSocios.rows[index].rowIndex;
 			}

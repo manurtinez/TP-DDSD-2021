@@ -1,7 +1,5 @@
 // ACCIONES - VALIDACIONES
 
-// Paises y estados seleccionados
-const opcionesSeleccionadas = new Set();
 
 async function validarFormulario(event) {
 	event.preventDefault()
@@ -129,26 +127,13 @@ async function validarFormulario(event) {
 		return false;
 	}
 
-	// LOS PAISES Y ESTADOS SOLO SE DEBEN VALIDAR SI SE TILDÓ "EXPORTA A OTROS PAISES" - HACER
-	// DESCOMENTAR LO DE ABAJO LUEGO - EXPLOTA POR EL MULTISELECT
-
-	// PAISES DE EXPORTACION - VACIO
-	/*
-	if (document.formularioSociedad.paisDeExportacion.value == 0 || document.formularioSociedad.paisDeExportacion.value== "") {
-		let $mensaje = 'Por favor, seleccioná un país.';
-		document.formularioSociedad.paisDeExportacion.focus();
-		mostrarModalMensaje($mensaje)
-		return false;
-	}
- // COMENTAR
 	// ESTADOS DE EXPORTACION - VACIO
-	if (document.formularioSociedad.estadoDeExportacion.value == 0 || document.formularioSociedad.estadoDeExportacion.value== "") {
-		let $mensaje = 'Por favor, seleccioná un estado.';
+	if (checkExporta.checked && (tablaExportaciones.tBodies[0].rows.length > 0)) {
+		let $mensaje = 'Tenés la opción de exportación activada. Por favor, seleccioná los lugares de exportación';
 		document.formularioSociedad.estadoDeExportacion.focus();
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
-*/
 
 	// VALIDAR QUE EL PORCENTAJE  DE APORTES HAYA LLLEGADO AL 100%
 	if (totalPorcentajeSocios < 100) {
@@ -165,20 +150,20 @@ async function validarFormulario(event) {
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
-	if(await existeSociedadConNombre(nombreSociedad.value)){
+	if (await existeSociedadConNombre(nombreSociedad.value)) {
 		let mensaje = 'Ya existe una sociedad con ese nombre, por favor introduzca otro.';
 		document.formularioSociedad.nombreSociedad.focus();
 		mostrarModalMensaje(mensaje)
 		return false;
 	}
-	setSocioRepresentante(representanteLegal.selectedIndex-1);
+	setSocioRepresentante(representanteLegal.selectedIndex - 1);
 	// TODO mover afuera de la funcion y utilizar el booleano que retorna esta funcion
 	registrarSociedad();
 	return true;
 }
 
 async function registrarSociedad() {
-	const response = await fetch(localHost+'/sociedad_anonima/', {
+	const response = await fetch(localHost + '/sociedad_anonima/', {
 		method: 'POST',
 		headers: {
 			'X-CSRFToken': csrftoken,
@@ -191,11 +176,9 @@ async function registrarSociedad() {
 			partners: sociosEnSociedad,
 			idApoderado: representanteLegal.value,
 			representative_email: document.formularioSociedad.mailApoderado.value,
-			export_countries: [
-				"Bolivia, Paraguay, Venezuela"
-			],
 			creation_date: document.formularioSociedad.fechaCreacion.value
-		})
+		}),
+			export_countries : JSON.stringify(lugaresExportacion,Map_Set_toJSON)		
 	});
 	if (response.status === 201) {
 		Swal.fire({
@@ -218,7 +201,7 @@ async function registrarSociedad() {
 			method: 'POST',
 			body: formData,
 		});
-		if (fileResponse.status !== 200) {		
+		if (fileResponse.status !== 200) {
 			mostrarModalMensaje('Hubo algun error al subir el archivo. Por favor, reintentelo');
 		}
 	} else {
@@ -242,10 +225,10 @@ async function getSociedadesPorTask(estadoTarea) {
 			sociedadesAnonimas.forEach(sociedad => {
 				let newRow = tablaSociedad.tBodies[0].insertRow(-1);
 				let newCell = newRow.insertCell(-1);
-				let newText = document.createTextNode(sociedad.name);			
+				let newText = document.createTextNode(sociedad.name);
 				newCell.appendChild(newText);
-				newCell = newRow.insertCell(-1);				
-				newText = document.createTextNode(fechaToString(new Date(sociedad.creation_date+" 00:00")));
+				newCell = newRow.insertCell(-1);
+				newText = document.createTextNode(fechaToString(new Date(sociedad.creation_date + " 00:00")));
 				newCell.appendChild(newText);
 				newCell = newRow.insertCell(-1);
 				newText = document.createTextNode(sociedad.legal_domicile);
@@ -253,28 +236,28 @@ async function getSociedadesPorTask(estadoTarea) {
 				let socioRepresentanteCell = newRow.insertCell(-1);
 				sociedad.sociosa_set.forEach(async socioParcial => {
 					if (socioParcial.is_representative) {
-						 socio = await socioPorId(socioParcial.partner);
-						 let socioRepresentanteText = document.createTextNode(socio.last_name + ' ' + socio.first_name);
-						 socioRepresentanteCell.appendChild(socioRepresentanteText);
+						socio = await socioPorId(socioParcial.partner);
+						let socioRepresentanteText = document.createTextNode(socio.last_name + ' ' + socio.first_name);
+						socioRepresentanteCell.appendChild(socioRepresentanteText);
 					}
 				});
 				newCell = newRow.insertCell(-1);
 				newText = document.createTextNode(sociedad.representative_email);
 				newCell.appendChild(newText);
 				newCell = newRow.insertCell(-1);
-				newCell.classList.add('px-1','align-middle','text-nowrap'); 
+				newCell.classList.add('px-1', 'align-middle', 'text-nowrap');
 				newLink = document.createElement("a");
-				//newLink.text = "Ver";
+				newLink.title = "Ver sociedad";
 				newLink.classList.add('btn', 'btn-info', 'px-2', 'anchoBoton');
-				newLink.addEventListener('click', mostrarSociedad.bind(this, sociedad.id));	
+				newLink.addEventListener('click', mostrarSociedad.bind(this, sociedad.id));
 				newIcon = document.createElement("i");
 				newIcon.classList.add("fas", "fa-1-5x", "fa-eye");
 				newLink.appendChild(newIcon);
 				newCell.appendChild(newLink);
-				obtenerBotones(sociedad.id,newCell);				
+				obtenerBotones(sociedad.id, newCell);
 			});
 		}
-		else{
+		else {
 			let newRow = tablaSociedad.tBodies[0].insertRow(-1);
 			let newCell = newRow.insertCell(-1);
 			newCell.colSpan = 6;
@@ -288,30 +271,25 @@ async function getSociedadesPorTask(estadoTarea) {
 }
 
 async function sociedadPorId(idSociedad) {
-		// Se contempla solamente el caso positivo si se encontro la sociedad o si no. Faltan agregar los casos para otras respuestas del servidor
-		let sociedad = await fetch(localHost + '/sociedad_anonima/' + idSociedad).then(response => response.json());
-		return sociedad != null ? sociedad : false;
+	// Se contempla solamente el caso positivo si se encontro la sociedad o si no. Faltan agregar los casos para otras respuestas del servidor
+	let sociedad = await fetch(localHost + '/sociedad_anonima/' + idSociedad).then(response => response.json());
+	return sociedad != null ? sociedad : false;
 }
 
-async function socioPorId(idSocio) {
-	// Se contempla solamente el caso positivo si se encontro la socio o si no. Faltan agregar los casos para otras respuestas del servidor
-	let socio = await fetch(localHost + '/socio/' + idSocio).then(response => response.json());
-	return socio != null ? socio : false;
-}
 
-async function socioRepresentanteDeSociedad(socios){
+async function socioRepresentanteDeSociedad(socios) {
 	socios.forEach(async socioParcial => {
 		if (socioParcial.is_representative) {
-			 socio = await socioPorId(socioParcial.partner);
-			 return socio.last_name + ' ' + socio.first_name;
+			socio = await socioPorId(socioParcial.partner);
+			return socio.last_name + ' ' + socio.first_name;
 		}
 	});
 }
 
-async function mostrarSociedad(idSociedad){
+async function mostrarSociedad(idSociedad) {
 	const sociedad = await sociedadPorId(idSociedad);
 	nombreSociedad.textContent = sociedad.name;
-	fechaCreacion.textContent =  fechaToString(new Date(sociedad.creation_date+" 00:00"));
+	fechaCreacion.textContent = fechaToString(new Date(sociedad.creation_date + " 00:00"));
 	domicilioLegal.textContent = sociedad.legal_domicile;
 	domicilioReal.textContent = sociedad.real_domicile;
 	mailApoderado.textContent = sociedad.representative_email;
@@ -377,26 +355,26 @@ async function mostrarSociedad(idSociedad){
 
 async function modificarEstatuto() {
 	// Modificar el endpoint cuando se tenga el put de actualizar estatuto	
-		const formData = new FormData();
-		formData.append('file', document.getElementById('estatuto').files[0]);
-		const fileResponse = await fetch(`${localHost}/sociedad_anonima/${parsedResponse.id}/subir_archivo/`, {
-			method: 'POST',
-			body: formData,
-		});
+	const formData = new FormData();
+	formData.append('file', document.getElementById('estatuto').files[0]);
+	const fileResponse = await fetch(`${localHost}/sociedad_anonima/${parsedResponse.id}/subir_archivo/`, {
+		method: 'POST',
+		body: formData,
+	});
 
-		if (response.status === 201) {
-			Swal.fire({
-				position: 'top',
-				icon: 'success',
-				title: 'El estatuto ha sido modificado correctamente!',
-				showConfirmButton: true,
-				confirmButtonText: 'Continuar'
-			}).then((result) => {
-				if (result.isConfirmed) {
-					location.reload()
-				}
-			})			
-		} else if (fileResponse.status !== 200) {		
-			mostrarModalMensaje('Hubo un error al subir el archivo. Por favor, reintentelo');
-		}
+	if (response.status === 201) {
+		Swal.fire({
+			position: 'top',
+			icon: 'success',
+			title: 'El estatuto ha sido modificado correctamente!',
+			showConfirmButton: true,
+			confirmButtonText: 'Continuar'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				location.reload()
+			}
+		})
+	} else if (fileResponse.status !== 200) {
+		mostrarModalMensaje('Hubo un error al subir el archivo. Por favor, reintentelo');
+	}
 }
