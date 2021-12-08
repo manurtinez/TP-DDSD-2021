@@ -1,5 +1,8 @@
+from datetime import datetime, timedelta
 import requests
 import environ
+
+from formulario.models import SAHashes
 
 # # el objeto env se usa para traer las variables de entorno
 env = environ.Env()
@@ -8,15 +11,27 @@ environ.Env.read_env()
 BASE_URL = env('API_COMPLEMENTARIA_URL') + '/api/email/send'
 
 
-def mail_solicitud_incorrecta(nombre_sa, nombre_apoderado, destinatario, plazo):
+def mail_solicitud_incorrecta(sa, nombre_apoderado):
     """
     Este metodo realiza el envio del mail de solicitud RECHAZADA por mesa de entradas
     """
     try:
-        payload = {'nombre_sociedad': nombre_sa,
+        # !! Definir la fecha limite de correcciones (A RECIBIR POR PARAMETRO)
+        # !! Por ahora, 7 dias desde dia actual
+        limit_date = (datetime.now() + timedelta(days=7)
+                      ).strftime('%d-%m-%Y')
+        sa_name = sa.name
+        to = sa.representative_email
+
+        # Obtengo el hash para la url de editar
+        hash = SAHashes.objects.get(sa_id=sa.id).hash
+        url = f'http://localhost:8000/sociedad_anonima/{sa.id}/editar/{hash}/'
+
+        payload = {'nombre_sociedad': sa_name,
                    'nombre_apoderado': nombre_apoderado,
-                   'destinatario': destinatario,
-                   'plazo_correccion': plazo}
+                   'destinatario': to,
+                   'plazo_correccion': limit_date,
+                   'url_boton': url}
         response = requests.post(
             BASE_URL + '/informacion-sociedad-incorrecta', data=payload)
         if response.status_code == 200:
@@ -44,14 +59,20 @@ def mail_num_expediente(nombre_sa, nombre_apoderado, destinatario, num_expedient
     return False
 
 
-def mail_estatuto_invalido(nombre_sa, nombre_apoderado, destinatario, observaciones):
+def mail_estatuto_invalido(sa, nombre_apoderado, observaciones):
     """
     Este metodo realiza el envio del mail de solicitud RECHAZADA por parte de legales
     """
     try:
-        payload = {'nombre_sociedad': nombre_sa,
+        sa_name = sa.name
+        to = sa.representative_email
+        edit_url = f'http://localhost:8000/sociedad_anonima/{sa.id}/estatuto/editar/'
+
+        payload = {'nombre_sociedad': sa_name,
                    'nombre_apoderado': nombre_apoderado,
-                   'destinatario': destinatario}
+                   'destinatario': to,
+                   'url_boton': edit_url}
+
         for i, obs in enumerate(observaciones.split('\n')):
             payload[f'observacion[{i}]'] = obs
         response = requests.post(
