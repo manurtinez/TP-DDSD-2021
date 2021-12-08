@@ -191,18 +191,14 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                         'El numero generado resulto estar repetido. Intentando de nuevo...')
                     sa.numero_expediente = uuid4().hex
                     sa.save()
+
                 # Envio email de confirmacion
                 if not mail_num_expediente(
                         sa.name, apoderado.first_name, sa.representative_email, sa.numero_expediente):
                     # !! tal vez aca, revertir transacciones
                     print('El mail de num expediente NO pudo enviarse...')
             else:
-                # !! Definir la fecha limite de correcciones (A RECIBIR POR PARAMETRO)
-                # !! Por ahora, 7 dias desde dia actual
-                limit_date = (datetime.now() + timedelta(days=7)
-                              ).strftime('%d-%m-%Y')
-                if not mail_solicitud_incorrecta(
-                        sa.name, apoderado.first_name, sa.representative_email, limit_date):
+                if not mail_solicitud_incorrecta(sa, apoderado.first_name):
                     # !! tal vez aca, revertir transacciones
                     print('El mail de correcciones NO pudo enviarse...')
 
@@ -260,7 +256,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                 if user_agent.startswith('Java'):
                     request_stamp(sa)
             else:
-                if not mail_estatuto_invalido(sa.name, apoderado.first_name, sa.representative_email, request.data['observaciones']):
+                if not mail_estatuto_invalido(sa, apoderado.first_name, request.data['observaciones']):
                     print('El mail de estatuto rechazado NO pudo enviarse...')
 
             # Acciones de bonita
