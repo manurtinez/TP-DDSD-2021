@@ -4,6 +4,7 @@ const urlEstampillar = "";
 const urlDescargarEstauto = "";
 const urlAprobarEstauto = "";
 const localHost = window.location.origin;
+const opcionesSeleccionadas = new Set();
 
 function getCookie(name) {
 	let cookieValue = null;
@@ -68,9 +69,34 @@ function agregarOptionEnSelect(select, text, value){
 	newOption.text = text;
 	newOption.value = value;
 	select.add(newOption);
+	return newOption;
 }
+
+function addTitleOptions(aSelect, titleSelect) {
+	option = agregarOptionEnSelect(aSelect, titleSelect);
+	option.hidden = option.disabled = option.selected = true;
+}
+
 
 function fechaToString(oDate){
     fechaString = oDate.getDate() + "/" + (oDate.getMonth() + 1) + "/" + oDate.getFullYear();
     return fechaString;
 }
+
+function toggleClasses(anElement, classToRemove, classToAdd) {
+	anElement.classList.remove(classToRemove);
+	anElement.classList.add(classToAdd);
+}
+
+
+function Map_Set_toJSON(key, value) {
+  if (typeof value === 'object' && value instanceof Map) {
+    return [...value.values()];
+  }
+	else if (typeof value === 'object' && value instanceof Set){
+		    return [...value];
+	}
+	  return value;
+}
+
+// JSON.stringify(exportaciones, Map_Set_toJSON)

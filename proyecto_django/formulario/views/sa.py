@@ -16,8 +16,8 @@ from rest_framework.response import Response
 from services.bonita_service import (assign_task, bonita_login_call,
                                      execute_task, set_bonita_variable,
                                      start_bonita_process)
-from services.estampillado_service import api_call_with_retry, complementaria_api_call
-from services.mail_service import (mail_estatuto_invalido, mail_num_expediente,
+from services.estampillado_service import api_call_with_retry, complementaria_api_call, request_stamp
+from services.mail_service import (mail_estatuto_invalido, mail_fin_solicitud, mail_num_expediente,
                                    mail_solicitud_incorrecta)
 
 from services.types import BonitaNotOpenException
@@ -144,14 +144,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             return Response(data='Esta sociedad aun no tiene un estatuto de conformacion subido', status=status.HTTP_400_BAD_REQUEST)
         if not sa.numero_expediente:
             return Response(data='Esta sociedad aun no ha sido aprobada por mesa de entrada', status=status.HTTP_400_BAD_REQUEST)
-        numero_expediente = sa.numero_expediente
-        base64_file = base64.b64encode(
-            sa.comformation_statute.read()).decode('ascii')
-        response = api_call_with_retry(
-            method='post', endpoint='/api/estampillado', data={"estatuto": base64_file, "num_expediente": numero_expediente, "url_organismo_solicitante": "localhost:8000/sociedad_anonima/ver"})
-        if not 'status' in response:
-            sa.stamp_hash = response['hash']
-            sa.save()
+        if request_stamp(sa):
             return Response(data='Estampillado solicitado con exito', status=status.HTTP_200_OK)
         else:
             return Response(data='La sociedad ya ha tenido un estampillado exitoso anteriormente', status=status.HTTP_502_BAD_GATEWAY)
@@ -263,8 +256,9 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
             verdict = request.data['veredicto']
             if verdict:
-                # TODO Aca llamar a api de estampillado (SE HACE DESDE EL FRONT)
-                pass
+                # Aca llamar a api de estampillado (SOLO SI VIENE DE BONITA, SINO SE HACE EN EL FRONT)
+                if user_agent.startswith('Java'):
+                    request_stamp(sa)
             else:
                 if not mail_estatuto_invalido(sa.name, apoderado.first_name, sa.representative_email, request.data['observaciones']):
                     print('El mail de estatuto rechazado NO pudo enviarse...')
@@ -314,7 +308,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         sa.drive_folder_link = response['success']['url']
         sa.save()
 
-        # TODO mandar mail de final de proceso
+        # Traer info de apoderado (para envio de mails)
+        apoderado = sa.sociosa_set.get(is_representative=True).partner
+        if not mail_fin_solicitud(sa.name, apoderado.first_name, sa.representative_email):
+            print("el email de fin de proceso NO pudo ser enviado...")
+
         if response['status'] == 200:
             return Response(data='La carpeta digital fue creada con exito. El archivo pdf se puede ver en ' + response['success']['url'])
         else:

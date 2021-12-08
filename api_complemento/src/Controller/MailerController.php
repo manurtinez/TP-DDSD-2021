@@ -70,8 +70,9 @@ class MailerController extends ApiController
         $nombre_apoderado = $request->get('nombre_apoderado');
         $destinatario = $request->get('destinatario');
         $plazo_correccion = $request->get('plazo_correccion');
+        $url_boton = $request->get('url_boton');
 
-        if($nombre_sociedad == null || $nombre_apoderado == null || $destinatario == null || $plazo_correccion == null){
+        if($nombre_sociedad == null || $nombre_apoderado == null || $destinatario == null || $plazo_correccion == null || $url_boton == null){
             $this->setStatusCode(400);
             return $this->respondWithErrors("Debe indicar todos los parámetros");
         }
@@ -79,7 +80,7 @@ class MailerController extends ApiController
         $email = (new TemplatedEmail())
                 ->from($this->from)
                 ->to(new Address($destinatario))
-                ->subject('Número de expediente - DNPJ')
+                ->subject('Información de la solicitud incorrecta - DNPJ')
 
                 // path of the Twig template to render
                 ->htmlTemplate('emails/informacion_sociedad_incorrecta.html.twig')
@@ -90,7 +91,8 @@ class MailerController extends ApiController
                     'nombre_sociedad' => $nombre_sociedad,
                     'nombre_apoderado' => $nombre_apoderado,
                     'destinatario' => $destinatario,
-                    'plazo_correccion' => $plazo_correccion
+                    'plazo_correccion' => $plazo_correccion,
+                    'url_boton' => $url_boton
                 ]);
 
         try {
@@ -112,8 +114,9 @@ class MailerController extends ApiController
         $nombre_apoderado = $request->get('nombre_apoderado');
         $destinatario = $request->get('destinatario');
         $observaciones = $request->get('observacion');
+        $url_boton = $request->get('url_boton');
 
-        if($nombre_sociedad == null || $nombre_apoderado == null || $destinatario == null || $observaciones == null){
+        if($nombre_sociedad == null || $nombre_apoderado == null || $destinatario == null || $observaciones == null || $url_boton == null){
             $this->setStatusCode(400);
             return $this->respondWithErrors("Debe indicar todos los parámetros");
         }
@@ -121,7 +124,7 @@ class MailerController extends ApiController
         $email = (new TemplatedEmail())
                 ->from($this->from)
                 ->to(new Address($destinatario))
-                ->subject('Número de expediente - DNPJ')
+                ->subject('Estatuto inválido - DNPJ')
 
                 // path of the Twig template to render
                 ->htmlTemplate('emails/estatuto_invalido.html.twig')
@@ -132,7 +135,8 @@ class MailerController extends ApiController
                     'nombre_sociedad' => $nombre_sociedad,
                     'nombre_apoderado' => $nombre_apoderado,
                     'destinatario' => $destinatario,
-                    'observaciones' => $observaciones
+                    'observaciones' => $observaciones,
+                    'url_boton' => $url_boton
                 ]);
 
         try {
@@ -162,7 +166,7 @@ class MailerController extends ApiController
         $email = (new TemplatedEmail())
                 ->from($this->from)
                 ->to(new Address($destinatario))
-                ->subject('Número de expediente - DNPJ')
+                ->subject('Fin de la socilitud - DNPJ')
 
                 // path of the Twig template to render
                 ->htmlTemplate('emails/fin_solicitud.html.twig')

@@ -21,7 +21,6 @@ router.register(r'socio', SocioViewSet, basename='socio')
 
 urlpatterns = [
     path('', include(router.urls)),
-    # TODO refactorizar estos template views, pasarlos al ViewSet para simplificar estas urls
     path('sociedad_anonima/alta', alta_sa, name="alta_formulario"),
     path('sociedad_anonima/<int:id>/estatuto/editar/',
          editar_estatuto, name="editar_estatuto"),
@@ -33,13 +32,17 @@ urlpatterns = [
          name="listado_sociedades_pendientes_aprobacion"),
     path('sociedad_anonima/a_evaluar', a_evaluar_estatuto,
          name="listado_sociedades_a_evaluar"),
+
+
     path('dashboard', dashboard, name="dashboard"),
+    path('login', login_template, name='login'),
+
     path('bonita/sociedades/obtener_por_task/<str:task_name>',
          BonitaViewSet.as_view({"get": "obtener_por_task"})),
     path('bonita/login', bonita_login, name='bonita_login'),
     path('bonita/logout',
          logout, name='logout'),
-    path('login', login_template, name='login'),
+
     path('estadisticas/por_area/<str:area>', estadisticas_por_area),
     path('estadisticas/sociedades_en_proceso/', estadisticas_casos_abiertos),
     path('estadisticas/usuarios/<str:condition>', estadisticas_usuario),
