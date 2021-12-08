@@ -399,7 +399,6 @@ async function modificarEstatuto() {
 			mostrarModalMensaje('Hubo un error al subir el archivo. Por favor, reintentelo');
 		}
 }
-<<<<<<< HEAD
 
 
 
@@ -444,5 +443,3 @@ async function modificarSociedad() {
 	}
 
 }
-=======
->>>>>>> 95f54f4d117c11c2232ea2a5c4632eac8d73b1b3
