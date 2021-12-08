@@ -377,11 +377,10 @@ async function validarFormularioEditarEstatutoSociedad(event) {
 
 async function modificarEstatuto() {
 	// Modificar el endpoint cuando se tenga el put de actualizar estatuto	
+    	let idSociedad = document.formularioSociedadEditarEstatuto.idSociedad.value;
 		const formData = new FormData();
-		formData.append('file', document.getElementById('estatuto').files[0]);
-		// DESCOMENTAR LINEA 386 CUANDO SE TENGA EL ID DE LA SOCIEDAD (POR AHORA VA HARCODEADO EL ID DE LA SOCIEDAD EN LINEA 384)
-	/*	const fileResponse = await fetch(`${localHost}/sociedad_anonima/${parsedResponse.id}/subir_archivo/`, { */
-		const fileResponse = await fetch(`${localHost}/sociedad_anonima/126/subir_archivo/`, {
+		formData.append('file', document.getElementById('estatuto').files[0]);		
+		const fileResponse = await fetch(`${localHost}/sociedad_anonima/${idSociedad}/subir_archivo/`, {
 			method: 'POST',
 			body: formData,
 		});
@@ -401,4 +400,48 @@ async function modificarEstatuto() {
 		} else if (fileResponse.status !== 200) {		
 			mostrarModalMensaje('Hubo un error al subir el archivo. Por favor, reintentelo');
 		}
+}
+
+
+
+async function modificarSociedad() {
+	event.preventDefault()
+	let idSociedad = document.formularioSociedad.idSociedad.value;
+
+	const response = await fetch(localHost+'/sociedad_anonima/'+idSociedad+'/', {
+		method: 'PATCH',
+		headers: {
+			'X-CSRFToken': csrftoken,
+			'Content-Type': 'application/json',
+			'id': idSociedad
+		},
+		body: JSON.stringify({
+			name: document.formularioSociedad.nombreSociedad.value,
+			real_domicile: document.formularioSociedad.domicilioReal.value,
+			legal_domicile: document.formularioSociedad.domicilioLegal.value,
+			creation_date: document.formularioSociedad.fechaCreacion.value,
+			representative_email: document.formularioSociedad.mailApoderado.value,
+			sociosa_set: sociosEnSociedad,
+			idApoderado: representanteLegal.value,
+			export_countries: [
+				"Bolivia, Paraguay, Venezuela"
+			],		
+		})
+	});
+	if (response.status === 201) {
+		Swal.fire({
+			position: 'top',
+			icon: 'success',
+			title: 'La sociedad ha sido modificada correctamente!',
+			showConfirmButton: true,
+			confirmButtonText: 'Continuar'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				location.href = "http://localhost:8000/";
+			}
+		})
+	} else {
+		// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+	}
+
 }

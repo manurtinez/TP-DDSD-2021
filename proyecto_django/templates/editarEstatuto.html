@@ -23,19 +23,7 @@
 <body class="bg-light">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
-      <div class="dropdown">
-        <button class="btn btn-primary rounded-circle p-0 size-50 btn-border" type="button" id="dropdownMenuButton"
-          data-mdb-toggle="dropdown" aria-expanded="false">
-          {{ request.session.user_firstname | slice:1 }}{{ request.session.user_lastname | slice:1 }}
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end text-center py-2" aria-labelledby="dropdownMenuButton">
-          Usuario: {{ request.session.user_firstname }} {{ request.session.user_lastname }}
-          <div class="mt-2"> Rol: {{ request.session.bonita_role }} </div>
-          <hr>
-          <li class="p-0"><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
-        </ul>
-      </div>
+      <a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>     
     </div>
   </nav>
 
@@ -50,9 +38,9 @@
           <span class="input-group-text border-0"> Nombre:</span>
           <div class="input-group-text"><i class="fas fa-users"></i></div>
           <input type="text" class="form-control w-auto" id="nombreSociedad" name="nombreSociedad"
-            value="Juan Rodriguez & Roberto Fernandez Sociedad de Hecho" disabled>
+            value="{{ sociedad.name }}" disabled>
         </div>
-
+        <input type="text" hidden id="idSociedad" name="idSociedad" value="{{ sociedad.id }}" disabled>
         <div class="input-group  cmb-4">
           <span class="input-group-text border-0">Estatuto de conformación: </span>
           <div class="input-group-text"><i class="fas fa-paperclip"></i></div>
