@@ -2,8 +2,7 @@
 var continentesCargados = false;
 // const lugaresExportacion = new Set();
 const idLugaresExportacion = new Set();
-var lugaresExportacion = [];
-var languagesInOptions = []
+var languagesInOptions = [];
 
 var exportaciones = new Map();
 
@@ -162,12 +161,12 @@ function agregarLugarExportacion() {
 		continente = exportaciones.get(continenteExportacion.value);
 	}
 	else {
-		exportaciones.set(continenteExportacion.value, new Continent(continenteExportacion.value, continenteExportacion.text));
+		exportaciones.set(continenteExportacion.value, new Continent(continenteExportacion.value, continenteExportacion.selectedOptions[0].text));
 		continente = exportaciones.get(continenteExportacion.value);
 	}
 
 	if (!(pais = continente.existCountry(paisExportacion.value))) {
-		pais = new Country(paisExportacion.value, paisExportacion.text, languagesInOptions[paisExportacion.options.selectedIndex]);
+		pais = new Country(paisExportacion.value, paisExportacion.selectedOptions[0].text, languagesInOptions[paisExportacion.options.selectedIndex]);
 		continente.addCountry(pais);
 	}
 

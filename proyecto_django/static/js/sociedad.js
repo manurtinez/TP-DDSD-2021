@@ -71,6 +71,14 @@ async function validarFormulario(event) {
 		return false;
 	}
 
+	// PROVINCIA
+	if(provinciaSociedad.value == "undefined"){
+		let mensaje = "Por favor, seleccioná la provincia de la sociedad."
+		document.formularioSociedad.provinciaSociedad.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+
 	// DOMICILIO LEGAL - VACIO
 	if (document.formularioSociedad.domicilioLegal.value.length == 0) {
 		let mensaje = "Por favor, ingresa el domicilio legal de la sociedad."
@@ -128,9 +136,8 @@ async function validarFormulario(event) {
 	}
 
 	// ESTADOS DE EXPORTACION - VACIO
-	if (checkExporta.checked && (tablaExportaciones.tBodies[0].rows.length > 0)) {
+	if (checkExporta.checked && (tablaExportaciones.tBodies[0].rows.length == 0)) {
 		let $mensaje = 'Tenés la opción de exportación activada. Por favor, seleccioná los lugares de exportación';
-		document.formularioSociedad.estadoDeExportacion.focus();
 		mostrarModalMensaje($mensaje)
 		return false;
 	}
@@ -176,9 +183,10 @@ async function registrarSociedad() {
 			partners: sociosEnSociedad,
 			idApoderado: representanteLegal.value,
 			representative_email: document.formularioSociedad.mailApoderado.value,
-			creation_date: document.formularioSociedad.fechaCreacion.value
+			creation_date: document.formularioSociedad.fechaCreacion.value,
+			exports : JSON.stringify(exportaciones,Map_Set_toJSON)
 		}),
-			export_countries : JSON.stringify(lugaresExportacion,Map_Set_toJSON)		
+
 	});
 	if (response.status === 201) {
 		Swal.fire({
