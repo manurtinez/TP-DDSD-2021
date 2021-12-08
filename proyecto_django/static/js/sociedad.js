@@ -419,14 +419,11 @@ async function modificarSociedad() {
 			legal_domicile: document.formularioSociedad.domicilioLegal.value,
 			creation_date: document.formularioSociedad.fechaCreacion.value,
 			representative_email: document.formularioSociedad.mailApoderado.value,
-			sociosa_set: sociosEnSociedad,
-			idApoderado: representanteLegal.value,
-			export_countries: [
-				"Bolivia, Paraguay, Venezuela"
-			],		
+			partners: sociosEnSociedad,
+					
 		})
 	});
-	if (response.status === 201) {
+	if (response.status === 200) {
 		Swal.fire({
 			position: 'top',
 			icon: 'success',
@@ -439,7 +436,51 @@ async function modificarSociedad() {
 			}
 		})
 	} else {
-		// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+		 mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
 	}
 
+}
+
+
+
+async function mostrarSocios() {
+	let idSociedad = document.formularioSociedad.idSociedad.value;
+	const sociedad = await sociedadPorId(idSociedad);
+	console.log("Sociedad: "+sociedad);
+
+	sociedad.sociosa_set.forEach(async socioParcial => {
+		const socio = await socioPorId(socioParcial.partner);
+		let newRow = tablaSocios.tBodies[0].insertRow(-1);
+		let newCell = newRow.insertCell(-1);
+		let newText = document.createTextNode(tablaSocios.tBodies[0].rows.length);
+		newCell.appendChild(newText);
+		newCell = newRow.insertCell(-1);
+
+		newText = document.createTextNode(socio.last_name + ' ' + socio.first_name);
+		newCell.appendChild(newText);
+		newCell = newRow.insertCell(-1);
+		newText = document.createTextNode(`${socioParcial.percentage} %`);
+		newCell.appendChild(newText);
+		if (socioParcial.is_representative) {
+			newRow.classList.add('bg-beige');
+			newRow.title="Apoderado";
+			//let selectApoderado = document.getElementById("#representanteLegal");
+			document.getElementById("representanteLegal").value = "Toyota Corolla";
+
+		}
+		newCell = newRow.insertCell(-1);
+		let iconEliminar = document.createElement('i');
+		iconEliminar.title = "Eliminar";
+		// iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "btn", "btn-white");
+		iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "bg-white", "rounded", "shadow");
+		iconEliminar.addEventListener('click', eliminarSocio.bind(this, newRow, idSocioAgregado));
+		newCell.appendChild(iconEliminar);
+		return newRow.rowIndex;
+	});
+}
+
+async function socioPorId(idSocio) {
+	// Se contempla solamente el caso positivo si se encontro la socio o si no. Faltan agregar los casos para otras respuestas del servidor
+	let socio = await fetch(localHost + '/socio/' + idSocio).then(response => response.json());
+	return socio != null ? socio : false;
 }
