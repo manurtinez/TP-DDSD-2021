@@ -46,7 +46,7 @@
 				<div class="input-group  cmb-4">
 					<span class="input-group-text border-0">Fecha de creación: </span>
 					<div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-					<input type="date" class="form-control" id="fechaCreacion" name="fechaCreacion" max="dateToday()" value="{{ sociedad.creation_date }}">
+					<input type="date" class="form-control" id="fechaCreacion" name="fechaCreacion" max="dateToday()" value="{{ sociedad.creation_date | date:'Y-m-d'}}">
 				</div>
 
 				<div class="input-group cmb-4">
