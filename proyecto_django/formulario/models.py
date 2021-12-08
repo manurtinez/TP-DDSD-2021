@@ -2,13 +2,30 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
+class Lenguaje(models.Model):
+    """
+    Este modelo representa un lenguaje, con su codigo,nombre en ingles y nombre nativo
+    """
+    code = models.CharField(max_length=3)
+    name = models.CharField(max_length=20)
+    native_name = models.CharField(max_length=50)
+
+
+class PaisLenguaje(models.Model):
+    """
+    Esta es la tabla intermedia que define las relaciones entre paises y sus lenguajes
+    """
+    country = models.ForeignKey('Pais', on_delete=models.CASCADE)
+    language = models.ForeignKey(Lenguaje, on_delete=models.CASCADE)
+
+
 class Pais(models.Model):
     """
     Este modelo representa un pais, con su codigo y los codigos de sus idiomas
     """
-    code = models.CharField(max_length=3, null=False, unique=True)
-    languages = ArrayField(models.CharField(
-        max_length=3, null=False), default=list)
+    code = models.CharField(max_length=3)
+    name = models.CharField(max_length=60)
+    languages = models.ManyToManyField(Lenguaje, through=PaisLenguaje)
 
 
 class Exportacion(models.Model):
@@ -16,7 +33,8 @@ class Exportacion(models.Model):
     Este modelo representa a cuales lugares (continentes, paises, estados) exporta una sociedad anonima.
     """
     sa = models.ForeignKey('SociedadAnonima', on_delete=models.DO_NOTHING)
-    continent = models.CharField(max_length=4, null=False)
+    continent_code = models.CharField(max_length=4)
+    continent_name = models.CharField(max_length=15)
     country = models.ForeignKey(Pais, on_delete=models.DO_NOTHING)
     states = ArrayField(models.CharField(
         max_length=100, null=False), default=list)
@@ -74,3 +92,11 @@ class SocioSA(models.Model):
     class Meta():
         # Solo puede existir un par de (socio, SA)
         unique_together = [['partner', 'sa']]
+
+
+class SAHashes(models.Model):
+    """
+    Este modelo asocia ids de sociedades con hashes generados en la creacion, para realizar "authentication" anónima
+    """
+    sa = models.ForeignKey(SociedadAnonima, on_delete=models.CASCADE)
+    hash = models.CharField(max_length=32, unique=True, null=False)

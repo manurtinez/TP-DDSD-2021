@@ -327,6 +327,11 @@
 									"key": "plazo_correccion",
 									"value": "25/12/2021",
 									"type": "text"
+								},
+								{
+									"key": "url_boton",
+									"value": "https://www.google.com/",
+									"type": "text"
 								}
 							]
 						},
@@ -361,6 +366,11 @@
 								{
 									"key": "nombre_apoderado",
 									"value": "Federico",
+									"type": "text"
+								},
+								{
+									"key": "url_boton",
+									"value": "https://www.google.com/",
 									"type": "text"
 								},
 								{

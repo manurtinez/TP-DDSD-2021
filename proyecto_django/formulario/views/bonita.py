@@ -24,7 +24,7 @@ class BonitaViewSet(viewsets.ViewSet):
 
     # url_path = r'obtener_por_task/(?P<task_name>\d+)'
     @action(detail=False)
-    def obtener_por_task(self, request, *args, **kwargs):
+    def obtener_por_task(self, request, task_name):
         """
         Este endpoint devuelve una lista de sociedades que estan parados en task_name
 
@@ -35,7 +35,7 @@ class BonitaViewSet(viewsets.ViewSet):
             * list[int] | None
         """
         try:
-            case_ids = get_cases_for_task(request.session, kwargs['task_name'])
+            case_ids = get_cases_for_task(request.session, task_name)
         except BonitaNotOpenException:
             return Response(
                 data='El servidor de Bonita no se encuentra corriendo o no esta disponible', status=status.HTTP_503_SERVICE_UNAVAILABLE)
@@ -88,7 +88,7 @@ def logout(request):
 
 
 @api_view()
-def estadisticas_por_area(request, *args, **kwargs):
+def estadisticas_por_area(request, area):
     """
     Este endpoint devuelve las estadisticas (aprobados / rechazados) de parte de mesa de entradas o area legales.
 
@@ -99,7 +99,6 @@ def estadisticas_por_area(request, *args, **kwargs):
         # Se necesita estar logeado (con cualquier usuario) para acceder
         return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
     try:
-        area = kwargs['area']
         results = area_statistics(request.session, area)
     except BonitaNotOpenException:
         return Response(
@@ -128,12 +127,11 @@ def estadisticas_casos_abiertos(request):
 
 
 @api_view()
-def estadisticas_usuario(request, *args, **kwargs):
+def estadisticas_usuario(request, condition):
     if not bonita_permission(request, 'any'):
         # Se necesita estar logeado (con cualquier usuario) para acceder
         return Response(data='Necesita estar autenticado (con cualquier usuario) para usar este endpoint', status=status.HTTP_403_FORBIDDEN)
     try:
-        condition = kwargs['condicion']
         results = max_stats_user(request.session, condition)
     except BonitaNotOpenException:
         return Response(

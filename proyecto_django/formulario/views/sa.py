@@ -6,7 +6,7 @@ import environ
 from django.db.utils import IntegrityError
 from django.http.response import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from formulario.models import Exportacion, Pais, SociedadAnonima, Socio
+from formulario.models import Exportacion, Lenguaje, Pais, SAHashes, SociedadAnonima, Socio
 from formulario.permissions import bonita_permission
 from formulario.serializers import (SociedadAnonimaRetrieveSerializer,
                                     SociedadAnonimaSerializer)
@@ -16,9 +16,11 @@ from rest_framework.response import Response
 from services.bonita_service import (assign_task, bonita_login_call,
                                      execute_task, set_bonita_variable,
                                      start_bonita_process)
-from services.estampillado_service import api_call_with_retry, complementaria_api_call
-from services.mail_service import (mail_estatuto_invalido, mail_num_expediente,
+from services.estampillado_service import api_call_with_retry, complementaria_api_call, request_stamp
+from services.mail_service import (mail_estatuto_invalido, mail_fin_solicitud, mail_num_expediente,
                                    mail_solicitud_incorrecta)
+
+from services.types import BonitaNotOpenException
 
 # # el objeto env se usa para traer las variables de entorno
 env = environ.Env()
@@ -47,18 +49,27 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     def process_exports(self, new_sa, export_info):
         for continent in export_info:
             for country in continent['countries']:
-                country_object, created = Pais.objects.get_or_create(
-                    code=country['code'], languages=country['languages'])
+                new_country, created = Pais.objects.get_or_create(
+                    code=country['code'], name=country['name'])
+                for language in country['languages']:
+                    new_language, created = Lenguaje.objects.get_or_create(
+                        code=language['code'], name=language['name'], native_name=language['native'])
+                    new_country.languages.add(new_language)
                 exportacion = Exportacion.objects.create(
-                    sa=new_sa, continent=continent['code'], country=country_object, states=country['states'])
+                    sa=new_sa, continent_code=continent['code'], continent_name=continent['name'], country=new_country, states=country['states'])
                 exportacion.save()
 
     def create(self, request):
         """
         Este metodo define la creacion de los objetos Sociedad Anonima
         """
-        serializer = SociedadAnonimaSerializer(data=request.data)
+        try:
+            # Por ahora, el login hardcodeado cada vez que se crea una SA
+            bonita_login_call(request.session, 'Apoderado1', 'bpm')
+        except BonitaNotOpenException:
+            return Response(data='El servidor de bonita no se encuentra corriendo. Abortando...')
 
+        serializer = SociedadAnonimaSerializer(data=request.data)
         if serializer.is_valid():
             data = request.data
 
@@ -66,6 +77,9 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             new_sa = SociedadAnonima.objects.create(name=data['name'], legal_domicile=data['legal_domicile'],
                                                     creation_date=data['creation_date'], real_domicile=data['real_domicile'],
                                                     representative_email=data['representative_email'])
+
+            # Se crea nuevo objeto con el hash asignado
+            SAHashes.objects.create(sa=new_sa, hash=uuid4().hex)
 
             # Se agregan los socios que hayan venido
             partners = data['partners']
@@ -130,14 +144,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             return Response(data='Esta sociedad aun no tiene un estatuto de conformacion subido', status=status.HTTP_400_BAD_REQUEST)
         if not sa.numero_expediente:
             return Response(data='Esta sociedad aun no ha sido aprobada por mesa de entrada', status=status.HTTP_400_BAD_REQUEST)
-        numero_expediente = sa.numero_expediente
-        base64_file = base64.b64encode(
-            sa.comformation_statute.read()).decode('ascii')
-        response = api_call_with_retry(
-            method='post', endpoint='/api/estampillado', data={"estatuto": base64_file, "num_expediente": numero_expediente, "url_organismo_solicitante": "localhost:8000/sociedad_anonima/ver"})
-        if not 'status' in response:
-            sa.stamp_hash = response['hash']
-            sa.save()
+        if request_stamp(sa):
             return Response(data='Estampillado solicitado con exito', status=status.HTTP_200_OK)
         else:
             return Response(data='La sociedad ya ha tenido un estampillado exitoso anteriormente', status=status.HTTP_502_BAD_GATEWAY)
@@ -190,7 +197,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                     # !! tal vez aca, revertir transacciones
                     print('El mail de num expediente NO pudo enviarse...')
             else:
-                # Definir la fecha limite de correcciones (A RECIBIR POR PARAMETRO)
+                # !! Definir la fecha limite de correcciones (A RECIBIR POR PARAMETRO)
                 # !! Por ahora, 7 dias desde dia actual
                 limit_date = (datetime.now() + timedelta(days=7)
                               ).strftime('%d-%m-%Y')
@@ -249,8 +256,9 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
             verdict = request.data['veredicto']
             if verdict:
-                # TODO Aca llamar a api de estampillado (SE HACE DESDE EL FRONT)
-                pass
+                # Aca llamar a api de estampillado (SOLO SI VIENE DE BONITA, SINO SE HACE EN EL FRONT)
+                if user_agent.startswith('Java'):
+                    request_stamp(sa)
             else:
                 if not mail_estatuto_invalido(sa.name, apoderado.first_name, sa.representative_email, request.data['observaciones']):
                     print('El mail de estatuto rechazado NO pudo enviarse...')
@@ -285,7 +293,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             "fecha_creacion": sa.creation_date.strftime('%d/%m/%Y'),
             "qr": qr,
             "estatuto": base64.b64encode(
-                sa.comformation_statute.read()).decode('ascii'),    # TODO agregar el estatuto real en base64
+                sa.comformation_statute.read()).decode('ascii'),
         }
 
         # Iterar socios y agregarlos al payload
@@ -300,7 +308,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         sa.drive_folder_link = response['success']['url']
         sa.save()
 
-        # TODO mandar mail de final de proceso
+        # Traer info de apoderado (para envio de mails)
+        apoderado = sa.sociosa_set.get(is_representative=True).partner
+        if not mail_fin_solicitud(sa.name, apoderado.first_name, sa.representative_email):
+            print("el email de fin de proceso NO pudo ser enviado...")
+
         if response['status'] == 200:
             return Response(data='La carpeta digital fue creada con exito. El archivo pdf se puede ver en ' + response['success']['url'])
         else:

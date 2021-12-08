@@ -1,7 +1,7 @@
 import requests
 import json
 import environ
-
+import base64
 from importlib import import_module
 
 from django.conf import settings
@@ -106,3 +106,17 @@ def api_call_with_retry(method, endpoint, data={}, url_params=''):
     except (requests.exceptions.RequestException, requests.exceptions.HTTPError) as e:
         # Hubo algun otro problema
         print(e)
+
+
+def request_stamp(sa):
+    numero_expediente = sa.numero_expediente
+    base64_file = base64.b64encode(
+        sa.comformation_statute.read()).decode('ascii')
+    response = api_call_with_retry(
+        method='post', endpoint='/api/estampillado', data={"estatuto": base64_file, "num_expediente": numero_expediente, "url_organismo_solicitante": "localhost:8000/sociedad_anonima/ver"})
+    if not 'status' in response:
+        sa.stamp_hash = response['hash']
+        sa.save()
+        return True
+    else:
+        return False

@@ -98,6 +98,8 @@ def bonita_login_call(session, user, password):
             user_data = [
                 us for us in user_response if us['userName'] == user][0]
             session['bonita_id'] = user_data['id']
+            session['user_firstname'] = user_data['firstname']
+            session['user_lastname'] = user_data['lastname']
 
             # Con el id obtenido, traer el rol del usuario para realizar permisos luego
             url_params = '?p=0&c=10&f=user_id={}&d=role_id&o=ASSIGNED_DATE_ASC'.format(
@@ -123,9 +125,6 @@ def start_bonita_process(session, new_sa):
     NOTA: hay que refactorizar el login y implementar manejo de excepciones.
     """
     try:
-        # Por ahora, el login hardcodeado cada vez que se crea una SA
-        bonita_login_call(session, 'Apoderado1', 'bpm')
-
         # Esto devuelve un array de procesos, en nuestro caso, uno solo, como Dict
         bonita_process = bonita_api_call(
             session, '/bpm/process', 'get', '?s=Proceso')[0]

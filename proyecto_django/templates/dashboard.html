@@ -25,17 +25,21 @@
 	<div id="content">
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
-				<div class="dropdown">
-					<button class="btn btn-primary rounded-circle p-0 size-50 btn-border" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
-						LM
-					</button>
-					<ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuButton">
-						<li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
-					</ul>
-				</div>
+			  <a class="navbar-brand" href="{% url 'index' %}">Sistema de Sociedades</a>
+			  <div class="dropdown">
+				<button class="btn btn-primary rounded-circle p-0 size-50 btn-border" type="button" id="dropdownMenuButton"
+				  data-mdb-toggle="dropdown" aria-expanded="false">
+				  {{ request.session.user_firstname | slice:1 }}{{ request.session.user_lastname | slice:1 }}
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end text-center py-2" aria-labelledby="dropdownMenuButton">
+				  Usuario: {{ request.session.user_firstname }} {{ request.session.user_lastname }}
+				  <div class="mt-2"> Rol: {{ request.session.bonita_role }} </div>
+				  <hr>
+				  <li class="p-0"><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+				</ul>
+			  </div>
 			</div>
-		</nav>
+		  </nav>
 
 		<div class="">
 	
@@ -267,14 +271,15 @@
 								<div class="row no-gutters align-items-center">
 									<div class="col mr-2">
 										<div class="text-xs font-weight-bold text-info text-uppercase mb-1">Continente hacia donde más se exporta</div>
-										<div class="h5 mb-0 font-weight-bold text-gray-800" id="continenteMayorExportacion"></div>
+										<div class="h5 mb-0 font-weight-bold text-gray-800 mt-2" id="continenteMayorExportacion"></div>
+										<div class="fst-italic mt-2" id="continenteMayorExportacionSinResultados"></div>
 									</div>
 									<div class="col-auto">
 										<i class="fas fa-globe-africa fa-2x text-gray-300"></i>
 									</div>
-								</div>
+								</div>								
+								<span class="badge rounded-pill bg-info mt-3 pl-2 pr-2"> *Se excluye América. </span>
 							</div>
-							<p class="fst-italic ml-3">*Se excluye América.</p>
 						</div>
 					</div>
 
@@ -304,10 +309,10 @@
 								<div class="row no-gutters align-items-center">
 									<div class="col mr-2">
 										<div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-											Provincias donde se registran más sociedades
+											Estados donde se registran más sociedades
 										</div>
 										<a href="#modalProvinciasRegistroSociedades"  data-target="#modalProvinciasRegistroSociedades" data-toggle="modal" class="btn btn-info btn-icon-split mt-2">
-											<span class="text">Ver provincias</span>
+											<span class="text">Ver estados</span>
 									</a>								
 									</div>
 									<div class="col-auto">
@@ -324,10 +329,10 @@
 								<div class="row no-gutters align-items-center">
 									<div class="col mr-2">
 										<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-											Continentes/paises a los que no se exporta
+											Continentes y paises a los que no se exporta
 										</div>
 										<a href="#modalContientesPaisesExportacion"  data-target="#modalContientesPaisesExportacion" data-toggle="modal" class="btn btn-primary btn-icon-split mt-2">
-											<span class="text">Ver contientes/paises</span>
+											<span class="text">Ver contientes y paises</span>
 									</a>								
 									</div>
 									<div class="col-auto">
@@ -441,8 +446,8 @@
 				<table id="tablaLenguajesPaisesExporta" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
 					<thead class="table-primary align-top">
 					  <tr class="px-5">
-						<th scope="col">Lenguaje</th>
-						
+						<th scope="col">País</th>
+						<th scope="col">Lenguaje</th>						
 					  </tr>
 					</thead>
 					<tbody>
@@ -459,12 +464,12 @@
 		</div>
 	  </section>	
 
-	<!-- MODAL PROVINCIAS DONDE SE REGISTRAN MAS SOCIEDADES -->
+	<!-- MODAL ESTADOS DONDE SE REGISTRAN MAS SOCIEDADES -->
 	<section class="modal fade" id="modalProvinciasRegistroSociedades" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-scrollable w-100">
 		  <div class="modal-content">
 			<div class="modal-header">
-			  <h5 class="modal-title">Provincias donde se registran más sociedades </h5>
+			  <h5 class="modal-title">Estados donde se registran más sociedades </h5>
 			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">×</span>
 			</button>
@@ -473,7 +478,7 @@
 				<table id="tablaProvinciasRegistroSociedades" class="table table-hover table-bordered w-100 mx-auto text-center cmy-2">
 					<thead class="table-info align-top">
 					  <tr class="px-5">
-						<th scope="col">Provincia</th>
+						<th scope="col">Estados</th>
 						
 					  </tr>
 					</thead>
@@ -496,7 +501,7 @@
 		<div class="modal-dialog modal-dialog-scrollable w-100">
 		  <div class="modal-content">
 			<div class="modal-header">
-			  <h5 class="modal-title">Continentes/paises a los que no se exporta</h5>
+			  <h5 class="modal-title">Continentes y paises a los que no se exporta</h5>
 			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">×</span>
 			</button>

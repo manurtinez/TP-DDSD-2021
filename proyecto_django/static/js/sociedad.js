@@ -316,14 +316,13 @@ async function mostrarSociedad(idSociedad) {
 	modalSociedad.show();
 }
 
+async function validarFormularioEditarEstatutoSociedad(event) {
 
-
-
-/* async */ function validarFormularioEditarSociedad(event) {
+	event.preventDefault()
 	// ESTATUTO DE CONFORMACION - VACIO
-	if (document.formularioSociedadEditar.estatuto.value.length == 0) {
+	if (document.formularioSociedadEditarEstatuto.estatuto.value.length == 0) {
 		let $mensaje = 'Por favor, ingresá el estatuto de conformación.';
-		document.formularioSociedadEditar.estatuto.focus();
+		document.formularioSociedadEditarEstatuto.estatuto.focus();
 		mostrarModalMensaje($mensaje);
 		return false;
 	}
@@ -346,35 +345,38 @@ async function mostrarSociedad(idSociedad) {
 		let $mensaje = 'Por favor, el formato de archivo del estatuto de conformación debe ser .docx, .odt ó .pdf';
 		mostrarModalMensaje($mensaje);
 		return false;
-	}
 
+	} 
 	modificarEstatuto();
 	return true;
+
 }
 
 
 async function modificarEstatuto() {
 	// Modificar el endpoint cuando se tenga el put de actualizar estatuto	
-	const formData = new FormData();
-	formData.append('file', document.getElementById('estatuto').files[0]);
-	const fileResponse = await fetch(`${localHost}/sociedad_anonima/${parsedResponse.id}/subir_archivo/`, {
-		method: 'POST',
-		body: formData,
-	});
+		const formData = new FormData();
+		formData.append('file', document.getElementById('estatuto').files[0]);
+		// DESCOMENTAR LINEA 386 CUANDO SE TENGA EL ID DE LA SOCIEDAD (POR AHORA VA HARCODEADO EL ID DE LA SOCIEDAD EN LINEA 384)
+	/*	const fileResponse = await fetch(`${localHost}/sociedad_anonima/${parsedResponse.id}/subir_archivo/`, { */
+		const fileResponse = await fetch(`${localHost}/sociedad_anonima/126/subir_archivo/`, {
+			method: 'POST',
+			body: formData,
+		});
 
-	if (response.status === 201) {
-		Swal.fire({
-			position: 'top',
-			icon: 'success',
-			title: 'El estatuto ha sido modificado correctamente!',
-			showConfirmButton: true,
-			confirmButtonText: 'Continuar'
-		}).then((result) => {
-			if (result.isConfirmed) {
-				location.reload()
-			}
-		})
-	} else if (fileResponse.status !== 200) {
-		mostrarModalMensaje('Hubo un error al subir el archivo. Por favor, reintentelo');
-	}
+		if (fileResponse.status === 200) {
+			Swal.fire({
+				position: 'top',
+				icon: 'success',
+				title: 'El estatuto ha sido modificado correctamente!',
+				showConfirmButton: true,
+				confirmButtonText: 'Continuar'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					location.href = "http://localhost:8000/";
+				}
+			})			
+		} else if (fileResponse.status !== 200) {		
+			mostrarModalMensaje('Hubo un error al subir el archivo. Por favor, reintentelo');
+		}
 }
