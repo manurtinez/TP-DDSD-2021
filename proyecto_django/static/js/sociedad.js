@@ -314,7 +314,7 @@ async function mostrarSocios() {
 			pais = new Country(paisExportacion.code, paisExportacion.name);
 			continente.addCountry(pais);
 			paisExportacion.states.forEach(state => {
-				pais.addState(state.name);
+				pais.addState(state);
 				agregarLugarExportacionEnTabla(exportacion.code, exportacion.name, paisExportacion.code, paisExportacion.name, state);
 			});
 		});
