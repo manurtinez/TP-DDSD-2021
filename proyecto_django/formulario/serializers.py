@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-from .models import Lenguaje, Pais, SociedadAnonima, Socio, SocioSA
+from .models import Pais, SociedadAnonima, Socio, SocioSA
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -59,6 +59,7 @@ class PaisSerializer(serializers.Serializer):
     languages = LenguajeSerializer(many=True)
     states = serializers.ListField()
     name = serializers.CharField(max_length=60)
+    code = serializers.CharField(max_length=4)
 
     class Meta:
         model = Pais
