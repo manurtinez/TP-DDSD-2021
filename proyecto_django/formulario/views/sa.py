@@ -77,6 +77,10 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
         try:
             sa = SociedadAnonima.objects.get(pk=pk)
+            sa_by_name = SociedadAnonima.objects.filter(
+                name=request.data['name']).first()
+            if sa_by_name and sa.id != sa_by_name.id:
+                return Response(data="Ya existe otra sociedad con ese mismo nombre", status=status.HTTP_400_BAD_REQUEST)
         except SociedadAnonima.DoesNotExist:
             return Response(data='La sociedad solicitada no existe', status=status.HTTP_400_BAD_REQUEST)
 
@@ -109,6 +113,12 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             bonita_login_call(request.session, 'Apoderado1', 'bpm')
         except BonitaNotOpenException:
             return Response(data='El servidor de bonita no se encuentra corriendo. Abortando...')
+
+        try:
+            if SociedadAnonima.objects.get(name=request.data['name']):
+                return Response(data="Ya existe una sociedad con ese mismo nombre", status=status.HTTP_400_BAD_REQUEST)
+        except SociedadAnonima.DoesNotExist:
+            pass
 
         serializer = SociedadAnonimaSerializer(data=request.data)
         if serializer.is_valid():

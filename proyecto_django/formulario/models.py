@@ -41,7 +41,7 @@ class Exportacion(models.Model):
 
 
 class SociedadAnonima(models.Model):
-    name = models.CharField(max_length=30, unique=True)
+    name = models.CharField(max_length=30)
     creation_date = models.DateField()
     partners = models.ManyToManyField(
         'Socio', through='SocioSA')
