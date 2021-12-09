@@ -61,7 +61,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     Este ViewSet provee acciones `list`, `create`, `retrieve`,
     `update` and `destroy` para el modelo SociedadAnonima.
     """
-    serializer_class = SociedadAnonimaSerializer
+    serializer_class = SociedadAnonimaRetrieveSerializer
     queryset = SociedadAnonima.objects.all()
     # IMPORTANTE cambiar esto cuando haya autenticacion
     permission_classes = [permissions.AllowAny]
@@ -69,17 +69,12 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name', 'stamp_hash']
 
-    def list(self, request):
-        queryset = SociedadAnonima.objects.all()
-        serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        sa = SociedadAnonima.objects.get(pk=pk)
-        serializer = SociedadAnonimaRetrieveSerializer(sa)
-        return Response(serializer.data)
-
     def update(self, request, pk=None):
+        try:
+            bonita_login_call(request.session, 'Apoderado1', 'bpm')
+        except BonitaNotOpenException:
+            return Response(data='El servidor de bonita no se encuentra corriendo. Abortando...')
+
         try:
             sa = SociedadAnonima.objects.get(pk=pk)
         except SociedadAnonima.DoesNotExist:
@@ -96,6 +91,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
             sa.save()
             process_partners(sa, data['partners'], update=True)
             process_exports(sa, data['exports'], update=True)
+
+            # Se asigna la tarea y se ejecuta
+            task_id = assign_task(request.session, sa.case_id)
+            execute_task(request.session, task_id)
+
             return Response(data=serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -120,7 +120,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                                                     representative_email=data['representative_email'])
 
             # Se crea nuevo objeto con el hash asignado
-            SAHashes.objects.create(sa=new_sa, hash=uuid4().hex)
+            hash_object = SAHashes.objects.create(sa=new_sa, hash=uuid4().hex)
 
             # Se agregan los socios que hayan venido
             partners = data['partners']
@@ -132,7 +132,8 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
             # Se inicia el proceso en bonita si se esta local
             if env('DJANGO_DEVELOPMENT') == 'True':
-                new_case = start_bonita_process(request.session, new_sa)
+                new_case = start_bonita_process(
+                    request.session, new_sa, hash_object.hash)
                 if (not new_case):
                     print(
                         '---> Hubo algun problema al iniciar el caso de bonita. Sin embargo, la SA fue creada correctamente')
@@ -169,6 +170,12 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
                 return Response(data='El archivo tiene que tener formato pdf y ser de 2MB o menos',
                                 status=status.HTTP_400_BAD_REQUEST)
             sa.comformation_statute.save(file.name, file, save=True)
+
+            if 'update' in request.data and request.data['update'] == 'true':
+                # Se asigna la tarea y se ejecuta
+                task_id = assign_task(request.session, sa.case_id)
+                execute_task(request.session, task_id)
+
             return Response({'status': 'Archivo guardado con exito'})
         else:
             return Response(data='El archivo pdf no fue enviado.', status=status.HTTP_400_BAD_REQUEST)
@@ -214,8 +221,8 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         if 'veredicto' in request.data:
             sa = self.get_object()
             # Si la sociedad ya fue aprobada anteriormente, NO SEGUIR
-            if sa.numero_expediente:
-                return Response('Esta sociedad ya fue aprobada anteriormente. Abortando...', status=status.HTTP_400_BAD_REQUEST)
+            # if sa.numero_expediente:
+            #     return Response('Esta sociedad ya fue aprobada anteriormente. Abortando...', status=status.HTTP_400_BAD_REQUEST)
 
             # Traer info de apoderado (para envio de mails)
             apoderado = sa.sociosa_set.get(is_representative=True).partner

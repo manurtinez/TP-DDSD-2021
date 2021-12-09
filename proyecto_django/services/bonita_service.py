@@ -119,7 +119,7 @@ def bonita_login_call(session, user, password):
         return response.status_code
 
 
-def start_bonita_process(session, new_sa):
+def start_bonita_process(session, new_sa, hash):
     """
     Este metodo dispara una instancia del proceso en bonita para una sociedad anonima dada.
     NOTA: hay que refactorizar el login y implementar manejo de excepciones.
@@ -136,6 +136,9 @@ def start_bonita_process(session, new_sa):
         # Se setean las variables id y name al caso
         set_bonita_variable(session, bonita_case['id'], 'id', new_sa.id)
         set_bonita_variable(session, bonita_case['id'], 'nombre', new_sa.name)
+        set_bonita_variable(
+            session, bonita_case['id'], 'email', new_sa.representative_email)
+        set_bonita_variable(session, bonita_case['id'], 'hash', hash)
 
         # bonita_api_call(session, '/bpm/caseVariable', 'put', f'/{bonita_case["id"]}/id', {
         #     'type': java_types[type(new_sa.id).__name__], 'value': new_sa.id})

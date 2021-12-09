@@ -32,6 +32,8 @@ async function mostrarSociedad() {
 	await getQR(sociedad.id);
 	nombreSociedad.value = sociedad.name;
 	fechaCreacion.value =  fechaToString(new Date(sociedad.creation_date+" 00:00"));
+	carpetaDigital.href = sociedad.drive_folder_link;
+	carpetaDigital.innerHTML = sociedad.drive_folder_link;
 	sociedad.sociosa_set.forEach(async socioParcial => {
 		const socio = await socioPorId(socioParcial.partner);
 		let newRow = tablaSocios.tBodies[0].insertRow(-1);

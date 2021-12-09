@@ -20,6 +20,7 @@ function map_to_objects(exportaciones) {
 
 
 async function registrarSociedad() {
+
 	const response = await fetch(localHost + '/sociedad_anonima/', {
 		method: 'POST',
 		headers: {
@@ -216,6 +217,7 @@ async function modificarEstatuto() {
 	let idSociedad = document.formularioSociedadEditarEstatuto.idSociedad.value;
 	const formData = new FormData();
 	formData.append('file', document.getElementById('estatuto').files[0]);
+	formData.append('update', true);
 	const fileResponse = await fetch(`${localHost}/sociedad_anonima/${idSociedad}/subir_archivo/`, {
 		method: 'POST',
 		body: formData,
@@ -251,8 +253,10 @@ async function modificarSociedad() {
 	event.preventDefault()
 	let idSociedad = document.formularioSociedad.idSociedad.value;
 
+	sociosEnSociedad[0].is_representative = true
+
 	const response = await fetch(localHost + '/sociedad_anonima/' + idSociedad + '/', {
-		method: 'PATCH',
+		method: 'PUT',
 		headers: {
 			'X-CSRFToken': csrftoken,
 			'Content-Type': 'application/json',
@@ -264,7 +268,8 @@ async function modificarSociedad() {
 			legal_domicile: document.formularioSociedad.domicilioLegal.value,
 			creation_date: document.formularioSociedad.fechaCreacion.value,
 			representative_email: document.formularioSociedad.mailApoderado.value,
-			partners: sociosEnSociedad
+			partners: sociosEnSociedad,
+			exports: []
 
 		})
 	});
