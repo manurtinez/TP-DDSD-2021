@@ -261,29 +261,13 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "nombre_sociedad",
-									"value": "Fed Producciones",
-									"type": "text"
-								},
-								{
-									"key": "nombre_apoderado",
-									"value": "Federico",
-									"type": "text"
-								},
-								{
-									"key": "destinatario",
-									"value": "tubarofederico@gmail.com",
-									"type": "text"
-								},
-								{
-									"key": "num_expediente",
-									"value": "rghwerhnw54h544whwhgw",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre_sociedad\": \"soci\",\r\n    \"nombre_apoderado\":\"manu\",\r\n    \"destinatario\":\"mantinez@gmail.com\",\r\n    \"plazo_correccion\":\"2020-12-12\", \r\n    \"url_boton\": \"http://localhost:8000/sociedad_anonima/1/editar/asklfjsafkl\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "javascript"
 								}
-							]
+							}
 						},
 						"url": {
 							"raw": "localhost/api/email/send/expediente",
@@ -306,34 +290,13 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "nombre_sociedad",
-									"value": "Fed Producciones",
-									"type": "text"
-								},
-								{
-									"key": "nombre_apoderado",
-									"value": "Federico",
-									"type": "text"
-								},
-								{
-									"key": "destinatario",
-									"value": "tubarofederico@gmail.com",
-									"type": "text"
-								},
-								{
-									"key": "plazo_correccion",
-									"value": "25/12/2021",
-									"type": "text"
-								},
-								{
-									"key": "url_boton",
-									"value": "https://www.google.com/",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre_sociedad\": \"soci\",\r\n    \"nombre_apoderado\":\"manu\",\r\n    \"destinatario\":\"mantinez@gmail.com\",\r\n    \"plazo_correccion\":\"2020-12-12\", \r\n    \"url_boton\": \"http://localhost:8000/sociedad_anonima/1/editar/asklfjsafkl\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
 							"raw": "localhost/api/email/send/informacion-sociedad-incorrecta",
