@@ -84,14 +84,18 @@ def mail_estatuto_invalido(sa, nombre_apoderado, observaciones):
     return False
 
 
-def mail_fin_solicitud(nombre_sa, nombre_apoderado, destinatario):
+def mail_fin_solicitud(sa, nombre_apoderado):
     """
     Este metodo realiza el envio del mail de solicitud incorrecta (cuando es rechazada por mesa de entradas)
     """
     try:
-        payload = {'nombre_sociedad': nombre_sa,
+        name = sa.name
+        to = sa.representative_email
+        url = f'http://localhost:8000/sociedad_anonima/ver/{sa.stamp_hash}'
+        payload = {'nombre_sociedad': name,
                    'nombre_apoderado': nombre_apoderado,
-                   'destinatario': destinatario}
+                   'destinatario': to,
+                   'url_boton': url}
         response = requests.post(
             BASE_URL + '/fin-solicitud', data=payload)
         if response.status_code == 200:

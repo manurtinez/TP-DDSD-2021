@@ -230,9 +230,6 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
         # serializer = VerdictSerializer(data=request.data)
         if 'veredicto' in request.data:
             sa = self.get_object()
-            # Si la sociedad ya fue aprobada anteriormente, NO SEGUIR
-            # if sa.numero_expediente:
-            #     return Response('Esta sociedad ya fue aprobada anteriormente. Abortando...', status=status.HTTP_400_BAD_REQUEST)
 
             # Traer info de apoderado (para envio de mails)
             apoderado = sa.sociosa_set.get(is_representative=True).partner
@@ -364,7 +361,7 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
         # Traer info de apoderado (para envio de mails)
         apoderado = sa.sociosa_set.get(is_representative=True).partner
-        if not mail_fin_solicitud(sa.name, apoderado.first_name, sa.representative_email):
+        if not mail_fin_solicitud(sa, apoderado.first_name):
             print("el email de fin de proceso NO pudo ser enviado...")
 
         if response['status'] == 200:

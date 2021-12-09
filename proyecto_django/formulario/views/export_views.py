@@ -37,7 +37,7 @@ def top_country_languages(request, limit):
     # Agregacion para ordenar exportaciones por ocurrencia de paises descendente
     # Se agarran los primeros n (limit)
     queryset = Exportacion.objects.values('country_id').annotate(country_count=Count(
-        'country_id'), languages=F('country__languages__name')).order_by('-country_count')[:limit]
+        'country_id'), languages=F('country__languages__name')).order_by('-country_count').distinct()[:limit]
 
     # Me quedo con los ids resultantes
     country_ids = queryset.values_list('country_id', flat=True)
