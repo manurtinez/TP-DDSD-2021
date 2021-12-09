@@ -1,12 +1,11 @@
 import base64
-from datetime import datetime, timedelta
 from uuid import uuid4
 
 import environ
 from django.db.utils import IntegrityError
 from django.http.response import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from formulario.models import Exportacion, Lenguaje, Pais, SAHashes, SociedadAnonima, Socio
+from formulario.models import Exportacion, Lenguaje, Pais, SAHashes, SociedadAnonima, Socio, SocioSA
 from formulario.permissions import bonita_permission
 from formulario.serializers import (SociedadAnonimaRetrieveSerializer,
                                     SociedadAnonimaSerializer)
@@ -27,12 +26,42 @@ env = environ.Env()
 environ.Env.read_env()
 
 
+def process_partners(sa, partners, update=False):
+    if update:
+        queryset = SocioSA.objects.filter(sa_id=sa.id)
+        queryset.delete()
+    for socio in partners:
+        partner = Socio.objects.get(
+            pk=socio['id']) if type(socio) == int else socio['id']
+        sa.partners.add(
+            partner, through_defaults={'percentage': socio['percentage'], 'is_representative': socio.get('is_representative', False)})
+
+
+def process_exports(sa, export_info, update=False):
+    # Si se esta haciendo una actualizacion, borro todas las tuplas que hubiera anteriormente
+    # antes de crear las nuevas
+    if update:
+        queryset = Exportacion.objects.filter(sa_id=sa.id)
+        queryset.delete()
+    for continent in export_info:
+        for country in continent['countries']:
+            new_country, created = Pais.objects.get_or_create(
+                code=country['code'], name=country['name'])
+            for language in country['languages']:
+                new_language, created = Lenguaje.objects.get_or_create(
+                    code=language['code'], name=language['name'], native_name=language['native'])
+                new_country.languages.add(new_language)
+            exportacion = Exportacion.objects.create(
+                sa=sa, continent_code=continent['code'], continent_name=continent['name'], country=new_country, states=country['states'])
+            exportacion.save()
+
+
 class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     """
     Este ViewSet provee acciones `list`, `create`, `retrieve`,
     `update` and `destroy` para el modelo SociedadAnonima.
     """
-    serializer_class = SociedadAnonimaRetrieveSerializer
+    serializer_class = SociedadAnonimaSerializer
     queryset = SociedadAnonima.objects.all()
     # IMPORTANTE cambiar esto cuando haya autenticacion
     permission_classes = [permissions.AllowAny]
@@ -40,24 +69,36 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name', 'stamp_hash']
 
-    def process_partners(self, new_sa, partners):
-        for socio in partners:
-            partner = Socio.objects.get(pk=socio['id'])
-            new_sa.partners.add(
-                partner, through_defaults={'percentage': socio['percentage'], 'is_representative': socio.get('is_representative', False)})
+    def list(self, request):
+        queryset = SociedadAnonima.objects.all()
+        serializer = SociedadAnonimaRetrieveSerializer(queryset, many=True)
+        return Response(serializer.data)
 
-    def process_exports(self, new_sa, export_info):
-        for continent in export_info:
-            for country in continent['countries']:
-                new_country, created = Pais.objects.get_or_create(
-                    code=country['code'], name=country['name'])
-                for language in country['languages']:
-                    new_language, created = Lenguaje.objects.get_or_create(
-                        code=language['code'], name=language['name'], native_name=language['native'])
-                    new_country.languages.add(new_language)
-                exportacion = Exportacion.objects.create(
-                    sa=new_sa, continent_code=continent['code'], continent_name=continent['name'], country=new_country, states=country['states'])
-                exportacion.save()
+    def retrieve(self, request, pk=None):
+        sa = SociedadAnonima.objects.get(pk=pk)
+        serializer = SociedadAnonimaRetrieveSerializer(sa)
+        return Response(serializer.data)
+
+    def update(self, request, pk=None):
+        try:
+            sa = SociedadAnonima.objects.get(pk=pk)
+        except SociedadAnonima.DoesNotExist:
+            return Response(data='La sociedad solicitada no existe', status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = SociedadAnonimaSerializer(data=request.data)
+        if serializer.is_valid():
+            data = request.data
+            sa.name = data['name']
+            sa.legal_domicile = data['legal_domicile']
+            sa.creation_date = data['creation_date']
+            sa.real_domicile = data['real_domicile']
+            sa.representative_email = data['representative_email']
+            sa.save()
+            process_partners(sa, data['partners'], update=True)
+            process_exports(sa, data['exports'], update=True)
+            return Response(data=serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
         """
@@ -83,11 +124,11 @@ class SociedadAnonimaViewSet(viewsets.ModelViewSet):
 
             # Se agregan los socios que hayan venido
             partners = data['partners']
-            self.process_partners(new_sa, partners)
+            process_partners(new_sa, partners)
 
             # Se crean los datos de exportacion
             export_info = data['exports']
-            self.process_exports(new_sa, export_info)
+            process_exports(new_sa, export_info)
 
             # Se inicia el proceso en bonita si se esta local
             if env('DJANGO_DEVELOPMENT') == 'True':

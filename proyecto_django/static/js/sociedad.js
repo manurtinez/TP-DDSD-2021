@@ -252,7 +252,7 @@ async function  modificarSociedad() {
 		let idSociedad = document.formularioSociedad.idSociedad.value;
 
 		const response = await fetch(localHost+'/sociedad_anonima/'+idSociedad+'/', {
-			method: 'PATCH',
+			method: 'PUT',
 			headers: {
 				'X-CSRFToken': csrftoken,
 				'Content-Type': 'application/json',
