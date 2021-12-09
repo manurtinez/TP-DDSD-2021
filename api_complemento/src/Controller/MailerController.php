@@ -161,8 +161,9 @@ class MailerController extends ApiController
         $nombre_sociedad = $request->get('nombre_sociedad');
         $nombre_apoderado = $request->get('nombre_apoderado');
         $destinatario = $request->get('destinatario');
+        $url_boton = $request->get('url_boton');
 
-        if($nombre_sociedad == null || $nombre_apoderado == null || $destinatario == null){
+        if($nombre_sociedad == null || $nombre_apoderado == null || $destinatario == null || $url_boton == null){
             $this->setStatusCode(400);
             return $this->respondWithErrors("Debe indicar todos los parámetros");
         }
@@ -181,6 +182,7 @@ class MailerController extends ApiController
                     'nombre_sociedad' => $nombre_sociedad,
                     'nombre_apoderado' => $nombre_apoderado,
                     'destinatario' => $destinatario,
+                    'url_boton' => $url_boton
                 ]);
 
         try {
