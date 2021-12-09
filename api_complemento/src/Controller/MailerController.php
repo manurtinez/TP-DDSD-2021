@@ -24,6 +24,7 @@ class MailerController extends ApiController
      */
     public function sendNumExpediente(Request $request, MailerInterface $mailer)
     {
+        $request = $this->transformJsonBody($request);
         $nombre_sociedad = $request->get('nombre_sociedad');
         $nombre_apoderado = $request->get('nombre_apoderado');
         $destinatario = $request->get('destinatario');
@@ -66,6 +67,7 @@ class MailerController extends ApiController
      */
     public function sendInfoSociedadIncorrecta(Request $request, MailerInterface $mailer)
     {
+        $request = $this->transformJsonBody($request);
         $nombre_sociedad = $request->get('nombre_sociedad');
         $nombre_apoderado = $request->get('nombre_apoderado');
         $destinatario = $request->get('destinatario');
@@ -110,6 +112,7 @@ class MailerController extends ApiController
      */
     public function sendEstatutoInvalido(Request $request, MailerInterface $mailer)
     {
+        $request = $this->transformJsonBody($request);
         $nombre_sociedad = $request->get('nombre_sociedad');
         $nombre_apoderado = $request->get('nombre_apoderado');
         $destinatario = $request->get('destinatario');
@@ -154,6 +157,7 @@ class MailerController extends ApiController
      */
     public function sendFinSolicitud(Request $request, MailerInterface $mailer)
     {
+        $request = $this->transformJsonBody($request);
         $nombre_sociedad = $request->get('nombre_sociedad');
         $nombre_apoderado = $request->get('nombre_apoderado');
         $destinatario = $request->get('destinatario');
