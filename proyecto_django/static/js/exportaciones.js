@@ -54,10 +54,10 @@ class Country {
 
 
 
-async function cargarProvinciasSociedad() {
+/* async function cargarProvinciasSociedad() {
 	await optionsInDynamicSelect(provinciaSociedad, agregarOptionsEnSelect, agregaMensajeEspera.bind(this, provinciaSociedad, 'Cargando provincias'), getEstados, 'AR');
 	addTitleOptions(provinciaSociedad, 'Seleccioná una provincia...');
-}
+} */
 
 function checkTheCheckAndHideContainer(check, container, aFunction) {
 	if (check.checked) {
