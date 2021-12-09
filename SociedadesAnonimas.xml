@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<organization:Organization xmlns:organization="http://documentation.bonitasoft.com/organization-xml-schema/1.1">
+  <customUserInfoDefinitions/>
+  <users>
+    <user userName="Apoderado1">
+      <firstName>Apoderado</firstName>
+      <lastName>Generico</lastName>
+      <jobTitle>Apoderado</jobTitle>
+      <personalData/>
+      <professionalData/>
+      <password encrypted="false">bpm</password>
+      <customUserInfoValues/>
+    </user>
+    <user userName="JuancitoMesa">
+      <firstName>Juancito</firstName>
+      <lastName>Mesa</lastName>
+      <jobTitle>Empleado mesa</jobTitle>
+      <personalData/>
+      <professionalData/>
+      <password encrypted="false">bpm</password>
+      <customUserInfoValues/>
+    </user>
+    <user userName="walter.bates">
+      <firstName>walter</firstName>
+      <lastName>bates</lastName>
+      <personalData/>
+      <professionalData/>
+      <password encrypted="false">bpm</password>
+      <customUserInfoValues/>
+    </user>
+    <user userName="JuancitoEscribano">
+      <firstName>juancito</firstName>
+      <lastName>escribano</lastName>
+      <jobTitle>escribano</jobTitle>
+      <personalData/>
+      <professionalData/>
+      <password encrypted="false">bpm</password>
+      <customUserInfoValues/>
+    </user>
+    <user userName="JuancitoDireccion">
+      <firstName>juancito</firstName>
+      <lastName>direccion</lastName>
+      <personalData/>
+      <professionalData/>
+      <password encrypted="false">bpm</password>
+      <customUserInfoValues/>
+    </user>
+  </users>
+  <roles>
+    <role name="ApoderadoGenerico">
+      <displayName>ApoderadoGenerico</displayName>
+    </role>
+    <role name="Empleado mesa">
+      <displayName>Empleado mesa</displayName>
+    </role>
+    <role name="Escribano">
+      <displayName>Escribano</displayName>
+    </role>
+    <role name="Direccion">
+      <displayName>Direccion</displayName>
+    </role>
+  </roles>
+  <groups>
+    <group name="Usuario DSSD">
+      <displayName>Usuarios DSSD</displayName>
+    </group>
+  </groups>
+  <memberships>
+    <membership>
+      <userName>Apoderado1</userName>
+      <roleName>ApoderadoGenerico</roleName>
+      <groupName>Usuario DSSD</groupName>
+    </membership>
+    <membership>
+      <userName>JuancitoMesa</userName>
+      <roleName>Empleado mesa</roleName>
+      <groupName>Usuario DSSD</groupName>
+    </membership>
+    <membership>
+      <userName>walter.bates</userName>
+      <roleName>ApoderadoGenerico</roleName>
+      <groupName>Usuario DSSD</groupName>
+    </membership>
+    <membership>
+      <userName>JuancitoEscribano</userName>
+      <roleName>Escribano</roleName>
+      <groupName>Usuario DSSD</groupName>
+    </membership>
+    <membership>
+      <userName>JuancitoDireccion</userName>
+      <roleName>Direccion</roleName>
+      <groupName>Usuario DSSD</groupName>
+    </membership>
+  </memberships>
+</organization:Organization>
