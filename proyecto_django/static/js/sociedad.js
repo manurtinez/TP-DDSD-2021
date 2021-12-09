@@ -1,172 +1,10 @@
-// ACCIONES - VALIDACIONES
 
-
-async function validarFormulario(event) {
-	event.preventDefault()
-
-	// NOMBRE DE LA SOCIEDAD
-	if (document.formularioSociedad.nombreSociedad.value.length == 0) {
-		let mensaje = "Por favor, ingresa el nombre de la sociedad."
-		document.formularioSociedad.nombreSociedad.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
+async function altaDeSociedad(event) {
+	if (await validarCamposSociedad()) {
+		setSocioRepresentante(representanteLegal.selectedIndex - 1);
+		// TODO mover afuera de la funcion y utilizar el booleano que retorna esta funcion
+		return registrarSociedad();
 	}
-
-
-	// NOMBRE DEL SOCIEDAD - ENTRE 3 Y 50 CARACTERES
-	if (document.formularioSociedad.nombreSociedad.value.length > 50 ||
-		document.formularioSociedad.nombreSociedad.value.length <= 2) {
-		let mensaje = 'Por favor, el nombre de la sociedad debe tener entre 3 y 50 caracteres.';
-		document.formularioSociedad.nombreSociedad.focus();
-		mostrarModalMensaje(mensaje);
-		return false;
-	}
-
-
-	// FECHA DE CREACION - VACIO
-	if (document.formularioSociedad.fechaCreacion.value.length == 0) {
-		let mensaje = "Por favor, ingresa la fecha de creación."
-		document.formularioSociedad.fechaCreacion.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-
-	// FECHA DE CREACION - MENOR O IGUAL A LA FECHA ACTUAL
-	let today = new Date()
-	let fechaActual = today.toISOString().split('T')[0]
-	let fechaCreacion = document.formularioSociedad.fechaCreacion.value
-
-	if (fechaCreacion > fechaActual) {
-		document.formularioSociedad.fechaCreacion.focus();
-		let mensaje = "Por favor, la fecha de creación debe ser menor o igual que la fecha actual.";
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-
-	// ESTATUTO DE CONFORMACION - VACIO
-	if (document.formularioSociedad.estatuto.value.length == 0) {
-		let $mensaje = 'Por favor, ingresá el estatuto de conformación.';
-		document.formularioSociedad.estatuto.focus();
-		mostrarModalMensaje($mensaje);
-		return false;
-	}
-
-	// ESTATUTO DE CONFORMACION - TAMAÑO DEL ARCHIVO
-	var input = document.getElementById('estatuto');
-	var file = input.files[0];
-	if (file.size > 3000000) {
-		let $mensaje = 'Por favor, el estatuto de conformacón debe pesar menos de 3 megabytes.';
-		mostrarModalMensaje($mensaje);
-		return false;
-	}
-
-	// ESTATUTO DE CONFORMACION - FORMATO DEL ARCHIVO 
-	var fileInput = document.getElementById('estatuto');
-	var filePath = fileInput.value;
-	var extensionesPermitidas = /(.pdf|.docx|.odt)$/i;
-	if (!extensionesPermitidas.exec(filePath)) {
-		fileInput.value = '';
-		let $mensaje = 'Por favor, el formato de archivo del estatuto de conformación debe ser .docx, .odt ó .pdf';
-		mostrarModalMensaje($mensaje);
-		return false;
-	}
-
-	// PROVINCIA
-	if(provinciaSociedad.value == "undefined"){
-		let mensaje = "Por favor, seleccioná la provincia de la sociedad."
-		document.formularioSociedad.provinciaSociedad.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-
-	// DOMICILIO LEGAL - VACIO
-	if (document.formularioSociedad.domicilioLegal.value.length == 0) {
-		let mensaje = "Por favor, ingresa el domicilio legal de la sociedad."
-		document.formularioSociedad.domicilioLegal.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-
-	// DOMICILIO LEGAL - ENTRE 10 Y 80 CARACTERES
-	if (document.formularioSociedad.domicilioLegal.value.length > 80 || document.formularioSociedad.domicilioLegal.value.length <= 9) {
-		let $mensaje = 'Por favor, el domicilio legal debe tener entre 10  y 80 caracteres.';
-		document.formularioSociedad.domicilioLegal.focus();
-		mostrarModalMensaje($mensaje)
-		return false;
-	}
-
-	// DOMICILIO REAL - VACIO
-	if (document.formularioSociedad.domicilioReal.value.length == 0) {
-		let mensaje = "Por favor, ingresa el domicilio real de la sociedad."
-		document.formularioSociedad.domicilioReal.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-
-	// DOMICILIO REAL - ENTRE 10 Y 80 CARACTERES
-	if (document.formularioSociedad.domicilioReal.value.length > 80 || document.formularioSociedad.domicilioReal.value.length <= 9) {
-		let $mensaje = 'Por favor, el domicilio real debe tener entre 10  y 80 caracteres.';
-		document.formularioSociedad.domicilioReal.focus();
-		mostrarModalMensaje($mensaje)
-		return false;
-	}
-
-	// MAIL - VACIO
-	if (document.formularioSociedad.mailApoderado.value.length == 0) {
-		let mensaje = "Por favor, ingresa el mail de apoderado."
-		document.formularioSociedad.mailApoderado.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-
-	// MAIL - ENTRE 5 Y 80 CARACTERES
-	if (document.formularioSociedad.mailApoderado.value.length > 80 || document.formularioSociedad.mailApoderado.value.length <= 4) {
-		let $mensaje = 'Por favor, el mail del apoderado debe tener entre 5 y 80 caracteres.';
-		document.formularioSociedad.mailApoderado.focus();
-		mostrarModalMensaje($mensaje)
-		return false;
-	}
-
-	// MAIL - FORMATO
-	if (!(/\S+@\S+\.\S+/.test(document.formularioSociedad.mailApoderado.value))) {
-		document.formularioSociedad.mailApoderado.focus();
-		let $mensaje = 'Por favor, ingresá el email del apoderado con el formato sancheznicolas@gmail.com';
-		mostrarModalMensaje($mensaje);
-		return false;
-	}
-
-	// ESTADOS DE EXPORTACION - VACIO
-	if (checkExporta.checked && (tablaExportaciones.tBodies[0].rows.length == 0)) {
-		let $mensaje = 'Tenés la opción de exportación activada. Por favor, seleccioná los lugares de exportación';
-		mostrarModalMensaje($mensaje)
-		return false;
-	}
-
-	// VALIDAR QUE EL PORCENTAJE  DE APORTES HAYA LLLEGADO AL 100%
-	if (totalPorcentajeSocios < 100) {
-		let $mensaje = 'Por favor, los socios ingresados no logran completar el 100% de acciones.';
-		document.formularioSociedad.apellidoSocio.focus();
-		mostrarModalMensaje($mensaje)
-		return false;
-	}
-
-	// REPRESENTANTE LEGAL/APODERADO - VACIO
-	if (representanteLegal.options.selectedIndex == 0) {
-		let $mensaje = 'Por favor, seleccioná un representante legal/apoderado.';
-		document.formularioSociedad.representanteLegal.focus();
-		mostrarModalMensaje($mensaje)
-		return false;
-	}
-	if (await existeSociedadConNombre(nombreSociedad.value)) {
-		let mensaje = 'Ya existe una sociedad con ese nombre, por favor introduzca otro.';
-		document.formularioSociedad.nombreSociedad.focus();
-		mostrarModalMensaje(mensaje)
-		return false;
-	}
-	setSocioRepresentante(representanteLegal.selectedIndex - 1);
-	// TODO mover afuera de la funcion y utilizar el booleano que retorna esta funcion
-	registrarSociedad();
-	return true;
 }
 
 // Esta funcion convierte la estructura de exportaciones a objetos y arrays simples
@@ -402,80 +240,91 @@ async function modificarEstatuto() {
 
 
 
-async function modificarSociedad() {
-	event.preventDefault()
-	let idSociedad = document.formularioSociedad.idSociedad.value;
-
-	const response = await fetch(localHost+'/sociedad_anonima/'+idSociedad+'/', {
-		method: 'PATCH',
-		headers: {
-			'X-CSRFToken': csrftoken,
-			'Content-Type': 'application/json',
-			'id': idSociedad
-		},
-		body: JSON.stringify({
-			name: document.formularioSociedad.nombreSociedad.value,
-			real_domicile: document.formularioSociedad.domicilioReal.value,
-			legal_domicile: document.formularioSociedad.domicilioLegal.value,
-			creation_date: document.formularioSociedad.fechaCreacion.value,
-			representative_email: document.formularioSociedad.mailApoderado.value,
-			partners: sociosEnSociedad,
-					
-		})
-	});
-	if (response.status === 200) {
-		Swal.fire({
-			position: 'top',
-			icon: 'success',
-			title: 'La sociedad ha sido modificada correctamente!',
-			showConfirmButton: true,
-			confirmButtonText: 'Continuar'
-		}).then((result) => {
-			if (result.isConfirmed) {
-				location.href = "http://localhost:8000/";
-			}
-		})
-	} else {
-		 mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+async function editarSociedad() {
+	if (validarCamposSociedad()) {
+		modificarSociedad();	
 	}
-
 }
 
+
+async function  modificarSociedad() {
+	event.preventDefault()
+		let idSociedad = document.formularioSociedad.idSociedad.value;
+
+		const response = await fetch(localHost+'/sociedad_anonima/'+idSociedad+'/', {
+			method: 'PATCH',
+			headers: {
+				'X-CSRFToken': csrftoken,
+				'Content-Type': 'application/json',
+				'id': idSociedad
+			},
+			body: JSON.stringify({
+				name: document.formularioSociedad.nombreSociedad.value,
+				real_domicile: document.formularioSociedad.domicilioReal.value,
+				legal_domicile: document.formularioSociedad.domicilioLegal.value,
+				creation_date: document.formularioSociedad.fechaCreacion.value,
+				representative_email: document.formularioSociedad.mailApoderado.value,
+				partners: sociosEnSociedad
+						
+			})
+		});
+		if (response.status === 200) {
+			Swal.fire({
+				position: 'top',
+				icon: 'success',
+				title: 'La sociedad ha sido modificada correctamente!',
+				showConfirmButton: true,
+				confirmButtonText: 'Continuar'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					location.href = "http://localhost:8000/";
+				}
+			})
+		} else {
+			mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+		}
+
+}
 
 
 async function mostrarSocios() {
 	let idSociedad = document.formularioSociedad.idSociedad.value;
 	const sociedad = await sociedadPorId(idSociedad);
-	console.log("Sociedad: "+sociedad);
+	// console.log("Sociedad: "+sociedad);
 
 	sociedad.sociosa_set.forEach(async socioParcial => {
 		const socio = await socioPorId(socioParcial.partner);
-		let newRow = tablaSocios.tBodies[0].insertRow(-1);
-		let newCell = newRow.insertCell(-1);
-		let newText = document.createTextNode(tablaSocios.tBodies[0].rows.length);
-		newCell.appendChild(newText);
-		newCell = newRow.insertCell(-1);
+		totalPorcentajeSocios += socioParcial.percentage;
+		agregarSocioEnTabla(socio.id,socio.first_name,socio.last_name,socioParcial.percentage)
+		agregarSocioEnSociedad(socio.id, socioParcial.percentage);
+		agregarSocioEnSelect(socio.last_name,socio.first_name,socio.id);
+		porcentajesSocios.push(socioParcial.percentage);
 
-		newText = document.createTextNode(socio.last_name + ' ' + socio.first_name);
-		newCell.appendChild(newText);
-		newCell = newRow.insertCell(-1);
-		newText = document.createTextNode(`${socioParcial.percentage} %`);
-		newCell.appendChild(newText);
-		if (socioParcial.is_representative) {
-			newRow.classList.add('bg-beige');
-			newRow.title="Apoderado";
-			//let selectApoderado = document.getElementById("#representanteLegal");
-			document.getElementById("representanteLegal").value = "Toyota Corolla";
+		// let newRow = tablaSocios.tBodies[0].insertRow(-1);
+		// let newCell = newRow.insertCell(-1);
+		// let newText = document.createTextNode(tablaSocios.tBodies[0].rows.length);
+		// newCell.appendChild(newText);
+		// newCell = newRow.insertCell(-1);
 
-		}
-		newCell = newRow.insertCell(-1);
-		let iconEliminar = document.createElement('i');
-		iconEliminar.title = "Eliminar";
-		// iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "btn", "btn-white");
-		iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "bg-white", "rounded", "shadow");
-		iconEliminar.addEventListener('click', eliminarSocio.bind(this, newRow, idSocioAgregado));
-		newCell.appendChild(iconEliminar);
-		return newRow.rowIndex;
+		// newText = document.createTextNode(socio.last_name + ' ' + socio.first_name);
+		// newCell.appendChild(newText);
+		// newCell = newRow.insertCell(-1);
+		// newText = document.createTextNode(`${socioParcial.percentage} %`);
+		// newCell.appendChild(newText);
+		// if (socioParcial.is_representative) {
+		// 	newRow.classList.add('bg-beige');
+		// 	newRow.title="Apoderado";			
+		// 	document.getElementById("representanteLegal").value = "Toyota Corolla";
+
+		// }
+		// newCell = newRow.insertCell(-1);
+		// let iconEliminar = document.createElement('i');
+		// iconEliminar.title = "Eliminar";
+		// // iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "btn", "btn-white");
+		// iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "bg-white", "rounded", "shadow");
+		// iconEliminar.addEventListener('click', eliminarSocio.bind(this, newRow, idSocioAgregado));
+		// newCell.appendChild(iconEliminar);
+		// return newRow.rowIndex;
 	});
 }
 
@@ -484,3 +333,172 @@ async function socioPorId(idSocio) {
 	let socio = await fetch(localHost + '/socio/' + idSocio).then(response => response.json());
 	return socio != null ? socio : false;
 }
+
+
+
+
+async function validarCamposSociedad() {
+	event.preventDefault()
+
+	// NOMBRE DE LA SOCIEDAD
+	if (document.formularioSociedad.nombreSociedad.value.length == 0) {
+		let mensaje = "Por favor, ingresa el nombre de la sociedad."
+		document.formularioSociedad.nombreSociedad.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+
+	// NOMBRE DEL SOCIEDAD - ENTRE 3 Y 50 CARACTERES
+	if (document.formularioSociedad.nombreSociedad.value.length > 50 ||
+		document.formularioSociedad.nombreSociedad.value.length <= 2) {
+		let mensaje = 'Por favor, el nombre de la sociedad debe tener entre 3 y 50 caracteres.';
+		document.formularioSociedad.nombreSociedad.focus();
+		mostrarModalMensaje(mensaje);
+		return false;
+	}
+
+	// FECHA DE CREACION - VACIO
+	if (document.formularioSociedad.fechaCreacion.value.length == 0) {
+		let mensaje = "Por favor, ingresa la fecha de creación."
+		document.formularioSociedad.fechaCreacion.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+
+	// FECHA DE CREACION - MENOR O IGUAL A LA FECHA ACTUAL
+	let today = new Date()
+	let fechaActual = today.toISOString().split('T')[0]
+	let fechaCreacion = document.formularioSociedad.fechaCreacion.value
+
+	if (fechaCreacion > fechaActual) {
+		document.formularioSociedad.fechaCreacion.focus();
+		let mensaje = "Por favor, la fecha de creación debe ser menor o igual que la fecha actual.";
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+
+	// ESTATUTO DE CONFORMACION - VACIO
+	if (document.formularioSociedad.estatuto.value.length == 0) {
+		let $mensaje = 'Por favor, ingresá el estatuto de conformación.';
+		document.formularioSociedad.estatuto.focus();
+		mostrarModalMensaje($mensaje);
+		return false;
+	}
+
+	// ESTATUTO DE CONFORMACION - TAMAÑO DEL ARCHIVO
+	var input = document.getElementById('estatuto');
+	var file = input.files[0];
+	if (file.size > 3000000) {
+		let $mensaje = 'Por favor, el estatuto de conformacón debe pesar menos de 3 megabytes.';
+		mostrarModalMensaje($mensaje);
+		return false;
+	}
+
+	// ESTATUTO DE CONFORMACION - FORMATO DEL ARCHIVO 
+	var fileInput = document.getElementById('estatuto');
+	var filePath = fileInput.value;
+	var extensionesPermitidas = /(.pdf|.docx|.odt)$/i;
+	if (!extensionesPermitidas.exec(filePath)) {
+		fileInput.value = '';
+		let $mensaje = 'Por favor, el formato de archivo del estatuto de conformación debe ser .docx, .odt ó .pdf';
+		mostrarModalMensaje($mensaje);
+		return false;
+	}
+
+	// PROVINCIA
+	if(provinciaSociedad.value == "undefined"){
+		let mensaje = "Por favor, seleccioná la provincia de la sociedad."
+		document.formularioSociedad.provinciaSociedad.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+
+	// DOMICILIO LEGAL - VACIO
+	if (document.formularioSociedad.domicilioLegal.value.length == 0) {
+		let mensaje = "Por favor, ingresa el domicilio legal de la sociedad."
+		document.formularioSociedad.domicilioLegal.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+
+	// DOMICILIO LEGAL - ENTRE 10 Y 80 CARACTERES
+	if (document.formularioSociedad.domicilioLegal.value.length > 80 || document.formularioSociedad.domicilioLegal.value.length <= 9) {
+		let $mensaje = 'Por favor, el domicilio legal debe tener entre 10  y 80 caracteres.';
+		document.formularioSociedad.domicilioLegal.focus();
+		mostrarModalMensaje($mensaje)
+		return false;
+	}
+
+	// DOMICILIO REAL - VACIO
+	if (document.formularioSociedad.domicilioReal.value.length == 0) {
+		let mensaje = "Por favor, ingresa el domicilio real de la sociedad."
+		document.formularioSociedad.domicilioReal.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+
+	// DOMICILIO REAL - ENTRE 10 Y 80 CARACTERES
+	if (document.formularioSociedad.domicilioReal.value.length > 80 || document.formularioSociedad.domicilioReal.value.length <= 9) {
+		let $mensaje = 'Por favor, el domicilio real debe tener entre 10  y 80 caracteres.';
+		document.formularioSociedad.domicilioReal.focus();
+		mostrarModalMensaje($mensaje)
+		return false;
+	}
+
+	// MAIL - VACIO
+	if (document.formularioSociedad.mailApoderado.value.length == 0) {
+		let mensaje = "Por favor, ingresa el mail de apoderado."
+		document.formularioSociedad.mailApoderado.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+
+	// MAIL - ENTRE 5 Y 80 CARACTERES
+	if (document.formularioSociedad.mailApoderado.value.length > 80 || document.formularioSociedad.mailApoderado.value.length <= 4) {
+		let $mensaje = 'Por favor, el mail del apoderado debe tener entre 5 y 80 caracteres.';
+		document.formularioSociedad.mailApoderado.focus();
+		mostrarModalMensaje($mensaje)
+		return false;
+	}
+
+	// MAIL - FORMATO
+	if (!(/\S+@\S+\.\S+/.test(document.formularioSociedad.mailApoderado.value))) {
+		document.formularioSociedad.mailApoderado.focus();
+		let $mensaje = 'Por favor, ingresá el email del apoderado con el formato sancheznicolas@gmail.com';
+		mostrarModalMensaje($mensaje);
+		return false;
+	}
+
+	// ESTADOS DE EXPORTACION - VACIO
+	if (checkExporta.checked && (tablaExportaciones.tBodies[0].rows.length == 0)) {
+		let $mensaje = 'Tenés la opción de exportación activada. Por favor, seleccioná los lugares de exportación';
+		mostrarModalMensaje($mensaje)
+		return false;
+	}
+
+	// VALIDAR QUE EL PORCENTAJE  DE APORTES HAYA LLLEGADO AL 100%
+	if (totalPorcentajeSocios < 100) {
+		let $mensaje = 'Por favor, los socios ingresados no logran completar el 100% de acciones.';
+		document.formularioSociedad.inputApellidoSocio.focus();
+		mostrarModalMensaje($mensaje)
+		return false;
+	}
+
+	// REPRESENTANTE LEGAL/APODERADO - VACIO
+	if (representanteLegal.options.selectedIndex == 0) {
+		let $mensaje = 'Por favor, seleccioná un representante legal/apoderado.';
+		document.formularioSociedad.representanteLegal.focus();
+		mostrarModalMensaje($mensaje)
+		return false;
+	}
+	if (await existeSociedadConNombre(nombreSociedad.value)) {
+		let mensaje = 'Ya existe una sociedad con ese nombre, por favor introduzca otro.';
+		document.formularioSociedad.nombreSociedad.focus();
+		mostrarModalMensaje(mensaje)
+		return false;
+	}
+	return true;
+	
+}
+
+

@@ -52,16 +52,16 @@ function validarDniSocio() {
 function validarAportesSocio() {
 	/*
 		// APELLIDO DEL SOCIO - VACIO
-		if (document.formularioSociedad.apellidoSocio.value.length == 0) {
+		if (document.formularioSociedad.inputApellidoSocio.value.length == 0) {
 			let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
-			document.formularioSociedad.apellidoSocio.focus();
+			document.formularioSociedad.inputApellidoSocio.focus();
 			mostrarModalMensaje(mensaje)
 			return false;
 		}
 		// NOMBRE DEL SOCIO - VACIO 
-		if (document.formularioSociedad.nombreSocio.value.length == 0) {
+		if (document.formularioSociedad.inputNombreSocio.value.length == 0) {
 			let mensaje = "Por favor, realice la búsqueda del socio antes de agregarlo."
-			document.formularioSociedad.nombreSocio.focus();
+			document.formularioSociedad.inputNombreSocio.focus();
 			mostrarModalMensaje(mensaje)
 			return false;
 		}
@@ -129,17 +129,17 @@ function agregarSocio(porcentajeAportado) {
 	}
 	containerAportes.hidden = true;
 	containerSocio.hidden = true;
-	let filaSocio = agregarSocioEnTabla();
-	agregarSocioEnSociedad(porcentajeAportado);
+	let filaSocio = agregarSocioEnTabla(idSocioAgregado,inputNombreSocio.value,inputApellidoSocio.value,porcentajeAportes.value);
+	agregarSocioEnSociedad(idSocioAgregado,porcentajeAportado);
 	if (porcentajeAportado >= porcentajeRepresentanteSugeridoActual) {
 		idFilaRepresentanteSugerido = filaSocio;
 		porcentajeRepresentanteSugeridoActual = porcentajeAportado;
-		representanteSugerido.textContent = apellidoSocio.value + ' ' + nombreSocio.value + ' (' + porcentajeAportado;
+		representanteSugerido.textContent = inputApellidoSocio.value + ' ' + inputNombreSocio.value + ' (' + porcentajeAportado;
 	}
 	refrescarTabla_Select();
-	agregarSocioEnSelect();
+	agregarSocioEnSelect(inputApellidoSocio.value,inputNombreSocio.value,idSocioAgregado);
 	porcentajesSocios.push(porcentajeAportado);
-	apellidoSocio.value = nombreSocio.value = "";
+	inputApellidoSocio.value = inputNombreSocio.value = "";
 	porcentajeAportes.value = "";
 	dniSocio.value = "";
 	dniSocio.focus();
@@ -188,20 +188,20 @@ function eliminarSocio(rowSocio, idSocio) {
 	})
 }
 
-function agregarSocioEnSociedad(porcentajeAportado) {
+function agregarSocioEnSociedad(idNuevoSocio, porcentajeAportado) {
 	let socio = {
-		id: idSocioAgregado,
-		percentage: porcentajeAportado
+		id: idNuevoSocio,
+		percentage: porcentajeAportado		
 	};
-	idSociosAgregados.add(idSocioAgregado);
+	idSociosAgregados.add(idNuevoSocio);
 	sociosEnSociedad.push(socio);
 }
 
 // Select Socios
-function agregarSocioEnSelect() {
+function agregarSocioEnSelect(apellidoSocio,nombreSocio,idSocio) {
 	let newOption = document.createElement("option");
-	newOption.text = apellidoSocio.value + ' ' + nombreSocio.value;
-	newOption.value = idSocioAgregado;
+	newOption.text = apellidoSocio + ' ' + nombreSocio;
+	newOption.value = idSocio;
 	representanteLegal.add(newOption);
 }
 
@@ -217,16 +217,16 @@ function setSocioRepresentante(index){
 }
 
 // Tabla Socios
-function agregarSocioEnTabla() {
+function agregarSocioEnTabla(idSocio,nombreSocio,apellidoSocio,porcentaje) {
 	let newRow = tablaSocios.tBodies[0].insertRow(-1);
 	let newCell = newRow.insertCell(-1);
 	let newText = document.createTextNode(tablaSocios.tBodies[0].rows.length);
 	newCell.appendChild(newText);
 	newCell = newRow.insertCell(-1);
-	newText = document.createTextNode(nombreSocio.value + ' ' + apellidoSocio.value);
+	newText = document.createTextNode(nombreSocio + ' ' + apellidoSocio);
 	newCell.appendChild(newText);
 	newCell = newRow.insertCell(-1);
-	newText = document.createTextNode(porcentajeAportes.value);
+	newText = document.createTextNode(porcentaje);
 	newCell.appendChild(newText);
 	newCell = newRow.insertCell(-1);
 	// let iconEditar = document.createElement('i');
@@ -237,7 +237,7 @@ function agregarSocioEnTabla() {
 	iconEliminar.title = "Eliminar";
 	// iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "btn", "btn-white");
 	iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "bg-white", "rounded", "shadow");
-	iconEliminar.addEventListener('click', eliminarSocio.bind(this, newRow, idSocioAgregado));
+	iconEliminar.addEventListener('click', eliminarSocio.bind(this, newRow, idSocio));
 	newCell.appendChild(iconEliminar);
 	return newRow.rowIndex;
 }
@@ -288,8 +288,8 @@ async function buscarSocio(inputDni) {
 			mostrarModalMensaje(mensaje);
 			return false;
 		} else {
-			apellidoSocio.value = socio.last_name;
-			nombreSocio.value = socio.first_name;
+			inputApellidoSocio.value = socio.last_name;
+			inputNombreSocio.value = socio.first_name;
 			mostrarCamposAportes();
 		}
 	} else {
@@ -408,8 +408,8 @@ function registrarSocio() {
 	}).then((result) => {
 		if (result.isConfirmed) {
 			idSocioAgregado = result.value.id;
-			apellidoSocio.value = result.value.first_name;
-			nombreSocio.value = result.value.last_name;
+			inputApellidoSocio.value = result.value.first_name;
+			inputNombreSocio.value = result.value.last_name;
 			mostrarCamposAportes();
 		}
 	})

@@ -49,7 +49,7 @@
 
 	<form action={% url 'sociedad_anonima-list' %} method="POST" enctype="multipart/form-data"
 		class="card container shadow pb-4 px-4 my-5" id="formularioSociedad" name="formularioSociedad"
-		onsubmit="return validarFormulario(event);">
+		onsubmit="return altaDeSociedad(event);">
 		{% csrf_token %}
 		<h3 class="card-title text-center mt-5"><i class="fas fa-clipboard-list"></i> Alta de sociedad</h3>
 		<div class="card-body shadow my-4 text-left px-0 py-4" id="bodyFormulario">
@@ -185,7 +185,7 @@
 						<div class="input-group">
 							<span class="input-group-text border-0">Apellido:</span>
 							<div class="input-group-text"><i class="fas fa-user-circle"></i></div>
-							<input type="text" class="form-control text-capitalize" id="apellidoSocio" name="apellidoSocio"
+							<input type="text" class="form-control text-capitalize" id="inputApellidoSocio" name="inputApellidoSocio"
 								placeholder="Por ej. Juan Rodriguez" readonly>
 						</div>
 					</div>
@@ -193,7 +193,7 @@
 						<div class="input-group">
 							<span class="input-group-text border-0">Nombre:</span>
 							<div class="input-group-text"><i class="fas fa-user-alt"></i></div>
-							<input type="text" class="form-control text-capitalize" id="nombreSocio" name="nombreSocio"
+							<input type="text" class="form-control text-capitalize" id="inputNombreSocio" name="inputNombreSocio"
 								placeholder="Por ej. Juan Rodriguez" readonly>
 						</div>
 					</div>
