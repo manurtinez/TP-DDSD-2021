@@ -129,7 +129,7 @@ function agregarSocio(porcentajeAportado) {
 	}
 	containerAportes.hidden = true;
 	containerSocio.hidden = true;
-	let filaSocio = agregarSocioEnTabla(idSocioAgregado,inputNombreSocio.value,inputApellidoSocio.value,porcentajeAportes.value);
+	let filaSocio = agregarSocioEnTabla(idSocioAgregado,inputNombreSocio.value,inputApellidoSocio.value,porcentajeAportes.value).rowIndex;
 	agregarSocioEnSociedad(idSocioAgregado,porcentajeAportado);
 	if (porcentajeAportado >= porcentajeRepresentanteSugeridoActual) {
 		idFilaRepresentanteSugerido = filaSocio;
@@ -203,6 +203,7 @@ function agregarSocioEnSelect(apellidoSocio,nombreSocio,idSocio) {
 	newOption.text = apellidoSocio + ' ' + nombreSocio;
 	newOption.value = idSocio;
 	representanteLegal.add(newOption);
+	return newOption;
 }
 
 function eliminarSocioEnSelect(index) {
@@ -239,7 +240,7 @@ function agregarSocioEnTabla(idSocio,nombreSocio,apellidoSocio,porcentaje) {
 	iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "bg-white", "rounded", "shadow");
 	iconEliminar.addEventListener('click', eliminarSocio.bind(this, newRow, idSocio));
 	newCell.appendChild(iconEliminar);
-	return newRow.rowIndex;
+	return newRow;
 }
 
 function refrescarTabla_Select() {

@@ -2,7 +2,6 @@
 async function altaDeSociedad(event) {
 	if (await validarCamposSociedad()) {
 		setSocioRepresentante(representanteLegal.selectedIndex - 1);
-		// TODO mover afuera de la funcion y utilizar el booleano que retorna esta funcion
 		return registrarSociedad();
 	}
 }
@@ -20,7 +19,7 @@ function map_to_objects(exportaciones) {
 
 
 async function registrarSociedad() {
-
+	body.classList.add('cursor-wait');
 	const response = await fetch(localHost + '/sociedad_anonima/', {
 		method: 'POST',
 		headers: {
@@ -66,6 +65,7 @@ async function registrarSociedad() {
 	} else {
 		// mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
 	}
+	toggleClasses(body, 'cursor-wait', 'cursor-default');
 }
 
 async function existeSociedadConNombre(nombre) {
@@ -253,7 +253,7 @@ async function modificarSociedad() {
 	event.preventDefault()
 	let idSociedad = document.formularioSociedad.idSociedad.value;
 
-	sociosEnSociedad[0].is_representative = true
+	setSocioRepresentante(representanteLegal.selectedIndex - 1);
 
 	const response = await fetch(localHost + '/sociedad_anonima/' + idSociedad + '/', {
 		method: 'PUT',
@@ -300,9 +300,14 @@ async function mostrarSocios() {
 	sociedad.sociosa_set.forEach(async socioParcial => {
 		const socio = await socioPorId(socioParcial.partner);
 		totalPorcentajeSocios += socioParcial.percentage;
-		agregarSocioEnTabla(socio.id, socio.first_name, socio.last_name, socioParcial.percentage)
+		let rowSocio = agregarSocioEnTabla(socio.id, socio.first_name, socio.last_name, socioParcial.percentage)
 		agregarSocioEnSociedad(socio.id, socioParcial.percentage);
-		agregarSocioEnSelect(socio.last_name, socio.first_name, socio.id);
+		let option = agregarSocioEnSelect(socio.last_name, socio.first_name, socio.id);
+		if (socioParcial.is_representative){
+			option.selected = true;
+			rowSocio.classList.add('bg-beige');
+			rowSocio.title="Apoderado";
+		}
 		porcentajesSocios.push(socioParcial.percentage);
 	});
 	
@@ -422,12 +427,12 @@ async function validarCamposSociedad() {
 	}
 
 	// PROVINCIA
-	if (provinciaSociedad.value == "undefined") {
+/* 	if (provinciaSociedad.value == "undefined") {
 		let mensaje = "Por favor, seleccioná la provincia de la sociedad."
 		document.formularioSociedad.provinciaSociedad.focus();
 		mostrarModalMensaje(mensaje)
 		return false;
-	}
+	} */
 
 	// DOMICILIO LEGAL - VACIO
 	if (document.formularioSociedad.domicilioLegal.value.length == 0) {

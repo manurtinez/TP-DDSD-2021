@@ -47,6 +47,7 @@ async function resolucionEstatuto(idSociedad, veredicto, observaciones) {
 }
 
 async function aprobarEstatuto(idSociedad) {
+	body.classList.add('cursor-wait');
 	const responseEstampillado = await fetch("http://localhost:8000/sociedad_anonima/" + idSociedad + "/solicitar_estampillado/");
 	if (responseEstampillado.status === 200) {
 		const responseResolucion = await resolucionEstatuto(idSociedad, true);
@@ -70,10 +71,11 @@ async function aprobarEstatuto(idSociedad) {
 	} else{
 		mostrarModalMensaje('Hubo algun error al generar el estampillado. Por favor, intente nuevamente.');
 		}
+	toggleClasses(body, 'cursor-wait', 'cursor-default');
 }
 
 async function rechazarEstatuto(idSociedad) {
-
+	body.classList.add('cursor-wait');
 	Swal.fire({
 		title: 'Envío de mail',
 		input: 'textarea',
@@ -123,5 +125,6 @@ async function rechazarEstatuto(idSociedad) {
 		},
 		allowOutsideClick: () => !Swal.isLoading()
 	})
+	toggleClasses(body, 'cursor-wait', 'cursor-default');
 }
 
