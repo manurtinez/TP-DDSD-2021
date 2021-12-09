@@ -9,13 +9,13 @@ async function altaDeSociedad(event) {
 
 // Esta funcion convierte la estructura de exportaciones a objetos y arrays simples
 function map_to_objects(exportaciones) {
-    return Array.from(exportaciones).map(
-        ([key, value]) => ({
-            ...value, countries: Array.from(value.countries).map(
-                ([key, value]) => ({...value, states: value.states.has('-') ? [] : Array.from(value.states)})
-            )
-        })
-    )
+	return Array.from(exportaciones).map(
+		([key, value]) => ({
+			...value, countries: Array.from(value.countries).map(
+				([key, value]) => ({ ...value, states: value.states.has('-') ? [] : Array.from(value.states) })
+			)
+		})
+	)
 }
 
 
@@ -34,7 +34,7 @@ async function registrarSociedad() {
 			idApoderado: representanteLegal.value,
 			representative_email: document.formularioSociedad.mailApoderado.value,
 			creation_date: document.formularioSociedad.fechaCreacion.value,
-			exports : map_to_objects(exportaciones)
+			exports: map_to_objects(exportaciones)
 		}),
 
 	});
@@ -204,7 +204,7 @@ async function validarFormularioEditarEstatutoSociedad(event) {
 		mostrarModalMensaje($mensaje);
 		return false;
 
-	} 
+	}
 	modificarEstatuto();
 	return true;
 
@@ -213,76 +213,76 @@ async function validarFormularioEditarEstatutoSociedad(event) {
 
 async function modificarEstatuto() {
 	// Modificar el endpoint cuando se tenga el put de actualizar estatuto	
-    	let idSociedad = document.formularioSociedadEditarEstatuto.idSociedad.value;
-		const formData = new FormData();
-		formData.append('file', document.getElementById('estatuto').files[0]);		
-		const fileResponse = await fetch(`${localHost}/sociedad_anonima/${idSociedad}/subir_archivo/`, {
-			method: 'POST',
-			body: formData,
-		});
+	let idSociedad = document.formularioSociedadEditarEstatuto.idSociedad.value;
+	const formData = new FormData();
+	formData.append('file', document.getElementById('estatuto').files[0]);
+	const fileResponse = await fetch(`${localHost}/sociedad_anonima/${idSociedad}/subir_archivo/`, {
+		method: 'POST',
+		body: formData,
+	});
 
-		if (fileResponse.status === 200) {
-			Swal.fire({
-				position: 'top',
-				icon: 'success',
-				title: 'El estatuto ha sido modificado correctamente!',
-				showConfirmButton: true,
-				confirmButtonText: 'Continuar'
-			}).then((result) => {
-				if (result.isConfirmed) {
-					location.href = "http://localhost:8000/";
-				}
-			})			
-		} else if (fileResponse.status !== 200) {		
-			mostrarModalMensaje('Hubo un error al subir el archivo. Por favor, reintentelo');
-		}
+	if (fileResponse.status === 200) {
+		Swal.fire({
+			position: 'top',
+			icon: 'success',
+			title: 'El estatuto ha sido modificado correctamente!',
+			showConfirmButton: true,
+			confirmButtonText: 'Continuar'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				location.href = "http://localhost:8000/";
+			}
+		})
+	} else if (fileResponse.status !== 200) {
+		mostrarModalMensaje('Hubo un error al subir el archivo. Por favor, reintentelo');
+	}
 }
 
 
 
 async function editarSociedad() {
 	if (validarCamposSociedad()) {
-		modificarSociedad();	
+		modificarSociedad();
 	}
 }
 
 
-async function  modificarSociedad() {
+async function modificarSociedad() {
 	event.preventDefault()
-		let idSociedad = document.formularioSociedad.idSociedad.value;
+	let idSociedad = document.formularioSociedad.idSociedad.value;
 
-		const response = await fetch(localHost+'/sociedad_anonima/'+idSociedad+'/', {
-			method: 'PATCH',
-			headers: {
-				'X-CSRFToken': csrftoken,
-				'Content-Type': 'application/json',
-				'id': idSociedad
-			},
-			body: JSON.stringify({
-				name: document.formularioSociedad.nombreSociedad.value,
-				real_domicile: document.formularioSociedad.domicilioReal.value,
-				legal_domicile: document.formularioSociedad.domicilioLegal.value,
-				creation_date: document.formularioSociedad.fechaCreacion.value,
-				representative_email: document.formularioSociedad.mailApoderado.value,
-				partners: sociosEnSociedad
-						
-			})
-		});
-		if (response.status === 200) {
-			Swal.fire({
-				position: 'top',
-				icon: 'success',
-				title: 'La sociedad ha sido modificada correctamente!',
-				showConfirmButton: true,
-				confirmButtonText: 'Continuar'
-			}).then((result) => {
-				if (result.isConfirmed) {
-					location.href = "http://localhost:8000/";
-				}
-			})
-		} else {
-			mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
-		}
+	const response = await fetch(localHost + '/sociedad_anonima/' + idSociedad + '/', {
+		method: 'PATCH',
+		headers: {
+			'X-CSRFToken': csrftoken,
+			'Content-Type': 'application/json',
+			'id': idSociedad
+		},
+		body: JSON.stringify({
+			name: document.formularioSociedad.nombreSociedad.value,
+			real_domicile: document.formularioSociedad.domicilioReal.value,
+			legal_domicile: document.formularioSociedad.domicilioLegal.value,
+			creation_date: document.formularioSociedad.fechaCreacion.value,
+			representative_email: document.formularioSociedad.mailApoderado.value,
+			partners: sociosEnSociedad
+
+		})
+	});
+	if (response.status === 200) {
+		Swal.fire({
+			position: 'top',
+			icon: 'success',
+			title: 'La sociedad ha sido modificada correctamente!',
+			showConfirmButton: true,
+			confirmButtonText: 'Continuar'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				location.href = "http://localhost:8000/";
+			}
+		})
+	} else {
+		mostrarModalMensaje('Hubo algun error al procesar la solicitud. Por favor, intente nuevamente.');
+	}
 
 }
 
@@ -295,38 +295,49 @@ async function mostrarSocios() {
 	sociedad.sociosa_set.forEach(async socioParcial => {
 		const socio = await socioPorId(socioParcial.partner);
 		totalPorcentajeSocios += socioParcial.percentage;
-		agregarSocioEnTabla(socio.id,socio.first_name,socio.last_name,socioParcial.percentage)
+		agregarSocioEnTabla(socio.id, socio.first_name, socio.last_name, socioParcial.percentage)
 		agregarSocioEnSociedad(socio.id, socioParcial.percentage);
-		agregarSocioEnSelect(socio.last_name,socio.first_name,socio.id);
+		agregarSocioEnSelect(socio.last_name, socio.first_name, socio.id);
 		porcentajesSocios.push(socioParcial.percentage);
-
-		// let newRow = tablaSocios.tBodies[0].insertRow(-1);
-		// let newCell = newRow.insertCell(-1);
-		// let newText = document.createTextNode(tablaSocios.tBodies[0].rows.length);
-		// newCell.appendChild(newText);
-		// newCell = newRow.insertCell(-1);
-
-		// newText = document.createTextNode(socio.last_name + ' ' + socio.first_name);
-		// newCell.appendChild(newText);
-		// newCell = newRow.insertCell(-1);
-		// newText = document.createTextNode(`${socioParcial.percentage} %`);
-		// newCell.appendChild(newText);
-		// if (socioParcial.is_representative) {
-		// 	newRow.classList.add('bg-beige');
-		// 	newRow.title="Apoderado";			
-		// 	document.getElementById("representanteLegal").value = "Toyota Corolla";
-
-		// }
-		// newCell = newRow.insertCell(-1);
-		// let iconEliminar = document.createElement('i');
-		// iconEliminar.title = "Eliminar";
-		// // iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "btn", "btn-white");
-		// iconEliminar.classList.add("far", "fa-trash-alt", "cursor-pointer", "p-2", "bg-white", "rounded", "shadow");
-		// iconEliminar.addEventListener('click', eliminarSocio.bind(this, newRow, idSocioAgregado));
-		// newCell.appendChild(iconEliminar);
-		// return newRow.rowIndex;
 	});
+	
+
+	exportacionesApi = await getExportacionesTest();
+	console.log(exportacionesApi);
+	let continente, pais;
+
+	//Cambiar cuando este el endpoint 
+	exportacionesApi.forEach(exportacion => {
+		exportaciones.set(exportacion.code, new Continent(exportacion.code, exportacion.name));
+		continente = exportaciones.get(exportacion.code);
+		exportacion.countries.forEach(paisExportacion => {
+			pais = new Country(paisExportacion.code, paisExportacion.name);
+			continente.addCountry(pais);
+			paisExportacion.states.forEach(state => {
+				pais.addState(state.name);
+				agregarLugarExportacionEnTabla(exportacion.code, exportacion.name, paisExportacion.code, paisExportacion.name, state);
+			});
+		});
+	});
+	if (tablaExportaciones.tBodies[0].rows.length > 0){
+		checkExporta.checked =true;
+		containerExporta.hidden = false;
+		cargarContinentes();
+	}
 }
+
+
+// LLAMADA AL ENDPOINT DE MANU
+async function getExportaciones() {
+	let exportaciones = await fetch(localHost + '/sociedad_anonima/').then(response => response.json());
+	return exportaciones != null ? exportaciones : false;
+}
+
+async function getExportacionesTest() {
+	let exportacionesTest = "[{\"code\":\"SA\",\"name\":\"South America\",\"countries\":[{\"code\":\"AR\",\"name\":\"Argentina\",\"languages\":[{\"code\":\"es\",\"name\":\"Spanish\",\"native\":\"Español\"},{\"code\":\"gn\",\"name\":\"Guarani\",\"native\":\"Avañe\"}],\"states\":[\"Buenos Aires\",\"Chaco\"]}]}]"
+	return	JSON.parse(exportacionesTest);
+}
+
 
 async function socioPorId(idSocio) {
 	// Se contempla solamente el caso positivo si se encontro la socio o si no. Faltan agregar los casos para otras respuestas del servidor
@@ -406,7 +417,7 @@ async function validarCamposSociedad() {
 	}
 
 	// PROVINCIA
-	if(provinciaSociedad.value == "undefined"){
+	if (provinciaSociedad.value == "undefined") {
 		let mensaje = "Por favor, seleccioná la provincia de la sociedad."
 		document.formularioSociedad.provinciaSociedad.focus();
 		mostrarModalMensaje(mensaje)
@@ -498,7 +509,7 @@ async function validarCamposSociedad() {
 		return false;
 	}
 	return true;
-	
+
 }
 
 
