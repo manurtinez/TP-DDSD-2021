@@ -78,7 +78,7 @@
 				<div class="input-group cmb-4">
 					<label for="checkExporta" class="input-group-text border-0">¿Exporta a otros países?</label>
 					<input autocomplete="off" class="form-check-input mt-2 rounded" type="checkbox" id="checkExporta"
-						onchange="checkTheCheckExportaciones(checkExporta);" />
+					onchange="checkTheCheckAndHideContainer(checkExporta,containerExporta,cargarContinentes);" />
 				</div>
 
 			<section id="containerExporta" hidden>
@@ -114,7 +114,7 @@
 				aria-label="Default select example"  autocomplete="off" multiple size="auto" onmousedown="customSelect(event,this);">
 		
 			</select>		
-			<table hidden id="tablaExportaciones" class="table table-bordered w-75 mx-auto text-center cmb-4">
+			<table id="tablaExportaciones" class="table table-bordered w-75 mx-auto text-center cmb-4">
 				<caption>
 					<h4><span class="badge rounded-pill bg-primary">Listado de lugares exportados</span></h4>
 				</caption>
